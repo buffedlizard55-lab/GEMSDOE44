@@ -222,30 +222,46 @@ in the scale of a probability map). Every artifact here is binary.</li>
 and worthless outside it — the metric is a distance filter, not a precision filter.</li>
 </ol>
 
-<h2>Why the previous best artifact scored what it scored, and what this repo does differently</h2>
-<p>The family's best live-reported artifact is a 44,090-dot thinning of a multilayer detector
-(distance-suppressed at 2.8 px), reported at 0.2600. The mechanism is the marginal rule above:
-thinning deletes dots whose realised credit was already below the break-even bar. The family's own
-analysis shows the family sits at its own emission optimum, so the remaining gap is a
-<em>field</em> problem, not an emission problem. This repository does three things differently,
-and each is falsifiable:</p>
+<h2>Why the previous best artifact scored what it scored — measured, not asserted</h2>
+<p>Two artifacts exist locally whose live scores bracket the family's best work: the 44,090-dot
+artifact the live board reports at <strong>0.2600</strong>, and the 37,654-dot artifact its owner
+reports at <strong>0.2778</strong>. They are related byte for byte: the 0.2778 file is a
+<em>strict subset</em> of the 0.2600 file, with <strong>6,436 dots deleted and none added</strong>,
+and <strong>100% of the deleted dots lie within 200 m of the known catalogue</strong> — the
+0–100 m and 100–200 m bands are emptied to exactly zero. On the local truth frame that passes the
+admissibility test below, those 6,436 dots earned a mean kernel credit of <strong>0.0135</strong>
+against their 0.2-per-dot cost: a net −1,187 units of denominator mass. That is the mechanism of the
+0.2600 → 0.2778 step, reproduced first-hand rather than quoted, and it is why this repository's
+emitter now excludes that ring (<code>--ring-px 2</code>).</p>
+<p>The same comparison falsifies the frame this repository had pre-registered as primary. Frame N
+(SGMC strands within 300 m of the catalogue) scores the pair <strong>backwards</strong>: 0.1755 for
+the 0.2600 artifact versus 0.0541 for the better 0.2778 one. Frame P (SGMC strands beyond 300 m)
+ranks them correctly (0.0954 &gt; 0.0942). A frame that ranks the family's best-known pair the wrong
+way cannot select a submission, so the admissibility rule fixed in AM-44-03 — rank the pair
+correctly <em>and</em> have positive probe excess over the 19 live-scored artifacts — excludes N and
+admits P. Both facts are on the limitations page as IR-44-15.</p>
 <ul>
-<li><strong>It chooses its validation frame by scoring already-scored artifacts on it.</strong>
-Nineteen family artifacts whose live scores were reported (0.0461 to 0.2600) were obtained
-(fifteen downloaded from the family's public mirrors, four already on disk) and scored on four
-candidate frames plus their own uniform controls. The catalogue frame is not merely
-weak, it is <em>inverted</em> (rho = −0.475) and it is degenerate under the official mask — its own
-truth pixels <em>are</em> the mask, so the truth set is empty and every artifact scores exactly
-0.000000. The frame this repository pre-registered first (SGMC faults &gt;300 m from the catalogue)
-also failed: rho = −0.054. The frame that survived is the SGMC strands within 300 m of the
-catalogue (rho_excess = +0.396, all 19 artifacts above uniform). The amendment is recorded as
-AM-44-01 and IR-44-09. <a href="validation.html">Validation</a> shows the whole table.</li>
-<li><strong>It emits by the metric's own arithmetic, at the metric's own spacing.</strong> Across the
-same 19 artifacts, one of the strongest measured correlates of a reported score is dot spacing:
+<li><strong>It re-picks the field on the admissible frame, and the answer flips.</strong> On frame N
+the winner is catalogue proximity (prox10, mean fold DTI 0.3964 against the incumbent's 0.1356). On
+frame P the order inverts: the field trained on <em>all</em> SGMC strands the catalogue lacks
+(sup_U) wins with a mean fold excess of <strong>+0.0808 over the uniform control</strong> and the
+best-of-4-folds positive in <strong>4 of 4</strong> folds at every mass tested, while catalogue
+proximity (prox10) is <em>worse than uniform</em> (−0.0342). The shipped field is therefore the
+unblended supervised one, emitted with the ring excluded. Evidence:
+<code>registry/selection.json</code>, <code>registry/ring_experiment.json</code>.</li>
+<li><strong>It excludes the ring only because the admissible frame says so.</strong> At matched mass
+and the same field, excluding the ≤200 m ring changes frame P by +0.0109 (sup_U, 44,090 dots) and by
++0.02 to +0.05 for the other fields tested; the paired delta is positive for every field and mass
+tested. On the falsified frame N the same change is −0.075, which is precisely why the frame
+question had to be settled first. Evidence: <code>registry/ring_experiment.json</code>.</li>
+<li><strong>It emits at the metric's own spacing.</strong> Across the same 19 artifacts, one of the
+strongest measured correlates of a reported score is dot spacing:
 <code>Spearman(score, fraction of dots 8-adjacent to another dot) = −0.361</code> — the three best
-artifacts have 0.001–0.002 adjacent dots against 0.88–0.99 for the worst. Mass correlates too
-(<code>ρ = −0.653</code>) but is confounded with the family's design eras, which is why the shipped
-mass is matched to the incumbent's 44,090 for a clean comparison. The mechanism is exact under the
+artifacts have 0.001–0.002 adjacent dots against 0.88–0.99 for the worst; this artifact has 0.00098.
+The ring profile is the second: the family's best artifact and both sibling-session artifacts all sit
+at 0.000 / 0.002 / 0.057 / 0.941 in the 0–100 / 100–200 / 200–300 / beyond-300 m bands. Mass also
+correlates (<code>ρ = −0.653</code>) but is confounded with the family's design eras, which is why
+the shipped mass is matched to the incumbent's 44,090 for a clean comparison. The mechanism is exact under the
 official formula: a dot beside another adds no new truth coverage and still costs 0.2 of FP. The
 emitter here is an exact greedy max-coverage solver that refuses any dot adding no new kernel
 credit.</li>
@@ -537,6 +553,35 @@ supported. Flagged as IR-44-03 in <a href="limitations.html">Limitations</a>.</p
         probe_rows.append((esc(a["file"][:44]), f"{a['live']:.4f}", f"{a['n']:,}",
                            f"{a['frac_dots_8adjacent']:.3f}", f"{a['frac_within_3px_of_N']:.3f}",
                            f"{a['frac_within_3px_of_P']:.3f}"))
+    ringm = load("ring_mechanism.json", {})
+    ringx = load("ring_experiment.json", {})
+    pair_rows = [(esc(k), f"{v['anchor_0.2600']:.6f}", f"{v['artifact_0.2778']:.6f}",
+                  f"{v['delta_pruned_minus_anchor']:+.6f}",
+                  "<strong>ranks correctly</strong>" if v["ranks_pair_correctly"] else "<strong>BACKWARDS — unusable</strong>")
+                 for k, v in (rank.get("direct_ab_pair_test") or {}).items()]
+    am_rows = []
+    for a in (pre.get("amendments") or []):
+        what = a.get("change") or a.get("what_was_already_known", [""])[0] if a.get("what_was_already_known") else a.get("change", "")
+        if a.get("decision_rule"):
+            what = (a["decision_rule"] if isinstance(a["decision_rule"], str) else a["decision_rule"][0])
+        am_rows.append((esc(a.get("id", "?")), esc(a.get("declared_utc", a.get("amended_at_utc", "—"))),
+                        esc(str(what))[:300]))
+    ring_rows = []
+    for fr in ("frame_N", "frame_P"):
+        r = ringm.get(fr)
+        if not r:
+            continue
+        ring_rows.append((fr.split("_")[1], f"{r['truth_px']:,}",
+                          f"{r['anchor_0.2600']['dti']:.6f}", f"{r['artifact_0.2778']['dti']:.6f}",
+                          f"<strong>{r['observed_delta_dti_pruned_minus_anchor']:+.6f}</strong>",
+                          f"{r['removed_set']['dots']:,}",
+                          f"{r['removed_set']['mean_credit_per_removed_dot']:.4f}",
+                          f"{r['removed_set']['net_effect_on_denominator']:+.1f}"))
+    ring_exp_rows = []
+    for k, v in (ringx.get("paired_delta_ring_excluded_minus_included") or {}).items():
+        ring_exp_rows.append((esc(k), f"{v['N_sgmc_within_300m']:+.4f}", f"{v['P_sgmc_beyond_300m']:+.4f}",
+                              f"{v['Q_sgmc_200_300m']:+.4f}", f"{v['R_sgmc_beyond_200m']:+.4f}"))
+
     halo_cors = (halo.get("spearman_vs_live") or {})
     cor_rows = [(esc(k), esc(v)) for k, v in sorted(halo_cors.items(), key=lambda kv: -abs(float(kv[1])))][:8]
     reg = (halo.get("rank_regression") or {})
@@ -555,10 +600,38 @@ artifact. Scored with the mask disabled it is worse than useless — the artifac
 artifact's score minus its own uniform control at the same mass, which removes the mass effect.
 Source: <code>registry/frame_ranking.json</code>, produced by <code>scripts/rank_frames.py</code>
 from the probe set in <code>scripts/fetch_probes.py</code>.</p>
-<p><strong>Frame P (SGMC beyond 300 m of the catalogue) was this repository's pre-registered primary
-frame and it failed this test.</strong> It was replaced before any selection result was read:
-<em>{esc(am.get('change',''))}</em>. Trigger: {esc(am.get('trigger',''))[:400]}…
-Source: <code>registry/preregistration.json</code> amendment {esc(am.get('id','?'))}; IR-44-09.</p>
+<h3>1b · The direct A/B that decides which frame may be used</h3>
+<p>Two locally available artifacts bracket the family's best work: the live-scored <strong>0.2600</strong>
+artifact (44,090 dots) and the owner-reported <strong>0.2778</strong> artifact (37,654 dots), which is
+a strict subset of it — 6,436 dots deleted, 100% of them inside the 200 m catalogue ring, none added.
+A frame that cannot rank that pair in the live order cannot select a submission.</p>
+{table(["candidate frame", "0.2600 anchor", "0.2778 artifact", "delta", "verdict"], pair_rows)}
+<p class="note">Rule fixed in advance as AM-44-03. Frame N — this repository's pre-registered primary
+— ranks the pair backwards and is therefore excluded; frame P ranks it correctly and is used.
+Source: <code>registry/frame_ranking.json</code>; IR-44-15.</p>
+
+<h3>1c · Amendment history (each declared before the numbers it governs)</h3>
+{table(["amendment", "declared", "what it fixed"], am_rows)}
+
+<h3>1d · The ring, verified byte by byte and priced on real truth</h3>
+<p>The claim under test is that the 0.2600 → 0.2778 step came from deleting the ≤200 m catalogue ring.
+The subset relation and the band emptying are first-hand measurements of the two files. Whether those
+dots were worthless is then priced with the exact operator on the local truth frames:</p>
+{table(["frame", "truth px", "0.2600 anchor DTI", "0.2778 artifact DTI", "delta", "removed dots",
+        "mean credit per removed dot", "net denominator effect of removing them"], ring_rows)}
+<p class="note">On frame P the removed dots earned 0.0135 mean credit against a 0.2-per-dot cost, so
+deleting them was net positive; on frame N they earned 0.4978, which is what makes frame N
+inadmissible rather than merely unhelpful. Source: <code>registry/ring_mechanism.json</code>;
+IR-44-16. A sibling session asserts the same rule from a 40,199-dot base; that base is not present
+here, so only the larger pair could be reproduced.</p>
+
+<h4>Ring rule at matched mass, same field, on every frame</h4>
+{table(["field | requested mass", "N", "P (admissible)", "Q (200–300 m)", "R (beyond 200 m)"],
+        ring_exp_rows)}
+<p class="note">Paired difference: ring-excluded minus ring-included, identical field and identical
+requested mass, both emitted in full. Positive on frame P for every field and mass tested; negative
+on the inadmissible frame N, which is exactly the contradiction that had to be resolved before any
+rebuild. Source: <code>registry/ring_experiment.json</code>.</p>
 
 <h3>2 · Dot spacing, not geology, is the largest measured correlate of a reported score</h3>
 <p>Each artifact below is real, was scored on the live board, and is on disk here. The columns are
@@ -611,15 +684,26 @@ data-blocked here, and the one-click site cannot be checked from inside the sand
 absent from the given catalogue are real mapped faults the catalogue lacks, but they are a
 pre-Quaternary-inclusive compilation and the hidden set need not share their statistics. The frame
 is used because it is the only local frame that cannot be won by copying the catalogue.</li>
-<li><strong>The validation frame was amended mid-session and the amendment is not free.</strong>
-Frame N's rank agreement with the reported live order is rho_excess = +0.396 at n = 19 (p ≈ 0.09):
-directional, not significant. It was chosen only after the pre-registered frame P failed
-(AM-44-01 / IR-44-09). A submission selected on frame N therefore carries a residual risk that is
-stated, not hidden.</li>
+<li><strong>Both frames this repository has used were chosen from data that had already been looked
+at, and one of them is now falsified outright.</strong> Frame N (pre-registered primary since
+AM-44-01) ranks the family's live-verified 0.2600 artifact <em>above</em> the better 0.2778 artifact
+— straightforwardly backwards — so it cannot be used to select anything (IR-44-15). The shipped
+artifact is instead selected on frame P by the rule fixed in AM-44-03/04: rank that pair correctly
+<em>and</em> show positive excess over uniform across the 19 live-scored artifacts
+(rho_excess = {esc(str(((rank.get('verdict') or {}).get('P_sgmc_beyond_300m') or {}).get('rho_excess', 'n/a')))}).
+That is still a rank statistic on 19 owner-reported scores, not a measurement of the hidden set.</li>
+<li><strong>The hole in frame N's definition is understood, and it is the frame, not the artifacts.</strong>
+62% of frame N's truth sits within 200 m of the catalogue (7,552 px at 0–100 m, 5,786 px at
+100–200 m of 21,471 before the mask), so any catalogue-hugging artifact is rewarded by construction.
+The ring evidence runs the other way on every other source available here, including the family's own
+live A/B. IR-44-15.</li>
 <li><strong>No geological field here is validated against the hidden set.</strong> The field shipped
-is a supervised transfer of the USGS SGMC compilation; if the organizers' hidden faults do not
-resemble that compilation, the transfer is worth nothing (IR-44-12). This is unmeasurable from
-inside this sandbox.</li>
+is a supervised transfer of the USGS SGMC compilation — all strands the catalogue lacks, not only the
+ones near it — emitted with the ≤200 m ring excluded. Its blocked validation is the 4-fold sweep on
+the admissible frame: mean held-out frame-P DTI 0.1453 against the incumbent artifact's 0.0924 at the
+same mass, positive in 4 of 4 folds. The full-grid number shown next to the download (0.3639) is
+in-sample and circular and is labelled as such everywhere. If the hidden faults do not resemble the
+SGMC compilation the transfer is worth nothing (IR-44-12), which is unmeasurable from here.</li>
 <li><strong>Quadrant blocking is coarse.</strong> Half-map quadrants remove large-scale leakage but
 not regional structure that persists within a quadrant. Finer blocking would be stricter and is the
 next methodological upgrade.</li>

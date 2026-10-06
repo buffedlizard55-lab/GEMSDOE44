@@ -74,15 +74,51 @@ message cannot be triggered by this file. The reason the message normally appear
 
 | field | value |
 | --- | --- |
-| file | `GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif` (320,989 B) |
-| sha256 | `4971d3593c2990bb275b77e5663814d1540af8d6a4de7679dae0dbd7e9605988` |
-| zip | `GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.zip` (210,323 B, inner member byte-identical) |
+| file | `GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-zeros.tif` (313,219 B) |
+| sha256 | `bf3b3914b1730596583bf84483f8bcd67202836944f4044464bfaaeaf67ed913` |
+| zip | `GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-zeros.zip` (190,160 B, inner member byte-identical) |
 | predicted cells | 44,090 cells, all exactly 1.0 |
-| portal Name / Note | `GEMS44_n-strand-ssmc_20261006T110212Z_4971d359` / "GEMS44 n-strand-ssmc | field = supervised transfer of USGS SGMC strands absent from the catalogue (U) onto the 19 offici…" |
-| held-out evidence | candidate 0.401181 vs incumbent 0.165267 (delta +0.235915), 4/4 folds positive |
-| format verification | 17 checks, 0 failures — [`registry/verification.json`](registry/verification.json) |
-| request checklist | 11 PASS / 1 PARTIAL / 1 PENDING / 0 FAIL — [`registry/request_checklist.json`](registry/request_checklist.json) |
-| uniqueness | max Jaccard against any obtainable prior artifact **0.0202**; against the 0.2600 incumbent **0.0121** |
+| field | supervised transfer of USGS SGMC strands the catalogue lacks (`sup_U`), **no** catalogue blend (alpha 1.0) |
+| ring | `--ring-px 2`: **0 dots within 200 m** of the known catalogue (0), 3,889 in the 200–300 m band |
+| spacing | min separation 3 px verified by exact neighbour count (max neighbours within 2 px = 0); 8-adjacent fraction 0.00098 |
+| portal Name / Note | `GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914` |
+| blocked evidence | sup_U at 44,090 on admissible frame P: mean held-out DTI 0.1453 vs incumbent artifact 0.0924, **4/4 folds positive** (sweep, per-fold retrained); the full-grid 0.3639 shown next to the download is in-sample/circular and is labelled so |
+| uniqueness | Jaccard vs the 0.2600 incumbent **0.0076** (665 shared dots) |
+| format verification | pass A/B/C, see [`registry/verification.json`](registry/verification.json) |
+| request checklist | [`registry/request_checklist.json`](registry/request_checklist.json) |
+
+### 1.2 Why the prior best scored 0.2778, measured first-hand
+
+The locally available 0.2778 artifact is a **strict subset** of the live-verified 0.2600 artifact:
+6,436 dots deleted, none added, **100% of the deletions inside the 200 m catalogue ring** (the 0–100 m
+and 100–200 m bands are emptied to exactly 0.000). Pricing those dots with the exact operator on the
+local truth frames:
+
+| frame | 0.2600 anchor | 0.2778 artifact | delta | removed dots' mean credit | net denominator effect |
+| --- | --- | --- | --- | --- | --- |
+| frame P (beyond 300 m, admissible) | 0.094174 | 0.095386 | **+0.001212** | 0.0135 | +1187.5 |
+| frame N (within 300 m, falsified) | 0.175536 | 0.054060 | -0.121476 | 0.4978 | -2220.7 |
+
+So the mechanism is real on the frame that can rank the pair correctly, and the same measurement is
+what falsifies frame N: it prefers a dot population that the live board penalised. Is >0.2778
+reachable? The marginal rule says a dot pays iff its kernel credit exceeds 0.2·DTI (0.0556 at 0.2778).
+Pruning alone therefore cannot get far — it removes cost but also coverage. The two levers that remain
+are (a) place dots only where expected credit clears the bar, which is what the ring rule and the
+spacing rule do, and (b) improve the field that decides *where* inside the admissible region the dots
+go. This artifact takes (a) to its measured limit and (b) to the limit of the evidence available
+here; whether that clears 0.2778 is unmeasurable from this sandbox, and the site says so.
+
+### 1.3 Emission rules, each pinned to a measurement
+
+* **Spacing.** `Spearman(reported score, fraction of dots 8-adjacent to another dot) = −0.361` over 19
+  live-scored artifacts; the best three sit at 0.001–0.002, the worst at 0.88–0.99.
+* **Ring.** Paired at matched mass, excluding the ≤200 m ring changes the admissible frame by
+  +0.0109 for the shipped field and is positive for
+  every field and mass tested; on the falsified frame it is negative, which is why the frame question
+  was settled first.
+* **Mass.** Matched to the live-verified incumbent (44,090) so the artifact is a clean A/B on field and
+  ring rule alone. Frame P prefers more mass, but frame P's truth is large and diffuse, so that
+  preference is not extrapolated.
 
 ### 1.2 Why the emitter is spaced, not dense
 
@@ -114,7 +150,7 @@ inside a 300 m neighbourhood. **Field and mass are consequently selected by the 
 spatially blocked frames.** The failing fold is preserved verbatim in
 [`registry/holdout_partial.json`](registry/holdout_partial.json).
 
-### 2.2 It never uses the catalogue as a promotion frame
+### 2.2 It never uses the catalogue as a promotion frame — and it drops the frame that secretly was one
 
 The competition scores faults the catalogue does **not** contain, so a catalogue-truth proxy
 cannot represent the target. This is not a theory: the prior family measured its own catalogue
@@ -122,6 +158,44 @@ proxy ranking three artifacts `0.17193 > 0.16635 > 0.16177` while the live board
 three `0.1922 < 0.2477 < 0.2600` — the **opposite** order. The primary frame here is the one real,
 officially published, locally available set of mapped faults the given catalogue lacks:
 **62,122 px** of USGS State Geologic Map Compilation faults more than 300 m from the catalogue.
+
+### 2.2b The frame arc, in full
+
+| step | frame used | what happened |
+| --- | --- | --- |
+| frozen at the start | P (SGMC beyond 300 m) | pre-registered |
+| AM-44-01 | N (SGMC within 300 m) | switched after the 19-probe ranking, before any selection result |
+| AM-44-03 | N **excluded** | a direct A/B (the 0.2600 and 0.2778 artifacts) is ranked backwards by N; admissibility now requires ranking that pair correctly **and** positive probe excess |
+| AM-44-04 | P | field re-picked on P: `sup_U` (+0.0808 mean fold excess over uniform at 61,328; 4/4 folds) beats the catalogue-proximity field, which is *worse than uniform* on P |
+
+Every step is in [`registry/preregistration.json`](registry/preregistration.json); the falsification is
+IR-44-15 and the consequence is that the previously shipped artifact
+(`..._4971d359-zeros.tif`, frame-N selected, 34.7% of its dots inside the ring) was withdrawn and
+replaced by the current one.
+
+**Merge record.** PR #3 (this session's first artifact, verification harness, registries and site) was
+merged into `main` as `b9d4ad8`; the sibling sessions' work had already landed as PR #1 (`bcad3e2`) and
+PR #2 (`988fd44`). The follow-up commit carrying the frame re-ranking, the ring analysis and the
+current artifact is merged as the next PR from this same branch.
+
+### 2.2c The final admissibility table (six frames, 19 live-scored artifacts)
+
+| candidate frame | truth px | rho vs reported score | rho of excess over uniform | probes above uniform | ranks the 0.2600/0.2778 pair correctly |
+| --- | --- | --- | --- | --- | --- |
+| `N_sgmc_within_300m` | 17,493 | +0.335 | +0.396 | 19/19 | no |
+| `P_sgmc_beyond_300m` | 62,122 | -0.054 | +0.188 | 8/19 | **yes** |
+| `Q_sgmc_200_300m` | 4,155 | +0.468 | +0.382 | 19/19 | no |
+| `R_sgmc_beyond_200m` | 66,277 | -0.046 | +0.191 | 8/19 | no |
+| `S0_catalogue_nomask` | 60,988 | -0.475 | -0.237 | 19/19 | no |
+| `U_sgmc_all_off_catalogue` | 79,615 | -0.393 | +0.209 | 9/19 | no |
+
+Exactly one frame passes: **P (SGMC faults beyond 300 m of the catalogue)**, rho_excess +0.188 and
+8/19 probes above their own uniform controls. The frame with the highest excess (N, +0.396) is
+*inadmissible* — it ranks the family's live-verified best pair backwards — which is the whole point of
+the pair test added in AM-44-03. The shipped artifact and the ring rule are both selected on P; on P
+the ring exclusion is positive for every field and mass tested, and `sup_U` beats the incumbent
+artifact in 4/4 blocked folds. Source: [`registry/frame_ranking.json`](registry/frame_ranking.json),
+[`registry/ring_experiment.json`](registry/ring_experiment.json).
 
 ### 2.3 It emits with the metric's own arithmetic
 

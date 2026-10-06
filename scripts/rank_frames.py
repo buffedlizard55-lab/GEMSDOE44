@@ -31,6 +31,18 @@ from gems44 import grid as G  # noqa: E402
 from gems44.metric import binary_credit, dti_of  # noqa: E402
 
 
+ANCHOR = Path("/home/user/prior/GEMSDOE32/docs/downloads/"
+              "gems32-probe-S1-ANCHOR-identical-to-live-02600.tif")
+SHIPPED_02778 = Path("/home/user/prior/GEMSDOE32/docs/downloads/"
+                     "gemsdoe32-h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros.tif")
+
+
+def _dots(p: Path) -> np.ndarray:
+    with rasterio.open(p) as src:
+        v = src.read(1)
+    return np.isfinite(v) & (v > 0)
+
+
 def main() -> int:
     g = G.load_grid("data/raw")
     labels = G.read_labels("data/raw")
@@ -43,6 +55,8 @@ def main() -> int:
     frames = {
         "N_sgmc_within_300m": sgmc & (d_cat <= 3.0),
         "P_sgmc_beyond_300m": sgmc & (d_cat > 3.0),
+        "Q_sgmc_200_300m": sgmc & (d_cat > 2.0) & (d_cat <= 3.0),
+        "R_sgmc_beyond_200m": sgmc & (d_cat > 2.0),
         "U_sgmc_all_off_catalogue": sgmc.copy(),
         "S0_catalogue_nomask": cat,
     }
@@ -95,6 +109,20 @@ def main() -> int:
         "frames": {k: int(v.sum()) for k, v in frames.items()},
         "verdict": verdict, "rows": rows,
     }
+    # Direct A/B test: the two artifacts whose live scores are known for the same dot family
+    # (the 0.2600 anchor and the 0.2778 artifact, which is that anchor minus the <=200 m ring).
+    # A frame that ranks the pair backwards cannot be used to select anything.
+    pair = {}
+    for fname, truth in frames.items():
+        kn = None if fname.startswith("S0") else g.known
+        a = dti_of(binary_credit(_dots(ANCHOR), truth, valid=g.footprint, known=kn))
+        b = dti_of(binary_credit(_dots(SHIPPED_02778), truth, valid=g.footprint, known=kn))
+        pair[fname] = {"anchor_0.2600": round(a, 6), "artifact_0.2778": round(b, 6),
+                       "delta_pruned_minus_anchor": round(b - a, 6), "ranks_pair_correctly": bool(b > a)}
+    report["direct_ab_pair_test"] = pair
+    for fname, rec in pair.items():
+        verdict[fname]["ranks_known_pair_correctly"] = rec["ranks_pair_correctly"]
+
     ranked = sorted(verdict.items(), key=lambda kv: -kv[1]["rho_excess"])
     report["best_frame_by_rho_excess"] = ranked[0][0]
     report["positive_rho_frames"] = [k for k, v in verdict.items() if v["rho_excess"] > 0.4]
@@ -102,6 +130,10 @@ def main() -> int:
     Path("registry/frame_ranking.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     print("\n" + json.dumps(verdict, indent=1))
     print("best by excess:", ranked[0][0], "| frames with rho_excess > 0.4:", report["positive_rho_frames"])
+    print("direct A/B (0.2778 minus 0.2600 anchor, must be positive for an admissible frame):")
+    for fname, rec in pair.items():
+        print(f"   {fname:26s} delta={rec['delta_pruned_minus_anchor']:+.6f} "
+              f"{'OK' if rec['ranks_pair_correctly'] else 'BACKWARDS'}")
     return 0
 
 

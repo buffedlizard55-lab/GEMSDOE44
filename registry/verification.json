@@ -1,5 +1,5 @@
 {
- "artifact": "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359",
+ "artifact": "GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914",
  "failures": [],
  "n_failures": 0,
  "pass_a_contract": {
@@ -125,9 +125,9 @@
   "published_copies_match": {
    "detail": {
     "published": [
-     "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-nan.tif",
-     "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif",
-     "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.zip"
+     "GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-nan.tif",
+     "GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-zeros.tif",
+     "GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-zeros.zip"
     ]
    },
    "ok": true
@@ -142,11 +142,11 @@
   "zip_bytes_match": {
    "detail": {
     "identical": true,
-    "loose_bytes": 320989,
+    "loose_bytes": 313219,
     "members": [
-     "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif"
+     "GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-zeros.tif"
     ],
-    "zip_bytes": 320989
+    "zip_bytes": 313219
    },
    "ok": true
   }
@@ -161,19 +161,19 @@
   },
   "frame_N": {
    "detail": {
-    "bruteforce": 0.39572393222033425,
-    "exact": 0.3957239322203377,
-    "independent_union_of_shifts": 0.39572393222033764,
-    "max_abs_diff": 3.4416913763379853e-15
+    "bruteforce": 0.13657133846618155,
+    "exact": 0.13657133846618288,
+    "independent_union_of_shifts": 0.13657133846618288,
+    "max_abs_diff": 1.3322676295501878e-15
    },
    "ok": true
   },
   "frame_P": {
    "detail": {
-    "bruteforce": 0.14218329444321123,
-    "exact": 0.14218329444320868,
-    "independent_union_of_shifts": 0.14218329444320868,
-    "max_abs_diff": 2.55351295663786e-15
+    "bruteforce": 0.363923809877226,
+    "exact": 0.3639238098772654,
+    "independent_union_of_shifts": 0.3639238098772654,
+    "max_abs_diff": 3.941291737419306e-14
    },
    "ok": true
   },
@@ -210,76 +210,111 @@
   "vs_incumbent": {
    "detail": {
     "incumbent_dots": 44090,
-    "jaccard": 0.0121,
-    "shared": 1055
+    "jaccard": 0.0076,
+    "shared": 665
    },
    "ok": true
   },
   "vs_prior_gemsdoe_artifacts": {
    "detail": {
-    "max_jaccard": 0.0202,
-    "max_jaccard_artifact": "gems20-h",
-    "n_compared": 12,
+    "max_jaccard": 0.0144,
+    "max_jaccard_artifact": "gems22-h23-a-dti-optimal-emission-6pct-20261002-e2ec4b49-nan",
+    "n_compared": 19,
     "per_artifact": {
-     "12GEMSDO": {
+     "12GEMSDOE_r7-nms3-dem10-scarp_0c9199f14e62": {
       "dots": 103347,
-      "jaccard_vs_ours": 0.0193,
-      "ours_inside_theirs": 0.0633
+      "jaccard_vs_ours": 0.0085,
+      "ours_inside_theirs": 0.0281
      },
-     "13gems_2": {
+     "13gems_20261001_r13-lattice-s5_v2_zerofill": {
       "dots": 206895,
       "jaccard_vs_ours": 0.007,
-      "ours_inside_theirs": 0.0397
+      "ours_inside_theirs": 0.0398
      },
-     "gems10-h": {
+     "gems10-h16-continuation-20260927T065521077735Z-3431b83c7c": {
+      "dots": 310042,
+      "jaccard_vs_ours": 0.0116,
+      "ours_inside_theirs": 0.092
+     },
+     "gems10-h20-dem10-scarp-thin-20260927T155223039488Z-ffc91a1686": {
+      "dots": 153957,
+      "jaccard_vs_ours": 0.0084,
+      "ours_inside_theirs": 0.0373
+     },
+     "gems10-h25-ctx-ridge-20260927T232947704150Z-6452ae1d00": {
+      "dots": 174232,
+      "jaccard_vs_ours": 0.0066,
+      "ours_inside_theirs": 0.0325
+     },
+     "gems10-h28-dotted-ridge-20260928T020256236880Z-6452ae1d00": {
       "dots": 69281,
-      "jaccard_vs_ours": 0.0123,
-      "ours_inside_theirs": 0.0313
+      "jaccard_vs_ours": 0.0047,
+      "ours_inside_theirs": 0.0121
      },
-     "gems16-h": {
-      "dots": 57783,
-      "jaccard_vs_ours": 0.0119,
-      "ours_inside_theirs": 0.0271
+     "gems16-h16-1-topo-geophys-baseline-ridges-20260930-df20f65e-nan": {
+      "dots": 123939,
+      "jaccard_vs_ours": 0.0131,
+      "ours_inside_theirs": 0.0493
      },
-     "gems19-h": {
+     "gems16-h18-3a-topo-geophys-x-complexity-prior-20260930-c502dfab-nan": {
+      "dots": 122120,
+      "jaccard_vs_ours": 0.0115,
+      "ours_inside_theirs": 0.043
+     },
+     "gems19-h19-4-multiline-corroborated-openness-thermal-pop-20260930-691e4dfa-nan": {
+      "dots": 123779,
+      "jaccard_vs_ours": 0.0126,
+      "ours_inside_theirs": 0.0472
+     },
+     "gems19-h19-5-powerlaw-budget-multiline-corroborated-20260930-e27054cf-nan": {
       "dots": 121131,
-      "jaccard_vs_ours": 0.0192,
-      "ours_inside_theirs": 0.0707
+      "jaccard_vs_ours": 0.0122,
+      "ours_inside_theirs": 0.045
      },
-     "gems20-h": {
+     "gems20-h20-1-sarnnpu-powerlaw-pi0363-tilt-wingcrack-20260930-be0e8f6b-nan": {
       "dots": 123829,
-      "jaccard_vs_ours": 0.0202,
-      "ours_inside_theirs": 0.0754
+      "jaccard_vs_ours": 0.0127,
+      "ours_inside_theirs": 0.0477
      },
-     "gems22-h": {
+     "gems22-h23-a-dti-optimal-emission-6pct-20261002-e2ec4b49-nan": {
       "dots": 335879,
-      "jaccard_vs_ours": 0.0193,
-      "ours_inside_theirs": 0.1632
+      "jaccard_vs_ours": 0.0144,
+      "ours_inside_theirs": 0.1226
      },
-     "gems24-h": {
-      "dots": 44090,
-      "jaccard_vs_ours": 0.0121,
-      "ours_inside_theirs": 0.0239
-     },
-     "gems26-d": {
-      "dots": 60068,
-      "jaccard_vs_ours": 0.0108,
-      "ours_inside_theirs": 0.0253
-     },
-     "gems27-t": {
-      "dots": 61328,
-      "jaccard_vs_ours": 0.0148,
-      "ours_inside_theirs": 0.035
-     },
-     "gemsdoe2": {
-      "dots": 91533,
-      "jaccard_vs_ours": 0.0109,
-      "ours_inside_theirs": 0.0331
-     },
-     "pindrop-": {
-      "dots": 155021,
+     "gems24-h25-1-dotted-h19-5-d1-5-20261002-989f59505db1-nan": {
+      "dots": 60069,
       "jaccard_vs_ours": 0.0091,
-      "ours_inside_theirs": 0.0408
+      "ours_inside_theirs": 0.0213
+     },
+     "gems24-h25-1-dotted-h19-5-d2-8-20261002-e56ea318af89-nan": {
+      "dots": 44090,
+      "jaccard_vs_ours": 0.0076,
+      "ours_inside_theirs": 0.0151
+     },
+     "gems26-dilcond-oof-v1-20261003-47629f496133-nan": {
+      "dots": 60068,
+      "jaccard_vs_ours": 0.0094,
+      "ours_inside_theirs": 0.0221
+     },
+     "gems27-topo-gap-closure-t-v2-on-d1-5-20261002-5512495c6bd1-nan": {
+      "dots": 61328,
+      "jaccard_vs_ours": 0.0091,
+      "ours_inside_theirs": 0.0216
+     },
+     "gemsdoe2-dual-family-union-f68e590f": {
+      "dots": 183642,
+      "jaccard_vs_ours": 0.0099,
+      "ours_inside_theirs": 0.0505
+     },
+     "gemsdoe23-h30-arrangement-matched-habitat-20261002-0d4e02e8-nan": {
+      "dots": 91533,
+      "jaccard_vs_ours": 0.0093,
+      "ours_inside_theirs": 0.0284
+     },
+     "pindrop-v4-nodes-20260925T152420Z-f347b70daa": {
+      "dots": 155021,
+      "jaccard_vs_ours": 0.0089,
+      "ours_inside_theirs": 0.0399
      }
     }
    },
