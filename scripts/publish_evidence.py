@@ -25,6 +25,7 @@ NAMES = [
     "mirror_model.json",
     "uniqueness_report.json",
     "dominance_check.json",
+    "final_arm_decision.json",
 ]
 for n in NAMES:
     src = EV / n
@@ -40,4 +41,13 @@ DL.mkdir(parents=True, exist_ok=True)
 for p in sorted(EV.glob("audit-*.json")):
     shutil.copyfile(p, DEST / p.name)
     shutil.copyfile(p, DL / p.name)
+# this session's (session 3) site is archived under docs/sibling/session3/;
+# its index.html fetches the same evidence feed relative to itself
+S3 = ROOT / "docs" / "sibling" / "session3"
+if S3.is_dir():
+    S3D = S3 / "data"
+    S3D.mkdir(parents=True, exist_ok=True)
+    for n in NAMES:
+        if (EV / n).exists():
+            shutil.copyfile(EV / n, S3D / n)
 print("done")

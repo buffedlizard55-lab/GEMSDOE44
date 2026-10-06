@@ -1,0 +1,40 @@
+{
+ "filename": "gemsdoe44-two-stage-20261006T152141Z-9ed0c5bf-zeros.tif",
+ "size_bytes": 148788,
+ "sha256": "e3ce40ccdf285f8fffccc1c55a8c7b48452a921f59d312ded90f7f70f3b52cde",
+ "count": 1,
+ "dtype": "float32",
+ "shape": [
+  3730,
+  3292
+ ],
+ "crs": "EPSG:32611",
+ "transform": [
+  100.0,
+  0.0,
+  243350.0,
+  0.0,
+  -100.0,
+  4508550.0,
+  0.0,
+  0.0,
+  1.0
+ ],
+ "nodata": null,
+ "checks": {
+  "single_band": true,
+  "dtype_float32": true,
+  "dimensions_3730x3292": true,
+  "crs_epsg_32611": true,
+  "official_transform": true,
+  "all_finite": true,
+  "no_nan": true,
+  "no_inf": true,
+  "no_nodata_tag": true,
+  "range_0_1_inclusive": true,
+  "min": 0.0,
+  "max": 1.0,
+  "emitted_positive_pixels": 45000,
+  "all_checks_passed": true
+ }
+}

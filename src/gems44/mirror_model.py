@@ -16,7 +16,7 @@ import numpy as np
 
 from . import config as C
 from .emission import scatter_positions
-from .metric import score_components
+from .metric44 import score_components
 
 
 def mirror_score(prediction: np.ndarray, catalogue: np.ndarray,

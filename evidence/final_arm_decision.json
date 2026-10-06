@@ -1,0 +1,127 @@
+{
+ "rule": "primary = higher mean mirror DTI over sigma 1.5/1.85/2.5 x paired seeds (off-catalogue structure-scattered truth, less circular than the catalogue holdout); ties -> A4. Disclosed model-based decision; the catalogue-proxy holdout is reported separately and favours A1 by construction (the gate was trained on the catalogue).",
+ "best_N": 45000,
+ "best_q": 0.25,
+ "A1_habitat": {
+  "file": "gemsdoe44-habitat-20261006T152640Z-fe7721db-zeros.tif",
+  "sha256": "42b77433f34e1231ae0795ed5567632fc43b79d119aac198f94f0d946d43b6c2",
+  "dots": 45000,
+  "proxy_dti_full_catalogue": 0.028991033570592312,
+  "mirror": {
+   "sigma_1.5": {
+    "mean": 0.10595015587258687,
+    "se": 0.00022834253529163093,
+    "n": 12,
+    "min": 0.10434229357485149,
+    "max": 0.1070266591172916
+   },
+   "sigma_1.85": {
+    "mean": 0.1217005663048172,
+    "se": 0.00017783479170090078,
+    "n": 12,
+    "min": 0.12100910601942089,
+    "max": 0.12275522950469991
+   },
+   "sigma_2.5": {
+    "mean": 0.1427845450717885,
+    "se": 0.000239476119866842,
+    "n": 12,
+    "min": 0.14120401366251953,
+    "max": 0.1440312088077542
+   }
+  }
+ },
+ "A4_full": {
+  "file": "gemsdoe44-two-stage-20261006T152141Z-9ed0c5bf-zeros.tif",
+  "sha256": "e3ce40ccdf285f8fffccc1c55a8c7b48452a921f59d312ded90f7f70f3b52cde",
+  "dots": 45000,
+  "proxy_dti_full_catalogue": 0.049271556128901065,
+  "mirror": {
+   "sigma_1.5": {
+    "mean": 0.17192456357780037,
+    "se": 0.0002877912706699389,
+    "n": 12,
+    "min": 0.17032392657256176,
+    "max": 0.17414058958170067
+   },
+   "sigma_1.85": {
+    "mean": 0.19433704055434686,
+    "se": 0.0002892461781093704,
+    "n": 12,
+    "min": 0.1929054377425679,
+    "max": 0.19608018592765056
+   },
+   "sigma_2.5": {
+    "mean": 0.22199282657687727,
+    "se": 0.0003242582890033825,
+    "n": 12,
+    "min": 0.22030174485055387,
+    "max": 0.2241112468929606
+   }
+  }
+ },
+ "mean_mirror_A1": 0.12347842241639752,
+ "mean_mirror_A4": 0.1960848102363415,
+ "CHOSEN_PRIMARY": "A4_full",
+ "uniqueness": [
+  {
+   "file": "gemsdoe32-h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros.tif",
+   "live_score": "0.2778",
+   "n_theirs": 37654,
+   "overlap_px": 1007,
+   "overlap_frac_of_mine": 0.022377777777777778,
+   "random_expectation_px": 327.9093651648526,
+   "excess_vs_random": 679.0906348351474
+  },
+  {
+   "file": "gems28-h27-4-r1-solo-d2-8-20261003-8acb75e1f2cc-allfinite.tif",
+   "live_score": "0.2708",
+   "n_theirs": 40199,
+   "overlap_px": 1007,
+   "overlap_frac_of_mine": 0.022377777777777778,
+   "random_expectation_px": 350.0724642869791,
+   "excess_vs_random": 656.9275357130209
+  },
+  {
+   "file": "gems25-dotted-h19-5-d2-8-20261002-e56ea318af89-zeros.tif",
+   "live_score": "0.2600",
+   "n_theirs": 44090,
+   "overlap_px": 1007,
+   "overlap_frac_of_mine": 0.022377777777777778,
+   "random_expectation_px": 383.95718675621055,
+   "excess_vs_random": 623.0428132437894
+  },
+  {
+   "file": "gems27-topo-gap-closure-t-v2-on-d1-5-20261002-5512495c6bd1-allfinite.tif",
+   "live_score": "0.2449",
+   "n_theirs": 61328,
+   "overlap_px": 1420,
+   "overlap_frac_of_mine": 0.03155555555555556,
+   "random_expectation_px": 534.0740836784959,
+   "excess_vs_random": 885.9259163215041
+  }
+ ],
+ "dominance": {
+  "n_dots": 45000,
+  "fav_decile_hist": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1955,
+   10159,
+   32886
+  ],
+  "fav_decile_top_share": 0.7308,
+  "fav_in_gate_share": 1.0,
+  "stage1_dominance_check": "PASS",
+  "stage2_pred_median_at_dots": 0.2493576854467392,
+  "stage2_pair_at_footprint_p90_share": 0.19124444444444444,
+  "stage2_relay_nonzero_share": 0.011955555555555556,
+  "stage2_backed_share": 0.20153333333333334,
+  "stage2_dominance_check": "FAIL",
+  "note": "stage-1 check: dots outside the gate are impossible by construction (gate is a hard constraint at emission); stage-2 check: >=50% of dots sit on H1 consensus at/above footprint p90 or on a gap-link relay stamp - if this fails, the fine placement model added nothing over the habitat"
+ }
+}

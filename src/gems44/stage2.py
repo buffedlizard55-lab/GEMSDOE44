@@ -21,7 +21,7 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 
 from . import config as C
 from .emission import greedy_dots
-from .metric import max_kernel_to_truth, score_components
+from .metric44 import max_kernel_to_truth, score_components
 from .features import channel_names
 
 
