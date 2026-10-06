@@ -1,0 +1,43 @@
+{
+  "read_utc": "2026-10-06",
+  "source_url": "https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/",
+  "read_method": "page fetch, 2026-10-06",
+  "column_header_on_page": "Best public DW-Tversky (in descending order)",
+  "rows_on_page": 50,
+  "note": "DrivenData's terms of use prohibit automated monitoring; this is a dated manual-style snapshot, not a live feed.",
+  "top": [
+    {"rank": 1, "participant": "alexoktaba", "score": "0.3345", "submissions": "23", "seen": "8h 57min before read"},
+    {"rank": 2, "participant": "nchuzhoy", "score": "0.3262", "submissions": "4", "seen": "2d 9h before read"},
+    {"rank": 3, "participant": "kinghorton42", "score": "0.3222", "submissions": "7", "seen": "2d 6h before read"},
+    {"rank": 4, "participant": "Batik Shirt Brothers (rariwa, masterozone0617)", "score": "0.3218", "submissions": "21", "seen": "3h 45min before read"},
+    {"rank": 5, "participant": "DARD", "score": "0.3195", "submissions": "14", "seen": "4d 8h before read"},
+    {"rank": 6, "participant": "joeyfezster", "score": "0.3163", "submissions": "21", "seen": "11h 15min before read"},
+    {"rank": 7, "participant": "xiaofanhu", "score": "0.3060", "submissions": "10", "seen": "1d 11h before read"},
+    {"rank": 8, "participant": "ndavis7", "score": "0.2888", "submissions": "8", "seen": "3d 14h before read"},
+    {"rank": 9, "participant": "mzoorob", "score": "0.2884", "submissions": "25", "seen": "3d before read"},
+    {"rank": 10, "participant": "GrigorSargsyan", "score": "0.2876", "submissions": "12", "seen": "3d 8h before read"},
+    {"rank": 11, "participant": "HardcoreTechGod", "score": "0.2854", "submissions": "6", "seen": "2w 4d before read"},
+    {"rank": 12, "participant": "op01", "score": "0.2792", "submissions": "6", "seen": "1d 23h before read"},
+    {"rank": 13, "participant": "extradr19", "score": "0.2778", "submissions": "10", "seen": "1d 17h before read"},
+    {"rank": 14, "participant": "wbg1", "score": "0.2750", "submissions": "12", "seen": "8h 59min before read"},
+    {"rank": 15, "participant": "smashi34", "score": "0.2710", "submissions": "10", "seen": "8h 58min before read"},
+    {"rank": 16, "participant": "smrtdoog5", "score": "0.2708", "submissions": "10", "seen": "1d 18h before read"},
+    {"rank": 17, "participant": "jgaines", "score": "0.2638", "submissions": "22", "seen": "8h 52min before read"},
+    {"rank": 18, "participant": "ad3002", "score": "0.2634", "submissions": "21", "seen": "22h 7min before read"},
+    {"rank": 19, "participant": "No Fault of Our Own (exposed)", "score": "0.2628", "submissions": "22", "seen": "1d 9h before read"},
+    {"rank": 20, "participant": "SDCF9", "score": "0.2600", "submissions": "11", "seen": "2d 7h before read"}
+  ],
+  "attribution_caveat": {
+    "id": "IR-44-03",
+    "question": "The brief states that the site GEMSDOE32 scored 0.2778 with the artifact gemsdoe32-h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros.tif.",
+    "finding": "GEMSDOE32's own README, cloned and read on 2026-10-06, labels that artifact UNSCORED and reports a PROJECTED 0.2747. The leaderboard value 0.2778 at rank 13 belongs to the participant extradr19. No file attribution is published there.",
+    "consequence": "Treating the 0.2778 as this artifact's score is not supported by any evidence read here. The number is recorded as 'owner-projected 0.2747 / leaderboard rank-13 third-party 0.2778' and never as a score for a named file of ours.",
+    "classified_as": "same class as the family's IR-30-002 numeric coincidence"
+  },
+  "leaderboard_movement_observed": {
+    "2026-10-03_snapshot_recorded_in_prior_repos": {"rank1": "DARD 0.3195", "rank2": "nchuzhoy 0.3128", "rank3": "alexoktaba 0.3042"},
+    "2026-10-04_snapshot_recorded_in_prior_repos": {"rank1": "nchuzhoy 0.3262", "rank2": "DARD 0.3195"},
+    "2026-10-06_this_read": {"rank1": "alexoktaba 0.3345", "rank2": "nchuzhoy 0.3262", "rank5": "DARD 0.3195"},
+    "implication": "The top of this board moves by roughly +0.005 to +0.008 per day. Any target derived from a single-day read is stale within days. The brief's figure of 0.3195 for the leader was correct on 2026-10-03 and is rank 5 on 2026-10-06; the current leader is 0.3345."
+  }
+}

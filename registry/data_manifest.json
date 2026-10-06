@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "note": "Every sha256 below was computed from the bytes actually used in this repository after download, on 2026-10-06. The pins prove the mirrors are self-consistent and reproducible. They do NOT prove organizer authentication: all four competition rasters are owner-supplied mirrors of login-walled DrivenData files (IR-44-02).",
+  "files": [
+    {
+      "id": "labels",
+      "dest": "raw/labels.tif",
+      "repo": "buffedlizard55-lab/GEMSDOE24",
+      "ref": "07345ea0604953d7efb858d9cfbc21e20c7aca0b",
+      "path": "data/bridge/labels.tif",
+      "bytes": 425830,
+      "sha256": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+      "role": "known-fault catalogue and the exclusion mask; int8 with nodata -1; 60,988 positive pixels",
+      "provenance": "owner-supplied mirror of a DrivenData competition file (data tab is login-walled); integrity-pinned, not organizer-authenticated"
+    },
+    {
+      "id": "sample_submission",
+      "dest": "raw/sample_submission.tif",
+      "repo": "buffedlizard55-lab/GEMSDOE24",
+      "ref": "07345ea0604953d7efb858d9cfbc21e20c7aca0b",
+      "path": "data/bridge/sample_submission.tif",
+      "bytes": 1599597,
+      "sha256": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+      "role": "grid, dtype and outside-footprint template ONLY. Not used as a null prediction: its 60,988 cells equal to 1 coincide with labels.tif == 1 (IR-44-04).",
+      "provenance": "owner-supplied mirror; integrity-pinned, not organizer-authenticated"
+    },
+    {
+      "id": "training_features",
+      "dest": "raw/training_features.tif",
+      "repo": "buffedlizard55-lab/GEMSDOE",
+      "ref": "c0c06ac82178f26b94fce3397036ef8f12a2f3a0",
+      "parts": [
+        "data/bridge/gems-geodawn-numerical-features.tif.part-000",
+        "data/bridge/gems-geodawn-numerical-features.tif.part-001",
+        "data/bridge/gems-geodawn-numerical-features.tif.part-002",
+        "data/bridge/gems-geodawn-numerical-features.tif.part-003",
+        "data/bridge/gems-geodawn-numerical-features.tif.part-004"
+      ],
+      "bytes": 418912844,
+      "sha256": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5",
+      "role": "the 19 official feature bands; float32; nodata -3.4028234663852886e+38",
+      "provenance": "owner-supplied mirror, split into five parts, concatenated and hash-verified here; integrity-pinned, not organizer-authenticated"
+    },
+    {
+      "id": "sgmc_faults",
+      "dest": "external/derived_sgmc_faults_100m_u8.tif",
+      "repo": "buffedlizard55-lab/GEMSDOE24",
+      "ref": "07345ea0604953d7efb858d9cfbc21e20c7aca0b",
+      "path": "data/external/derived_sgmc_faults_100m_u8.tif",
+      "bytes": 198602,
+      "sha256": "643cbe992ef4ba37588fb469163ed8291e3ceb23d6c1f78a3cfaa462430c2da0",
+      "role": "USGS State Geologic Map Compilation fault lines rasterised to this grid (83,593 px, of which 62,122 px are more than 300 m from the catalogue). Used as the TRAINING TARGET and the primary validation truth for H2.",
+      "provenance": "derived by the owner's CI from the public-domain USGS SGMC product; USGS data carry no use restrictions"
+    },
+    {
+      "id": "incumbent_d28",
+      "dest": "raw/incumbent_d28.tif",
+      "repo": "buffedlizard55-lab/GEMSDOE24",
+      "ref": "07345ea0604953d7efb858d9cfbc21e20c7aca0b",
+      "path": "docs/downloads/gems24-h25-1-dotted-h19-5-d2-8-20261002-e56ea318af89-nan.tif",
+      "bytes": 1603424,
+      "sha256": "91eae1ca42ec845eaa8c2ba32da49806e24751743459b8a10017c479bbe639b8",
+      "role": "CONTROL ONLY. The live-scored artifact reported at 0.2600 (44,090 positive pixels, strictly binary {0,1}, NaN outside the footprint). Its sha256 prefix 91eae1ca matches the artifact digest recorded in the family's GEMSDOE30 score ledger entry 'd28-poisson300m-offcat-44090-20261003T233156Z-91eae1ca: 0.2600'. Never used as an input to any field.",
+      "provenance": "owner-published artifact, owner-reported score; no organizer receipt exists (IR-44-08)"
+    }
+  ]
+}

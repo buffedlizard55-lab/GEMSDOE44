@@ -1,0 +1,312 @@
+{
+  "angle_profile_random_control_matched": {
+    "bin_edges_deg": [
+      0.0,
+      15.0,
+      30.0,
+      45.0,
+      60.0,
+      75.0,
+      90.0
+    ],
+    "enrichment": [
+      0.2966700302724521,
+      0.3057517658930374,
+      0.3491422805247225,
+      0.5993945509586277,
+      1.4187689202825429,
+      3.0302724520686173
+    ],
+    "frac": [
+      0.04944500504540868,
+      0.05095862764883956,
+      0.05819038008745375,
+      0.09989909182643794,
+      0.23646148671375714,
+      0.5050454086781029
+    ],
+    "uniform_control_frac": [
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666
+    ]
+  },
+  "angle_profile_sgmc_matched": {
+    "bin_edges_deg": [
+      0.0,
+      15.0,
+      30.0,
+      45.0,
+      60.0,
+      75.0,
+      90.0
+    ],
+    "enrichment": [
+      0.3059889280322094,
+      0.30699547055863113,
+      0.36537493709109214,
+      0.602918973326623,
+      1.4494212380473077,
+      2.969300452944137
+    ],
+    "frac": [
+      0.0509981546720349,
+      0.05116591175977185,
+      0.06089582284851535,
+      0.10048649555443717,
+      0.24157020634121792,
+      0.4948834088240228
+    ],
+    "uniform_control_frac": [
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666
+    ]
+  },
+  "azimuth": {
+    "bin_centres_deg": [
+      5.0,
+      15.0,
+      25.0,
+      35.0,
+      45.0,
+      55.0,
+      65.0,
+      75.0,
+      85.0,
+      95.0,
+      105.0,
+      115.0,
+      125.0,
+      135.0,
+      145.0,
+      155.0,
+      165.0,
+      175.0
+    ],
+    "bin_edges_deg": [
+      0.0,
+      10.0,
+      20.0,
+      30.0,
+      40.0,
+      50.0,
+      60.0,
+      70.0,
+      80.0,
+      90.0,
+      100.0,
+      110.0,
+      120.0,
+      130.0,
+      140.0,
+      150.0,
+      160.0,
+      170.0,
+      180.0
+    ],
+    "modal_bin_deg": 105.0,
+    "total_length_px": 27276.412,
+    "weights": [
+      376.73100000000005,
+      277.7749999999999,
+      252.70899999999983,
+      406.5469999999999,
+      934.2339999999995,
+      1767.0679999999988,
+      1882.0020000000045,
+      1991.8489999999993,
+      2166.252999999998,
+      2589.9510000000046,
+      3648.2959999999894,
+      3183.6430000000037,
+      2537.738999999994,
+      1955.2200000000012,
+      1299.832999999995,
+      1004.6959999999926,
+      598.9699999999975,
+      402.895999999997
+    ]
+  },
+  "grid": {
+    "crs": "EPSG:32611",
+    "footprint_px": 5167373,
+    "height": 3730,
+    "known_fault_px": 60988,
+    "scored_domain_px": 5106385,
+    "template_nodata": NaN,
+    "transform": [
+      100.0,
+      0.0,
+      243350.0,
+      0.0,
+      -100.0,
+      4508550.0
+    ],
+    "width": 3292
+  },
+  "offset_geometry_all_sgmc": {
+    "delta_median_deg": 74.43868048197643,
+    "frac_within_30deg_of_perp": 0.6813185424773841,
+    "frac_within_30deg_of_strike": 0.13281447414969424,
+    "frac_within_45deg_of_strike": 0.20965785616819124,
+    "n": 79148
+  },
+  "offset_geometry_random_control_matched": {
+    "delta_median_deg": 75.18371620704028,
+    "frac_within_30deg_of_perp": 0.7415068953918601,
+    "frac_within_30deg_of_strike": 0.10040363269424823,
+    "frac_within_45deg_of_strike": 0.158594012781702,
+    "n": 5946
+  },
+  "offset_geometry_sgmc_matched": {
+    "delta_median_deg": 74.82215631857784,
+    "frac_within_30deg_of_perp": 0.7364536151652408,
+    "frac_within_30deg_of_strike": 0.10216406643180674,
+    "frac_within_45deg_of_strike": 0.16305988928032208,
+    "n": 5961
+  },
+  "segments": {
+    "median_elongation": 12.364999999999998,
+    "median_length_km": 1.234,
+    "n": 1662,
+    "p90_length_km": 2.840300000000001,
+    "sample": [
+      {
+        "azimuth_deg": 86.81,
+        "centroid_col": 1094.2111111111112,
+        "centroid_row": 649.9944444444444,
+        "elongation": 3.79,
+        "id": 876,
+        "length_km_2sigma": 8.43,
+        "length_px_2sigma": 84.298,
+        "px": 360
+      },
+      {
+        "azimuth_deg": 103.18,
+        "centroid_col": 2170.502923976608,
+        "centroid_row": 3118.9795321637425,
+        "elongation": 17.16,
+        "id": 2990,
+        "length_km_2sigma": 16.33,
+        "length_px_2sigma": 163.3,
+        "px": 342
+      },
+      {
+        "azimuth_deg": 92.59,
+        "centroid_col": 1543.7567567567567,
+        "centroid_row": 1210.4222972972973,
+        "elongation": 7.82,
+        "id": 1646,
+        "length_km_2sigma": 12.102,
+        "length_px_2sigma": 121.016,
+        "px": 296
+      },
+      {
+        "azimuth_deg": 48.98,
+        "centroid_col": 1646.0967741935483,
+        "centroid_row": 3470.6917562724016,
+        "elongation": 8.44,
+        "id": 3148,
+        "length_km_2sigma": 10.187,
+        "length_px_2sigma": 101.872,
+        "px": 279
+      },
+      {
+        "azimuth_deg": 126.91,
+        "centroid_col": 2127.263537906137,
+        "centroid_row": 2926.129963898917,
+        "elongation": 4.13,
+        "id": 2913,
+        "length_km_2sigma": 8.552,
+        "length_px_2sigma": 85.524,
+        "px": 277
+      },
+      {
+        "azimuth_deg": 74.32,
+        "centroid_col": 1831.383064516129,
+        "centroid_row": 2569.8467741935483,
+        "elongation": 6.17,
+        "id": 2843,
+        "length_km_2sigma": 5.586,
+        "length_px_2sigma": 55.86,
+        "px": 248
+      },
+      {
+        "azimuth_deg": 63.32,
+        "centroid_col": 2894.383333333333,
+        "centroid_row": 640.975,
+        "elongation": 1.99,
+        "id": 910,
+        "length_km_2sigma": 9.174,
+        "length_px_2sigma": 91.741,
+        "px": 240
+      },
+      {
+        "azimuth_deg": 105.7,
+        "centroid_col": 2120.6880733944954,
+        "centroid_row": 3395.8853211009173,
+        "elongation": 10.29,
+        "id": 3120,
+        "length_km_2sigma": 12.672,
+        "length_px_2sigma": 126.723,
+        "px": 218
+      },
+      {
+        "azimuth_deg": 107.59,
+        "centroid_col": 2777.440758293839,
+        "centroid_row": 127.5260663507109,
+        "elongation": 3.24,
+        "id": 77,
+        "length_km_2sigma": 9.33,
+        "length_px_2sigma": 93.301,
+        "px": 211
+      },
+      {
+        "azimuth_deg": 139.15,
+        "centroid_col": 2990.7428571428572,
+        "centroid_row": 506.5904761904762,
+        "elongation": 10.43,
+        "id": 697,
+        "length_km_2sigma": 13.742,
+        "length_px_2sigma": 137.423,
+        "px": 210
+      },
+      {
+        "azimuth_deg": 89.19,
+        "centroid_col": 432.37373737373736,
+        "centroid_row": 713.3181818181819,
+        "elongation": 19.85,
+        "id": 962,
+        "length_km_2sigma": 11.407,
+        "length_px_2sigma": 114.073,
+        "px": 198
+      },
+      {
+        "azimuth_deg": 79.94,
+        "centroid_col": 1855.4484536082475,
+        "centroid_row": 2222.5,
+        "elongation": 10.57,
+        "id": 2625,
+        "length_km_2sigma": 11.403,
+        "length_px_2sigma": 114.033,
+        "px": 194
+      }
+    ]
+  },
+  "sgmc": {
+    "off_catalogue_km": 7961.5,
+    "off_catalogue_px": 79615
+  },
+  "source": {
+    "labels": "data/raw/labels.tif sha256 7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+    "note": "measured, not assumed; regenerate with scripts/measure_population.py",
+    "sgmc": "data/external/derived_sgmc_faults_100m_u8.tif"
+  }
+}

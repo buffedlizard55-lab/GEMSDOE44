@@ -1,0 +1,62 @@
+{
+  "schema": "gems44-irregularities-v1",
+  "note": "Defects, ambiguities and things that do not add up, flagged for human review. None of these is resolved by assumption.",
+  "items": [
+    {
+      "id": "IR-44-01",
+      "what": "The organizers' answer to 'How were the new test faults identified?' (community thread 11527) could not be read by the fetch tool from this sandbox. The thread page returned the participant posts and the staff reply was not exposed in the rendered text.",
+      "why": "The provenance, fault type (surface vs buried) and spatial coverage of the hidden label set determine which physical signature should work. Guessing it is exactly the kind of assumption this project forbids.",
+      "status": "open - a human with a browser can resolve it in one minute by opening the thread",
+      "action_taken": "No claim about the hidden population is made anywhere in this repository. H1, which would have depended on the 'new geometry of an existing system' reading, was tested empirically against data instead and failed."
+    },
+    {
+      "id": "IR-44-02",
+      "what": "All four official competition rasters used here are owner-supplied mirrors of login-walled DrivenData files, fetched from public GitHub repositories by the same account that owns this repository. They are pinned by sha256 and the pins matched exactly, but they are not organizer-authenticated.",
+      "why": "A pin proves the bytes are reproducible; it does not prove the bytes are the organizer's. If a mirror had been transcribed or re-exported, every measurement in this repository would be on the wrong grid or the wrong labels.",
+      "status": "accepted with a stated control",
+      "action_taken": "The grid read from labels.tif agrees with the NaN footprint of sample_submission.tif pixel-for-pixel (5,167,373 px, checked by assertion in gems44/grid.py), and labels.tif and existing_faults.tif are byte-identical to each other in the manifest. Those are the only independent cross-checks available without DrivenData authentication."
+    },
+    {
+      "id": "IR-44-03",
+      "what": "The brief states that GEMSDOE32 scored 0.2778. The live leaderboard shows 0.2778 at rank 13 for the participant extradr19, while GEMSDOE32's own README labels its named artifact UNSCORED with a projected 0.2747.",
+      "why": "Reporting a third party's score as our artifact's score would corrupt every calibration and promotion decision downstream.",
+      "status": "flagged, not resolved",
+      "action_taken": "The number is carried everywhere as two separate, labelled facts. It is never used as a target for model selection."
+    },
+    {
+      "id": "IR-44-04",
+      "what": "sample_submission.tif is described on the data page as a submission that predicts total fault absence, but its 60,988 positive cells are exactly the labelled catalogue fault pixels (values {0, 1, NaN}; the 1s coincide with labels.tif == 1).",
+      "why": "It is therefore not a 'no faults' template; it is the catalogue raster re-typed as float32. Anyone reading it as a null submission would draw wrong conclusions about what an empty prediction scores (an empty file scores exactly 0).",
+      "status": "characterised",
+      "action_taken": "Only the grid, dtype and outside-footprint convention are taken from it. This file's footprint convention is stated explicitly in docs/how-to-submit.html."
+    },
+    {
+      "id": "IR-44-05",
+      "what": "The reference solution writes its prediction map RAW (not thresholded) and its own comment says 'it may be advantageous to threshold this map for better scoring'; the visualization in the same notebook uses a > 0.1 threshold.",
+      "why": "The organizer's baseline therefore ships a graded file. The metric is monotone in the scale of a probability map (proved and unit-tested here), so any graded file is strictly dominated by its own thresholded support. A participant who copies the baseline's output convention gives away score.",
+      "status": "characterised",
+      "action_taken": "Every artifact in this repository is strictly binary {0, 1}. The domination argument is a test: tests/test_metric.py::test_binary_dominates_its_own_scaled_version."
+    },
+    {
+      "id": "IR-44-06",
+      "what": "A supervised field with a spatially blocked pixel AUC of 0.773 (folds 0.762-0.789) produced a held-out metric score of 0.0766 at 44,090 dots, while uniform-random dots at the same mass scored 0.1341 on the same frame.",
+      "why": "This is a contradiction between the two ways of measuring the same field, and it invalidates AUC-based field selection for this competition. Until it is explained the project cannot rely on any ranking metric other than the official one.",
+      "status": "measured, explained as a frame effect, but only on one fold",
+      "action_taken": "AUC is no longer used to select anything. registry/holdout_partial.json keeps fold 0 verbatim so the effect stays on the record. scripts/run_selection.py scores fields with the official metric on blocked frames instead."
+    },
+    {
+      "id": "IR-44-07",
+      "what": "The competition brief supplied to this project states that the highest score is 0.3195, while the live board read on 2026-10-06 shows 0.3345 at rank 1 and DARD's 0.3195 at rank 5.",
+      "why": "A target set from a stale read is already unreachable by the time it is used. Three days of board movement is worth about +0.015 at the top.",
+      "status": "characterised",
+      "action_taken": "The date of every leaderboard read is recorded next to the number. No target is stated as a fixed value."
+    },
+    {
+      "id": "IR-44-08",
+      "what": "The competition brief asks for a review of 'why and how' a specific artifact scored 0.2778, but no organizer receipt exists in any material available here for any artifact belonging to this project family.",
+      "why": "Every score in this family's record is owner-reported or inferred by numeric coincidence.",
+      "status": "open - resolvable only by uploading an artifact and reading the board",
+      "action_taken": "docs/leaderboard.html reports the owner-reported series as owner-reported and states plainly that no artifact here has an organizer score."
+    }
+  ]
+}

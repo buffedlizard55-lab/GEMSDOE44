@@ -1,0 +1,61 @@
+{
+  "schema": "gems44-preregistration-v1",
+  "frozen_utc": "2026-10-06, before any submission slot is touched",
+  "purpose": "State, before measurement, exactly what would count as evidence that a candidate deserves a submission slot, and exactly what would kill it. This file is not edited after the measurements are read; outcomes go in registry/selection.json, registry/holdout.json and registry/hypotheses.json.",
+  "submission_budget": {
+    "rule_source": "The GEMS Prize rules limit scored submissions and require ONE file to be chosen for scoring across both prize rounds before the deadline.",
+    "policy": "No slot is spent on any candidate that has not first beaten the incumbent on the blocked primary frame. A slot is treated as an experiment, not a lottery ticket.",
+    "note": "The exact weekly limit could not be verified here: the official rules PDF at docs.nlr.gov/docs/fy26osti/96647.pdf is outside this sandbox's network allowlist. The prior-art repositories in this family state three per week; that figure is NOT verified by this repository and is not relied on."
+  },
+  "frames": {
+    "P_primary": {
+      "definition": "Truth = USGS SGMC fault pixels more than 300 m from the competition catalogue, measured at 62,122 px on this grid.",
+      "why": "The only locally available set of REAL mapped faults that the given catalogue does not carry. A frame whose positives are far from the catalogue cannot be won by copying the catalogue, which is the failure mode that made the prior family's catalogue-truth proxies rank artifacts backwards.",
+      "known_weakness": "SGMC is a pre-Quaternary-inclusive compilation; the hidden set need not share its statistics. Stated on every page that reports a number from this frame."
+    },
+    "S_sanity": {
+      "definition": "Truth = a held-out quadrant of the catalogue.",
+      "why": "Reported for completeness and for continuity with the prior family's record.",
+      "restriction": "Never used for promotion. registry/score-ceiling evidence in the prior family shows catalogue-truth frames rank artifacts in the OPPOSITE order to the live board."
+    }
+  },
+  "blocking": {
+    "scheme": "Four spatially blocked quadrants of the 3730 x 3292 grid; leave-one-quadrant-out for every reported number.",
+    "selection": "Field and emitted mass are both chosen leave-one-fold-out: the choice for each fold is made on the other three folds only.",
+    "known_weakness": "Quadrant blocking removes large-scale leakage but not regional structure persisting within a quadrant. Finer blocking is the next upgrade."
+  },
+  "decision_rule": {
+    "promote_if": "(a) pooled held-out DTI on frame P exceeds the same-frame DTI of the live-scored 0.2600 incumbent artifact by at least +0.005, AND (b) at least 3 of 4 folds show a positive delta, AND (c) the artifact passes every format check re-read from disk.",
+    "reject_if": "any of the three conditions fails. The measurement is written to registry/selection.json either way and a failed candidate is documented rather than hidden.",
+    "controls_required_on_the_same_frame_and_metric": [
+      "the live-scored 0.2600 incumbent artifact (fetched from its hash-pinned mirror)",
+      "uniform-random dots at matched mass",
+      "a raster-order thinning of the same belief at matched mass"
+    ]
+  },
+  "falsification_ledger": [
+    {
+      "hypothesis": "H1 anisotropic across-strike offset-strand prior",
+      "test_frozen": "Offset-angle histogram of non-catalogue fault pixels to the nearest catalogue pixel, in the local catalogue strike frame, against a distance-matched random footprint control. Falsified if the two distributions are indistinguishable.",
+      "outcome": "FALSIFIED. Scripts/measure_population.py; registry/population.json. SGMC 0.102 within 30 deg of strike / 0.736 within 30 deg of across-strike, median 74.8 deg; control 0.100 / 0.742, median 75.2 deg. No signal beyond the distance-transform baseline.",
+      "slot_spent": "none"
+    },
+    {
+      "hypothesis": "H2 supervised off-catalogue field",
+      "test_frozen": "Spatially blocked ROC AUC for SGMC-off-catalogue fault pixels versus random footprint pixels, then the official metric on emitted dots in a held-out quadrant.",
+      "outcome": "SPLIT, and the split is the finding. Blocked AUC = 0.773 (folds 0.762-0.789), but the emitted field scored 0.0766 against uniform-random 0.1341 and the incumbent 0.1353 on the first blocked quadrant. The AUC did not survive contact with the metric. Field selection was consequently moved onto the metric itself.",
+      "slot_spent": "none on the AUC-selected version"
+    },
+    {
+      "hypothesis": "Detectability of catalogue-absent faults from the 19 official bands at all",
+      "test_frozen": "Blocked AUC of ~= 0.5 on frame P would mean no field built from the provided bands can find the hidden faults and the project must buy data rather than tune models.",
+      "outcome": "NOT FALSIFIED. Blocked AUC 0.773 with all four folds in 0.762-0.789; the strongest single discriminator is the 3x3 mean of detrended elevation slope at 0.747 for catalogue-absent faults versus 0.561 for catalogue faults, i.e. the off-catalogue population is not merely harder, it has partly different discriminative signs.",
+      "slot_spent": "n/a"
+    }
+  ],
+  "what_would_change_the_plan": [
+    "If the selected candidate fails the gate, the artifact is still built and published for audit, but docs/index.html must display the FAIL verdict and the project must say so rather than ship a silent downgrade.",
+    "If a finer blocking scheme reverses the ranking, the finer scheme wins and the coarse one is retired (finer blocking is strictly stricter).",
+    "If the frame-P ranking and the frame-S ranking disagree in sign, frame P wins for the reason recorded under frames.S_sanity."
+  ]
+}
