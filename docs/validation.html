@@ -30,6 +30,8 @@ artifact. Scored with the mask disabled it is worse than useless — the artifac
 <table class="tbl"><thead><tr><th>candidate frame</th><th>truth px</th><th>rho level</th><th>rho excess</th><th>probes above uniform</th><th>mean DTI</th></tr></thead><tbody>
 <tr><td>N_sgmc_within_300m</td><td>17,493</td><td><strong>0.335</strong></td><td><strong>0.396</strong></td><td>19/19</td><td>0.150157</td></tr>
 <tr><td>P_sgmc_beyond_300m</td><td>62,122</td><td><strong>-0.054</strong></td><td><strong>0.188</strong></td><td>8/19</td><td>0.122292</td></tr>
+<tr><td>Q_sgmc_200_300m</td><td>4,155</td><td><strong>0.468</strong></td><td><strong>0.382</strong></td><td>19/19</td><td>0.048514</td></tr>
+<tr><td>R_sgmc_beyond_200m</td><td>66,277</td><td><strong>-0.046</strong></td><td><strong>0.191</strong></td><td>8/19</td><td>0.133584</td></tr>
 <tr><td>S0_catalogue_nomask</td><td>60,988</td><td><strong>-0.475</strong></td><td><strong>-0.237</strong></td><td>19/19</td><td>0.228445</td></tr>
 <tr><td>U_sgmc_all_off_catalogue</td><td>79,615</td><td><strong>-0.393</strong></td><td><strong>0.209</strong></td><td>9/19</td><td>0.167843</td></tr>
 </tbody></table>
@@ -37,10 +39,61 @@ artifact. Scored with the mask disabled it is worse than useless — the artifac
 artifact's score minus its own uniform control at the same mass, which removes the mass effect.
 Source: <code>registry/frame_ranking.json</code>, produced by <code>scripts/rank_frames.py</code>
 from the probe set in <code>scripts/fetch_probes.py</code>.</p>
-<p><strong>Frame P (SGMC beyond 300 m of the catalogue) was this repository's pre-registered primary
-frame and it failed this test.</strong> It was replaced before any selection result was read:
-<em>Two selection details fixed in advance: (a) the shipped MASS is 44,090, matched to the incumbent&#x27;s published mass so that a live A/B differs only in field and emission; (b) the shipped FIELD is chosen by the frame-N gate first, and among gate-passing fields by the best mean frame-P score at that mass (a robustness tie-break, because frame P is the only frame that is not halo-dominated even though it cannot rank artifacts).</em>. Trigger: Fold 0 of the swept run showed the catalogue-proximity fields (prox3/prox10/prox30) win frame N by a wide margin while covering almost nothing outside the halo (frame-P 0.002), and the supervised fields lose frame N while covering the wider map better. A declared tie-break is needed so that the choice is not made after seeing which field wins.…
-Source: <code>registry/preregistration.json</code> amendment AM-44-02; IR-44-09.</p>
+<h3>1b · The direct A/B that decides which frame may be used</h3>
+<p>Two locally available artifacts bracket the family's best work: the live-scored <strong>0.2600</strong>
+artifact (44,090 dots) and the owner-reported <strong>0.2778</strong> artifact (37,654 dots), which is
+a strict subset of it — 6,436 dots deleted, 100% of them inside the 200 m catalogue ring, none added.
+A frame that cannot rank that pair in the live order cannot select a submission.</p>
+<table class="tbl"><thead><tr><th>candidate frame</th><th>0.2600 anchor</th><th>0.2778 artifact</th><th>delta</th><th>verdict</th></tr></thead><tbody>
+<tr><td>N_sgmc_within_300m</td><td>0.175536</td><td>0.054060</td><td>-0.121476</td><td><strong>BACKWARDS — unusable</strong></td></tr>
+<tr><td>P_sgmc_beyond_300m</td><td>0.094174</td><td>0.095386</td><td>+0.001212</td><td><strong>ranks correctly</strong></td></tr>
+<tr><td>Q_sgmc_200_300m</td><td>0.070388</td><td>0.050596</td><td>-0.019792</td><td><strong>BACKWARDS — unusable</strong></td></tr>
+<tr><td>R_sgmc_beyond_200m</td><td>0.102759</td><td>0.099102</td><td>-0.003658</td><td><strong>BACKWARDS — unusable</strong></td></tr>
+<tr><td>S0_catalogue_nomask</td><td>0.161772</td><td>0.006709</td><td>-0.155063</td><td><strong>BACKWARDS — unusable</strong></td></tr>
+<tr><td>U_sgmc_all_off_catalogue</td><td>0.131076</td><td>0.092893</td><td>-0.038183</td><td><strong>BACKWARDS — unusable</strong></td></tr>
+</tbody></table>
+<p class="note">Rule fixed in advance as AM-44-03. Frame N — this repository's pre-registered primary
+— ranks the pair backwards and is therefore excluded; frame P ranks it correctly and is used.
+Source: <code>registry/frame_ranking.json</code>; IR-44-15.</p>
+
+<h3>1c · Amendment history (each declared before the numbers it governs)</h3>
+<table class="tbl"><thead><tr><th>amendment</th><th>declared</th><th>what it fixed</th></tr></thead><tbody>
+<tr><td>AM-44-01</td><td>—</td><td>Promotion frame moved from the pre-registered frame P (SGMC faults &gt;300 m from the catalogue) to frame N (SGMC strands within 300 m of the catalogue, 17,493 px).</td></tr>
+<tr><td>AM-44-02</td><td>—</td><td>Two selection details fixed in advance: (a) the shipped MASS is 44,090, matched to the incumbent&#x27;s published mass so that a live A/B differs only in field and emission; (b) the shipped FIELD is chosen by the frame-N gate first, and among gate-passing fields by the best mean frame-P score at tha</td></tr>
+<tr><td>AM-44-03</td><td>2026-10-06</td><td>byte level: the owner-reported 0.2778 artifact is a strict subset of the live-verified 0.2600 anchor, 6,436 dots removed, 100% of them within 200 m of the catalogue, none added (registry/ring_mechanism.json)</td></tr>
+<tr><td>AM-44-04</td><td>2026-10-06</td><td>1. field: the field with the largest mean leave-one-fold-out EXCESS over the uniform control on the admissible frame P, at each candidate mass. Expected consequence of the already-known numbers: sup_U.</td></tr>
+</tbody></table>
+
+<h3>1d · The ring, verified byte by byte and priced on real truth</h3>
+<p>The claim under test is that the 0.2600 → 0.2778 step came from deleting the ≤200 m catalogue ring.
+The subset relation and the band emptying are first-hand measurements of the two files. Whether those
+dots were worthless is then priced with the exact operator on the local truth frames:</p>
+<table class="tbl"><thead><tr><th>frame</th><th>truth px</th><th>0.2600 anchor DTI</th><th>0.2778 artifact DTI</th><th>delta</th><th>removed dots</th><th>mean credit per removed dot</th><th>net denominator effect of removing them</th></tr></thead><tbody>
+<tr><td>N</td><td>21,471</td><td>0.175536</td><td>0.054060</td><td><strong>-0.121476</strong></td><td>6,436</td><td>0.4978</td><td>-2220.7</td></tr>
+<tr><td>P</td><td>62,122</td><td>0.094174</td><td>0.095386</td><td><strong>+0.001212</strong></td><td>6,436</td><td>0.0135</td><td>+1187.5</td></tr>
+</tbody></table>
+<p class="note">On frame P the removed dots earned 0.0135 mean credit against a 0.2-per-dot cost, so
+deleting them was net positive; on frame N they earned 0.4978, which is what makes frame N
+inadmissible rather than merely unhelpful. Source: <code>registry/ring_mechanism.json</code>;
+IR-44-16. A sibling session asserts the same rule from a 40,199-dot base; that base is not present
+here, so only the larger pair could be reproduced.</p>
+
+<h4>Ring rule at matched mass, same field, on every frame</h4>
+<table class="tbl"><thead><tr><th>field | requested mass</th><th>N</th><th>P (admissible)</th><th>Q (200–300 m)</th><th>R (beyond 200 m)</th></tr></thead><tbody>
+<tr><td>blend_U|44090</td><td>-0.0969</td><td>+0.0215</td><td>+0.0387</td><td>+0.0277</td></tr>
+<tr><td>blend_U|61328</td><td>-0.0867</td><td>+0.0190</td><td>+0.0293</td><td>+0.0247</td></tr>
+<tr><td>blend_U|80000</td><td>-0.0772</td><td>+0.0166</td><td>+0.0239</td><td>+0.0222</td></tr>
+<tr><td>prox10|44090</td><td>-0.0818</td><td>+0.0216</td><td>+0.0515</td><td>+0.0305</td></tr>
+<tr><td>prox10|61328</td><td>-0.0774</td><td>+0.0182</td><td>+0.0311</td><td>+0.0246</td></tr>
+<tr><td>prox10|80000</td><td>-0.0680</td><td>+0.0168</td><td>+0.0252</td><td>+0.0229</td></tr>
+<tr><td>sup_U|44090</td><td>-0.0748</td><td>+0.0109</td><td>+0.0083</td><td>+0.0117</td></tr>
+<tr><td>sup_U|61328</td><td>-0.0771</td><td>+0.0096</td><td>+0.0105</td><td>+0.0113</td></tr>
+<tr><td>sup_U|80000</td><td>-0.0775</td><td>+0.0081</td><td>+0.0094</td><td>+0.0099</td></tr>
+</tbody></table>
+<p class="note">Paired difference: ring-excluded minus ring-included, identical field and identical
+requested mass, both emitted in full. Positive on frame P for every field and mass tested; negative
+on the inadmissible frame N, which is exactly the contradiction that had to be resolved before any
+rebuild. Source: <code>registry/ring_experiment.json</code>.</p>
 
 <h3>2 · Dot spacing, not geology, is the largest measured correlate of a reported score</h3>
 <p>Each artifact below is real, was scored on the live board, and is on disk here. The columns are

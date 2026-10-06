@@ -1,82 +1,115 @@
 {
-  "amended_at_utc": "2026-10-06T10:20:00Z",
-  "amendments": [
-    {
-      "at_utc": "2026-10-06T10:20:00Z",
-      "before_reading_any_sweep_result": true,
-      "change": "Promotion frame moved from the pre-registered frame P (SGMC faults >300 m from the catalogue) to frame N (SGMC strands within 300 m of the catalogue, 17,493 px).",
-      "id": "AM-44-01",
-      "residual_risk": "Frame N's rho_excess = +0.396 at n=19 (p ~ 0.09) is directional, not conclusive; registered as IR-44-09 and stated on the site.",
-      "trigger": "scripts/rank_frames.py scored 19 family artifacts with reported live scores on four candidate frames and on their own uniform controls (scripts/fetch_probes.py; registry/probe_manifest.json). Frame P: rho_level -0.054, rho_excess +0.188. Frame N: rho_level +0.335, rho_excess +0.396, all 19 probes above their uniform control. Frame U (all SGMC off-catalogue): rho_level -0.393. Frame S0 (catalogue, mask disabled): rho_level -0.475.",
-      "unchanged": "The gate is unchanged: mean held-out delta vs the 0.2600 incumbent >= +0.005 with >= 3 of 4 blocked folds positive, at density-matched mass; no idea is promoted that has not beaten the incumbent on the primary frame."
-    },
-    {
-      "at_utc": "2026-10-06T10:35:00Z",
-      "before_reading_any_sweep_result": true,
-      "change": "Two selection details fixed in advance: (a) the shipped MASS is 44,090, matched to the incumbent's published mass so that a live A/B differs only in field and emission; (b) the shipped FIELD is chosen by the frame-N gate first, and among gate-passing fields by the best mean frame-P score at that mass (a robustness tie-break, because frame P is the only frame that is not halo-dominated even though it cannot rank artifacts).",
-      "id": "AM-44-02",
-      "residual_risk": "A halo-dominated frame N can reward a stencil rather than a prediction; the tie-break deliberately refuses the pure stencil in favour of a field that also covers the rest of the map, and the artifact's own diagnostics report how much mass sits outside the halo.",
-      "trigger": "Fold 0 of the swept run showed the catalogue-proximity fields (prox3/prox10/prox30) win frame N by a wide margin while covering almost nothing outside the halo (frame-P 0.002), and the supervised fields lose frame N while covering the wider map better. A declared tie-break is needed so that the choice is not made after seeing which field wins.",
-      "unchanged": "The gate itself, the frames, the density-matched fold mass and the exact-operator confirmation."
-    }
+ "amended_at_utc": "2026-10-06T10:20:00Z",
+ "amendments": [
+  {
+   "at_utc": "2026-10-06T10:20:00Z",
+   "before_reading_any_sweep_result": true,
+   "change": "Promotion frame moved from the pre-registered frame P (SGMC faults >300 m from the catalogue) to frame N (SGMC strands within 300 m of the catalogue, 17,493 px).",
+   "id": "AM-44-01",
+   "residual_risk": "Frame N's rho_excess = +0.396 at n=19 (p ~ 0.09) is directional, not conclusive; registered as IR-44-09 and stated on the site.",
+   "trigger": "scripts/rank_frames.py scored 19 family artifacts with reported live scores on four candidate frames and on their own uniform controls (scripts/fetch_probes.py; registry/probe_manifest.json). Frame P: rho_level -0.054, rho_excess +0.188. Frame N: rho_level +0.335, rho_excess +0.396, all 19 probes above their uniform control. Frame U (all SGMC off-catalogue): rho_level -0.393. Frame S0 (catalogue, mask disabled): rho_level -0.475.",
+   "unchanged": "The gate is unchanged: mean held-out delta vs the 0.2600 incumbent >= +0.005 with >= 3 of 4 blocked folds positive, at density-matched mass; no idea is promoted that has not beaten the incumbent on the primary frame."
+  },
+  {
+   "at_utc": "2026-10-06T10:35:00Z",
+   "before_reading_any_sweep_result": true,
+   "change": "Two selection details fixed in advance: (a) the shipped MASS is 44,090, matched to the incumbent's published mass so that a live A/B differs only in field and emission; (b) the shipped FIELD is chosen by the frame-N gate first, and among gate-passing fields by the best mean frame-P score at that mass (a robustness tie-break, because frame P is the only frame that is not halo-dominated even though it cannot rank artifacts).",
+   "id": "AM-44-02",
+   "residual_risk": "A halo-dominated frame N can reward a stencil rather than a prediction; the tie-break deliberately refuses the pure stencil in favour of a field that also covers the rest of the map, and the artifact's own diagnostics report how much mass sits outside the halo.",
+   "trigger": "Fold 0 of the swept run showed the catalogue-proximity fields (prox3/prox10/prox30) win frame N by a wide margin while covering almost nothing outside the halo (frame-P 0.002), and the supervised fields lose frame N while covering the wider map better. A declared tie-break is needed so that the choice is not made after seeing which field wins.",
+   "unchanged": "The gate itself, the frames, the density-matched fold mass and the exact-operator confirmation."
+  },
+  {
+   "consequence_if_rules_fail": "If no frame passes rule 1, no submission is rebuilt on frame evidence and the limitation is recorded instead of being papered over.",
+   "declared_before": "the re-ranking of candidate frames Q (SGMC 200-300 m), R (SGMC beyond 200 m) and U (all SGMC off-catalogue), and before any artifact is rebuilt with the ring rule",
+   "declared_utc": "2026-10-06",
+   "id": "AM-44-03",
+   "rule_1_admissible_frame": "A frame may be used to select a submission only if it satisfies BOTH: (a) direct A/B - it ranks the 0.2778 artifact above the 0.2600 anchor; and (b) probe excess - Spearman rank correlation between (frame DTI minus the uniform control at the same mass) and the 19 reported live scores is > 0.",
+   "rule_2_ring_rule": "The <=200 m catalogue ring is excluded from the emitter's allowed mask (allowed = footprint & ~known & distance-to-catalogue > 2 px) if and only if the admissible frames of rule 1 support it; the exclusion is validated at matched mass against the ring-included emission on the same field.",
+   "rule_3_mass": "Mass is chosen on the admissible frame(s) at per-fold mass scaled by the fold's share of the allowed area, so a fold's dot density equals a global submission's density.",
+   "rule_4_uniqueness": "The shipped dot set must remain this repository's own emission. Copying the 0.2778 artifact (i.e. the anchor minus its ring) is forbidden by the task statement even though it is the highest-scoring local dot set, and is not done.",
+   "what_was_already_known": [
+    "byte level: the owner-reported 0.2778 artifact is a strict subset of the live-verified 0.2600 anchor, 6,436 dots removed, 100% of them within 200 m of the catalogue, none added (registry/ring_mechanism.json)",
+    "frame N (primary so far) ranks that pair BACKWARDS: anchor 0.175536 > artifact 0.054060",
+    "frame P ranks it correctly: 0.095386 > 0.094174, margin +0.001212",
+    "on frame P the removed dots earn 0.0135 mean kernel credit against a 0.2-per-dot cost; on frame N they earn 0.4978"
+   ]
+  },
+  {
+   "decision_rule": [
+    "1. field: the field with the largest mean leave-one-fold-out EXCESS over the uniform control on the admissible frame P, at each candidate mass. Expected consequence of the already-known numbers: sup_U.",
+    "2. ring: exclude <= 200 m from the emitter's allowed mask iff the paired delta (ring-excluded minus ring-included) on frame P is positive at the chosen mass for that field.",
+    "3. mass: the largest mass tested whose paired delta and fold positivity hold (>= 3 of 4 folds with positive excess over uniform), capped at 61,328 unless a larger mass still improves frame P; the submission file records the mass actually emitted.",
+    "4. the shipped file must remain this repository's own emission of its own field; it is never a copy or a filtering of a family artifact, even though filtering the anchor would score higher on the board as far as anyone can verify here (IR-44-16).",
+    "5. every consequent claim on the site names the frame it rests on, and frame N's falsification (IR-44-15) stays on the limitations page."
+   ],
+   "declared_before": "the ring-exclusion experiment on the supervised field and before any rebuild of the artifact",
+   "declared_utc": "2026-10-06",
+   "id": "AM-44-04",
+   "what_was_already_known": [
+    "the 4-fold sweep at the shipped emitter setting (candidate pool 25%, min_sep 3 px) is complete: registry/selection.json, all 12 requested masses emitted in full in 4/4 folds",
+    "frame N and frame P rank the fields in opposite order. N: prox10 0.3964 >> blend_U 0.2887 > incumbent 0.1356 > sup_N 0.1259 > sup_U 0.0778. P (excess over uniform at the same mass): sup_U +0.0808 > sup_N +0.0325 > blend_U +0.0277 > incumbent -0.0030 > prox10 -0.0342",
+    "AM-44-03 rule 1 has already excluded frame N by the direct A/B; frame P passes it (0.095386 > 0.094174)"
+   ]
+  }
+ ],
+ "blocking": {
+  "known_weakness": "Quadrant blocking removes large-scale leakage but not regional structure persisting within a quadrant. Finer blocking is the next upgrade.",
+  "scheme": "Four spatially blocked quadrants of the 3730 x 3292 grid; leave-one-quadrant-out for every reported number.",
+  "selection": "Field and emitted mass are both chosen leave-one-fold-out: the choice for each fold is made on the other three folds only."
+ },
+ "decision_rule": {
+  "controls_required_on_the_same_frame_and_metric": [
+   "the live-scored 0.2600 incumbent artifact (fetched from its hash-pinned mirror)",
+   "uniform-random dots at matched mass",
+   "a raster-order thinning of the same belief at matched mass"
   ],
-  "blocking": {
-    "known_weakness": "Quadrant blocking removes large-scale leakage but not regional structure persisting within a quadrant. Finer blocking is the next upgrade.",
-    "scheme": "Four spatially blocked quadrants of the 3730 x 3292 grid; leave-one-quadrant-out for every reported number.",
-    "selection": "Field and emitted mass are both chosen leave-one-fold-out: the choice for each fold is made on the other three folds only."
+  "promote_if": "(a) pooled held-out DTI on frame P exceeds the same-frame DTI of the live-scored 0.2600 incumbent artifact by at least +0.005, AND (b) at least 3 of 4 folds show a positive delta, AND (c) the artifact passes every format check re-read from disk.",
+  "reject_if": "any of the three conditions fails. The measurement is written to registry/selection.json either way and a failed candidate is documented rather than hidden."
+ },
+ "falsification_ledger": [
+  {
+   "hypothesis": "H1 anisotropic across-strike offset-strand prior",
+   "outcome": "FALSIFIED. Scripts/measure_population.py; registry/population.json. SGMC 0.102 within 30 deg of strike / 0.736 within 30 deg of across-strike, median 74.8 deg; control 0.100 / 0.742, median 75.2 deg. No signal beyond the distance-transform baseline.",
+   "slot_spent": "none",
+   "test_frozen": "Offset-angle histogram of non-catalogue fault pixels to the nearest catalogue pixel, in the local catalogue strike frame, against a distance-matched random footprint control. Falsified if the two distributions are indistinguishable."
   },
-  "decision_rule": {
-    "controls_required_on_the_same_frame_and_metric": [
-      "the live-scored 0.2600 incumbent artifact (fetched from its hash-pinned mirror)",
-      "uniform-random dots at matched mass",
-      "a raster-order thinning of the same belief at matched mass"
-    ],
-    "promote_if": "(a) pooled held-out DTI on frame P exceeds the same-frame DTI of the live-scored 0.2600 incumbent artifact by at least +0.005, AND (b) at least 3 of 4 folds show a positive delta, AND (c) the artifact passes every format check re-read from disk.",
-    "reject_if": "any of the three conditions fails. The measurement is written to registry/selection.json either way and a failed candidate is documented rather than hidden."
+  {
+   "hypothesis": "H2 supervised off-catalogue field",
+   "outcome": "SPLIT, and the split is the finding. Blocked AUC = 0.773 (folds 0.762-0.789), but the emitted field scored 0.0766 against uniform-random 0.1341 and the incumbent 0.1353 on the first blocked quadrant. The AUC did not survive contact with the metric. Field selection was consequently moved onto the metric itself.",
+   "slot_spent": "none on the AUC-selected version",
+   "test_frozen": "Spatially blocked ROC AUC for SGMC-off-catalogue fault pixels versus random footprint pixels, then the official metric on emitted dots in a held-out quadrant."
   },
-  "falsification_ledger": [
-    {
-      "hypothesis": "H1 anisotropic across-strike offset-strand prior",
-      "outcome": "FALSIFIED. Scripts/measure_population.py; registry/population.json. SGMC 0.102 within 30 deg of strike / 0.736 within 30 deg of across-strike, median 74.8 deg; control 0.100 / 0.742, median 75.2 deg. No signal beyond the distance-transform baseline.",
-      "slot_spent": "none",
-      "test_frozen": "Offset-angle histogram of non-catalogue fault pixels to the nearest catalogue pixel, in the local catalogue strike frame, against a distance-matched random footprint control. Falsified if the two distributions are indistinguishable."
-    },
-    {
-      "hypothesis": "H2 supervised off-catalogue field",
-      "outcome": "SPLIT, and the split is the finding. Blocked AUC = 0.773 (folds 0.762-0.789), but the emitted field scored 0.0766 against uniform-random 0.1341 and the incumbent 0.1353 on the first blocked quadrant. The AUC did not survive contact with the metric. Field selection was consequently moved onto the metric itself.",
-      "slot_spent": "none on the AUC-selected version",
-      "test_frozen": "Spatially blocked ROC AUC for SGMC-off-catalogue fault pixels versus random footprint pixels, then the official metric on emitted dots in a held-out quadrant."
-    },
-    {
-      "hypothesis": "Detectability of catalogue-absent faults from the 19 official bands at all",
-      "outcome": "NOT FALSIFIED. Blocked AUC 0.773 with all four folds in 0.762-0.789; the strongest single discriminator is the 3x3 mean of detrended elevation slope at 0.747 for catalogue-absent faults versus 0.561 for catalogue faults, i.e. the off-catalogue population is not merely harder, it has partly different discriminative signs.",
-      "slot_spent": "n/a",
-      "test_frozen": "Blocked AUC of ~= 0.5 on frame P would mean no field built from the provided bands can find the hidden faults and the project must buy data rather than tune models."
-    }
-  ],
-  "frames": {
-    "P_primary": {
-      "definition": "Truth = USGS SGMC fault pixels more than 300 m from the competition catalogue, measured at 62,122 px on this grid.",
-      "known_weakness": "SGMC is a pre-Quaternary-inclusive compilation; the hidden set need not share its statistics. Stated on every page that reports a number from this frame.",
-      "why": "The only locally available set of REAL mapped faults that the given catalogue does not carry. A frame whose positives are far from the catalogue cannot be won by copying the catalogue, which is the failure mode that made the prior family's catalogue-truth proxies rank artifacts backwards."
-    },
-    "S_sanity": {
-      "definition": "Truth = a held-out quadrant of the catalogue.",
-      "restriction": "Never used for promotion. registry/score-ceiling evidence in the prior family shows catalogue-truth frames rank artifacts in the OPPOSITE order to the live board.",
-      "why": "Reported for completeness and for continuity with the prior family's record."
-    }
+  {
+   "hypothesis": "Detectability of catalogue-absent faults from the 19 official bands at all",
+   "outcome": "NOT FALSIFIED. Blocked AUC 0.773 with all four folds in 0.762-0.789; the strongest single discriminator is the 3x3 mean of detrended elevation slope at 0.747 for catalogue-absent faults versus 0.561 for catalogue faults, i.e. the off-catalogue population is not merely harder, it has partly different discriminative signs.",
+   "slot_spent": "n/a",
+   "test_frozen": "Blocked AUC of ~= 0.5 on frame P would mean no field built from the provided bands can find the hidden faults and the project must buy data rather than tune models."
+  }
+ ],
+ "frames": {
+  "P_primary": {
+   "definition": "Truth = USGS SGMC fault pixels more than 300 m from the competition catalogue, measured at 62,122 px on this grid.",
+   "known_weakness": "SGMC is a pre-Quaternary-inclusive compilation; the hidden set need not share its statistics. Stated on every page that reports a number from this frame.",
+   "why": "The only locally available set of REAL mapped faults that the given catalogue does not carry. A frame whose positives are far from the catalogue cannot be won by copying the catalogue, which is the failure mode that made the prior family's catalogue-truth proxies rank artifacts backwards."
   },
-  "frozen_utc": "2026-10-06, before any submission slot is touched",
-  "purpose": "State, before measurement, exactly what would count as evidence that a candidate deserves a submission slot, and exactly what would kill it. This file is not edited after the measurements are read; outcomes go in registry/selection.json, registry/holdout.json and registry/hypotheses.json.",
-  "schema": "gems44-preregistration-v1",
-  "submission_budget": {
-    "note": "The exact weekly limit could not be verified here: the official rules PDF at docs.nlr.gov/docs/fy26osti/96647.pdf is outside this sandbox's network allowlist. The prior-art repositories in this family state three per week; that figure is NOT verified by this repository and is not relied on.",
-    "policy": "No slot is spent on any candidate that has not first beaten the incumbent on the blocked primary frame. A slot is treated as an experiment, not a lottery ticket.",
-    "rule_source": "The GEMS Prize rules limit scored submissions and require ONE file to be chosen for scoring across both prize rounds before the deadline."
-  },
-  "what_would_change_the_plan": [
-    "If the selected candidate fails the gate, the artifact is still built and published for audit, but docs/index.html must display the FAIL verdict and the project must say so rather than ship a silent downgrade.",
-    "If a finer blocking scheme reverses the ranking, the finer scheme wins and the coarse one is retired (finer blocking is strictly stricter).",
-    "If the frame-P ranking and the frame-S ranking disagree in sign, frame P wins for the reason recorded under frames.S_sanity."
-  ]
+  "S_sanity": {
+   "definition": "Truth = a held-out quadrant of the catalogue.",
+   "restriction": "Never used for promotion. registry/score-ceiling evidence in the prior family shows catalogue-truth frames rank artifacts in the OPPOSITE order to the live board.",
+   "why": "Reported for completeness and for continuity with the prior family's record."
+  }
+ },
+ "frozen_utc": "2026-10-06, before any submission slot is touched",
+ "purpose": "State, before measurement, exactly what would count as evidence that a candidate deserves a submission slot, and exactly what would kill it. This file is not edited after the measurements are read; outcomes go in registry/selection.json, registry/holdout.json and registry/hypotheses.json.",
+ "schema": "gems44-preregistration-v1",
+ "submission_budget": {
+  "note": "The exact weekly limit could not be verified here: the official rules PDF at docs.nlr.gov/docs/fy26osti/96647.pdf is outside this sandbox's network allowlist. The prior-art repositories in this family state three per week; that figure is NOT verified by this repository and is not relied on.",
+  "policy": "No slot is spent on any candidate that has not first beaten the incumbent on the blocked primary frame. A slot is treated as an experiment, not a lottery ticket.",
+  "rule_source": "The GEMS Prize rules limit scored submissions and require ONE file to be chosen for scoring across both prize rounds before the deadline."
+ },
+ "what_would_change_the_plan": [
+  "If the selected candidate fails the gate, the artifact is still built and published for audit, but docs/index.html must display the FAIL verdict and the project must say so rather than ship a silent downgrade.",
+  "If a finer blocking scheme reverses the ranking, the finer scheme wins and the coarse one is retired (finer blocking is strictly stricter).",
+  "If the frame-P ranking and the frame-S ranking disagree in sign, frame P wins for the reason recorded under frames.S_sanity."
+ ]
 }

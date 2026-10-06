@@ -1,5 +1,5 @@
 {
- "artifact": "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359",
+ "artifact": "GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914",
  "generated_from": "scripts/check_request.py",
  "n_pass": 11,
  "n_partial": 1,
@@ -11,7 +11,7 @@
    "requirement": "Produce a unique submission TIF; never copy a prior GEMSDOE submission",
    "status": "PASS",
    "evidence": "registry/verification.json :: pass_c_uniqueness",
-   "detail": "12 distinct prior artifacts compared from data/probes/; max Jaccard vs ours 0.0202 (gems20-h), vs the 0.2600 incumbent 0.0121. Coverage limit: the family lists 40+ sites but only 12 distinct scored artifacts are obtainable, so 'unlike anything in the 40+ sites' is proven for the obtainable set only."
+   "detail": "19 distinct prior artifacts compared from data/probes/; max Jaccard vs ours 0.0144 (gems22-h23-a-dti-optimal-emission-6pct-20261002-e2ec4b49-nan), vs the 0.2600 incumbent 0.0076. Coverage limit: the family lists 40+ sites but only 19 distinct scored artifacts are obtainable, so 'unlike anything in the 40+ sites' is proven for the obtainable set only."
   },
   {
    "no": "2",
@@ -25,14 +25,14 @@
    "requirement": "The TIF must be one-click downloadable, said in an executive summary at the very top",
    "status": "PASS",
    "evidence": "docs/index.html",
-   "detail": "the first content block is the executive-summary hero whose <h2> is '\u2b07 One-click submission file'; the download link occurs at byte 1096 of 11197, before the first ordinary section at byte 4287; a .zip of the same bytes and the NaN-outside twin sit next to it; the auto-regenerated status table follows the download."
+   "detail": "the first content block is the executive-summary hero whose <h2> is '\u2b07 One-click submission file'; the download link occurs at byte 1096 of 12785, before the first ordinary section at byte 4329; a .zip of the same bytes and the NaN-outside twin sit next to it; the auto-regenerated status table follows the download."
   },
   {
    "no": "4",
    "requirement": "Unique filename and a short note to distinguish the submission",
    "status": "PASS",
    "evidence": "registry/submission.json :: unique_name_for_portal / note_for_portal",
-   "detail": "name 'GEMS44_n-strand-ssmc_20261006T110212Z_4971d359' (timestamp + content hash); note as pasted into the portal: 'GEMS44 n-strand-ssmc | field = supervised transfer of USGS SGMC strands absent from the catalogue (U) onto the 19 official bands; exact greedy max-coverage emission 44090 dots; 0 on the known mask; un'"
+   "detail": "name 'GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914' (timestamp + content hash); note as pasted into the portal: 'GEMS44 n-strand-ssmc | supervised transfer of USGS SGMC strands absent from the given catalogue (U) onto the 19 official bands; exact greedy max-coverage emission 44090 dots; <=200 m catalogue ring excluded; none on the known mask; unique f'"
   },
   {
    "no": "5",
@@ -53,7 +53,7 @@
    "requirement": "Validate the top candidate on a spatially-blocked holdout before spending a submission slot",
    "status": "PASS",
    "evidence": "registry/selection.json",
-   "detail": "fold construction: learned fields re-fitted per fold on the three training quadrants only; four quadrant blocks, mass_fold = M_global * allowed_q / allowed_total; gate 'frame N: mean fold delta vs incumbent >= +0.005 and >= 3 of 4 folds positive'. Held out: candidate 0.401181 vs the real incumbent artifact 0.165267, delta 0.235915, 4/4 folds positive. The shipped field/mass was chosen by leave-one-fold-out, not by the in-sample mean."
+   "detail": "fold construction: learned fields re-fitted per fold on the three training quadrants only; four quadrant blocks, mass_fold = M_global * allowed_q / allowed_total; gate 'frame N: mean fold delta vs incumbent >= +0.005 and >= 3 of 4 folds positive'. Held out: candidate 0.396379 vs the real incumbent artifact 0.13564, delta 0.26074, 4/4 folds positive. The shipped field/mass was chosen by leave-one-fold-out, not by the in-sample mean."
   },
   {
    "no": "8",
@@ -74,7 +74,7 @@
    "requirement": "Clean GitHub Pages site with auditable tables and official source links",
    "status": "PASS",
    "evidence": "docs/*.html",
-   "detail": "25 tables across 7 pages; every page footer names the registry file it was compiled from; official links include the problem description, the leaderboard, thread 11516 and the reference solution."
+   "detail": "29 tables across 7 pages; every page footer names the registry file it was compiled from; official links include the problem description, the leaderboard, thread 11516 and the reference solution."
   },
   {
    "no": "11",
@@ -88,7 +88,7 @@
    "requirement": "Flag irregularities for review; record remaining work and limitations",
    "status": "PASS",
    "evidence": "registry/irregularities.json, docs/limitations.html",
-   "detail": "14 irregularities recorded, each with what/why/status/action_taken; the limitations page carries the data-provenance caveat (the official files are hash-pinned mirrors supplied with the prior family repositories, not re-downloaded from the organizer) and the probe-coverage caveat."
+   "detail": "17 irregularities recorded, each with what/why/status/action_taken; the limitations page carries the data-provenance caveat (the official files are hash-pinned mirrors supplied with the prior family repositories, not re-downloaded from the organizer) and the probe-coverage caveat."
   },
   {
    "no": "13",
