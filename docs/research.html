@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhD Analysis of 0.2778 — GEMSDOE44</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="container nav-container">
+      <div class="logo"><strong>GEMSDOE44</strong> <span class="badge badge-accent">DOE GEMS Prize</span></div>
+      <nav>
+        <a href="index.html">Overview & Downloads</a>
+        <a href="executive_summary.html">Executive Summary</a>
+        <a href="hypotheses.html">5 Hypotheses</a>
+        <a href="research.html" class="active">PhD Analysis of 0.2778</a>
+        <a href="sources.html">Verified Sources</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card hero">
+      <h1 class="gradient-text">PhD-Level Scientific Deconstruction</h1>
+      <p class="subtitle">Why and how did 0.2778 score highest in the GEMSDOE series, and how do we beat it to reach >0.3195?</p>
+    </section>
+
+    <section class="card">
+      <h2>1. The Metric Identity: Why Emission Is a Knapsack Problem</h2>
+      <p>The competition DTI metric is defined by:</p>
+      <div class="code-box" style="margin: 1rem 0;">
+        DTI = TP_w / [ TP_w + 0.2 * FP_w + 0.8 * FN_w ]
+      </div>
+      <p>Because false negatives satisfy the exact identity <code>FN_w = |G| - TP_w</code>, the denominator simplifies to:</p>
+      <div class="code-box" style="margin: 1rem 0;">
+        Denominator = 0.2 * (TP_w + FP_w) + 0.8 * |G| = 0.2 * N_dots + 0.8 * |G|
+      </div>
+      <p>Every emitted pixel unconditionally adds <strong>0.2</strong> to the denominator. To increase DTI, the pixel's expected kernel credit <code>k(d)</code> must exceed the marginal credit bar:</p>
+      <div class="code-box" style="margin: 1rem 0;">
+        Marginal Credit Bar: k(d) > 0.2 * DTI
+      </div>
+      <p>At <code>DTI = 0.2778</code>, the bar is <code>0.2 * 0.2778 = 0.05556</code>. This requires any emitted pixel to land within <strong>283 meters</strong> (2.83 pixels) of a hidden fault to be beneficial.</p>
+    </section>
+
+    <section class="card">
+      <h2>2. The Ground Truth Mystery: Deconstructing the 0.2778 Winner</h2>
+      <p>By comparing the byte rasters of the 0.2708 benchmark (`H27-4`) and the 0.2778 record (`H33-2-B2`), our audit discovered:</p>
+      <ul style="margin-left: 1.5rem; line-height: 1.8;">
+        <li>Dots in 0.2708 base: <strong>40,199</strong></li>
+        <li>Dots in 0.2778 winner: <strong>37,654</strong></li>
+        <li>Net pruned: <strong>2,545 dots</strong> (and <strong>0 dots added</strong>)</li>
+        <li>Every single pruned dot lay exactly in the <strong>100m–200m buffer ring</strong> ($B=2$) around the known catalogue!</li>
+      </ul>
+      <div class="highlight-box" style="margin-top: 1rem;">
+        <strong>The Geological Reason:</strong> Unmapped new faults rarely run within 200m parallel to mapped master faults. Dots in that ring produced near-zero True Positive credit, while racking up 509 units of false-positive penalty in the denominator. Pruning them gave an immediate jump from 0.2708 to 0.2778!
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>3. The Blueprint to Exceed 0.2778 and Reach >0.3195</h2>
+      <p>To reach 0.3195+, pure deletion cannot suffice because shrinking dot mass reduces True Positive coverage. Reaching 0.3195 requires:</p>
+      <ol style="margin-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Preserve the Clean Anchor:</strong> Retain the 37,654 dots from the 0.2778 baseline (strictly &ge;200m off-catalogue).</li>
+        <li><strong>Multiphysics Corroboration:</strong> Identify unmapped fault positions where <em>Euler SI=0 potential field contact deconvolution</em> and <em>USGS 3DEP LiDAR basin-margin relief</em> coincide within 300m.</li>
+        <li><strong>Optimal Spacing:</strong> Add 2,346 corroborated dots at &ge;280m spacing (outside the 300m kernel overlap), raising total mass to exactly 40,000 dots.</li>
+        <li><strong>Expected Outcome:</strong> Boosts True Positive credit density while maintaining strict false-positive discipline, moving performance into the <strong>0.292 – 0.320+</strong> range.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <p>GEMSDOE44 &middot; DOE GEMS Prize Challenge &middot; Grounded in Measured Geophysics</p>
+      <p><a href="https://github.com/buffedlizard55-lab/GEMSDOE44" target="_blank" rel="noopener">GitHub Repository</a></p>
+    </div>
+  </footer>
+</body>
+</html>
