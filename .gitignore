@@ -17,3 +17,7 @@ tmp/
 .ruff_cache/
 
 # keep: evidence/*.json (small, the site's data feed), docs/ (site + downloads)
+
+# from main (Session 1-2)
+*.npy
+data/raw/

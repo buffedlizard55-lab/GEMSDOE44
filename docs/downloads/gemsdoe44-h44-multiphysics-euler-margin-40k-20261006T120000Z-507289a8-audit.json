@@ -1,0 +1,44 @@
+{
+  "submission_name": "GEMSDOE44-H44-MULTIPHYSICS-40K",
+  "filename": "gemsdoe44-h44-multiphysics-euler-margin-40k-20261006T120000Z-507289a8-zeros.tif",
+  "sha256": "c36d8fea85ccd9f832d44f18c22d950aa6231da802c812af6e3a56bb136a0bf6",
+  "size_bytes": 152132,
+  "nan_filename": "gemsdoe44-h44-multiphysics-euler-margin-40k-20261006T120000Z-507289a8-nan.tif",
+  "nan_sha256": "b988cbce0f4c2d839151cb7f9f6e5577fdad2f355ec8ce7186feddc7e6e58232",
+  "nan_size_bytes": 183470,
+  "shape": [
+    3730,
+    3292
+  ],
+  "crs": "EPSG:32611",
+  "transform": [
+    100.0,
+    0.0,
+    243350.0,
+    0.0,
+    -100.0,
+    4508550.0
+  ],
+  "dtype": "float32",
+  "nodata": null,
+  "emitted_positive_pixels": 40000,
+  "in_footprint_finite_pixels": 5167373,
+  "in_footprint_min": 0.0,
+  "in_footprint_max": 1.0,
+  "full_grid_finite_pixels": 12279160,
+  "base_anchor_pixels": 37654,
+  "added_corroborated_pixels": 2346,
+  "checks": {
+    "single_band": true,
+    "dtype_float32": true,
+    "dimensions_3730x3292": true,
+    "crs_epsg_32611": true,
+    "in_footprint_all_finite": true,
+    "in_footprint_zero_nan": true,
+    "in_footprint_range_0_1": true,
+    "zero_on_catalogue_leakage": true,
+    "validator_range_0_1_guaranteed": true
+  },
+  "note": "GEMSDOE44 H44-40K | 37654-dot 0.2778-lineage anchor + 2346 Euler SI=0/LiDAR dots at >=280m; 40000 dots, off-catalogue, [0,1] safe | sha c36d8fea",
+  "session2_note_fix": "2026-10-06 (IR-44-07): portal note shortened from 206 to 144 chars to fit the 200-char convention; TIF bytes untouched, sha256 unchanged."
+}
