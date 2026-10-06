@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Method — GEMSDOE44</title>
+<link rel="stylesheet" href="assets/site.css"></head><body>
+<header class="top"><div class="wrap">
+<h1>Method</h1>
+<div class="note">What was done, in order, with the negative result that changed the design</div>
+<nav style="margin-top:14px">
+<a href="index.html">Executive summary</a>
+<a href="how-to-submit.html">How to submit</a>
+<a href="data.html">Data</a>
+<a href="method.html">Method</a>
+<a href="validation.html">Validation</a>
+<a href="hypotheses.html">Hypotheses</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="limitations.html">Limitations</a>
+</nav></div></header>
+<div class="wrap">
+
+<h2>Method, in the order it was done</h2>
+<ol>
+<li><strong>Read the rules from the source.</strong> The metric, kernel, weights, masking rule and
+format contract are transcribed into <code>src/gems44/metric.py</code> and exercised by 23 tests
+that include an independent O(|P|·|G|) brute-force transcription.</li>
+<li><strong>Measure the population before modelling it.</strong> <code>scripts/measure_population.py</code>
+labels the catalogue into 1,662 segments, measures the length and azimuth distributions, and tests
+the one geometric hypothesis (H1) whose premise the data could settle. H1 failed its own test and
+was dropped — see <a href="hypotheses.html">Hypotheses</a>.</li>
+<li><strong>Measure detectability before trusting a field.</strong>
+<code>scripts/measure_detectability.py</code> measures spatially blocked ROC AUC for real faults
+absent from the catalogue versus random footprint pixels. Result: <strong>0.773</strong> blocked
+(folds 0.762–0.789) against 0.773 for the same features on the catalogue frame — but see step 5 for
+why that number did not survive contact with the metric.</li>
+<li><strong>Build the emitter from the metric, not from intuition.</strong> <code>TP_w</code> is a
+max over a 300 m disc ⇒ the objective is submodular ⇒ fixed-order greedy expected-marginal-credit
+emission, stopping at <code>k &gt; 0.2·DTI</code>.</li>
+<li><strong>Score fields with the metric, on blocked frames, out of fold.</strong>
+<code>scripts/run_selection.py</code> sweeps a family of belief fields × emitted mass over four
+spatially blocked quadrants, scoring every combination with the official metric against a frame
+whose positives the catalogue does not contain, and selecting leave-one-fold-out. This is the step
+that exists <em>because</em> step 3's AUC was misleading.</li>
+<li><strong>Emit, write, and re-read.</strong> <code>scripts/build_submission.py</code> writes the
+GeoTIFF, then independently re-reads the bytes on disk and checks CRS, resolution, shape,
+transform, dtype, band count and the [0, 1] range.</li>
+</ol>
+
+<h2>Reproduce</h2>
+<pre>bash scripts/fetch_official_mirrors.sh          # hash-verified data into data/
+PYTHONPATH=src python scripts/measure_population.py
+PYTHONPATH=src python scripts/measure_detectability.py
+PYTHONPATH=src python scripts/run_selection.py
+PYTHONPATH=src python scripts/run_holdout.py     # exact-operator confirmation
+PYTHONPATH=src python scripts/build_submission.py
+PYTHONPATH=src python -m pytest tests -q
+python scripts/build_site.py</pre>
+
+<h2>Metric-exact facts used by the selection</h2>
+<table class="tbl"><thead><tr><th>at score s</th><th>break-even credit k = 0.2s</th><th>implied maximum distance from scored truth</th></tr></thead><tbody>
+<tr><td>0.1000</td><td>0.0200</td><td>294 m</td></tr>
+<tr><td>0.2000</td><td>0.0400</td><td>288 m</td></tr>
+<tr><td>0.2600</td><td>0.0520</td><td>284 m</td></tr>
+<tr><td>0.2778</td><td>0.0556</td><td>283 m</td></tr>
+<tr><td>0.3195</td><td>0.0639</td><td>281 m</td></tr>
+<tr><td>0.3345</td><td>0.0669</td><td>280 m</td></tr>
+</tbody></table>
+<p>These follow from the published formula alone and need no data. They are the reason a dot
+anywhere inside the 300 m kernel is close to free, and the reason the competition is a coverage
+problem rather than a precision problem.</p>
+
+<h2>The first holdout, kept in the record</h2>
+<p>A supervised off-catalogue classifier reached a blocked pixel AUC of 0.773, so an earlier
+version of this pipeline emitted its belief field with the exact greedy emitter and scored it with
+the official metric on a held-out quadrant. Held-out DTI at 44,090 dots was
+<strong>0.0766</strong>; uniform-random dots scored <strong>0.1341</strong>; the live-scored 0.2600
+incumbent artifact scored <strong>0.1353</strong> on the same frame. That single fold is preserved
+in <code>registry/holdout_partial.json</code> and it is the reason this repository selects on the
+metric rather than on AUC.</p>
+
+
+<footer>
+<p><strong>Evidence discipline.</strong> Every number on this site is rendered from a JSON file in
+<code>registry/</code> that was written by a script in this repository, and the page names that file.
+Nothing here is asserted from memory. Where a value is an estimate from a model rather than a
+measurement, it is labelled as such. No organizer score is claimed for any artifact in this
+repository.</p>
+<p>GEMSDOE44 · DOE GEMS Prize (DrivenData #306) · source:
+<a href="https://github.com/buffedlizard55-lab/GEMSDOE44">github.com/buffedlizard55-lab/GEMSDOE44</a></p>
+</footer></div></body></html>

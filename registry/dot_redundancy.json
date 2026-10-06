@@ -1,0 +1,142 @@
+[
+ {
+  "file": "gems24-h25-1-dotted-h19-5-d2-8-20261002-e56e",
+  "n": 44090,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.195
+ },
+ {
+  "file": "gems16-h18-4-usgs-geologic-map-faults-gap-20",
+  "n": 57783,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.0
+ },
+ {
+  "file": "gems26-dilcond-oof-v1-20261003-47629f496133-",
+  "n": 60068,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.146
+ },
+ {
+  "file": "gems24-h25-1-dotted-h19-5-d1-5-20261002-989f",
+  "n": 60069,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.199
+ },
+ {
+  "file": "gems27-topo-gap-closure-t-v2-on-d1-5-2026100",
+  "n": 61328,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.199
+ },
+ {
+  "file": "gems10-h28-dotted-ridge-20260928T02025623688",
+  "n": 69281,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.267
+ },
+ {
+  "file": "gemsdoe23-h30-arrangement-matched-habitat-20",
+  "n": 91533,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.13
+ },
+ {
+  "file": "12GEMSDOE_r7-nms3-dem10-scarp_0c9199f14e62.t",
+  "n": 103347,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.232
+ },
+ {
+  "file": "gems19-h19-5-powerlaw-budget-multiline-corro",
+  "n": 121131,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.2
+ },
+ {
+  "file": "gems16-h18-3a-topo-geophys-x-complexity-prio",
+  "n": 122120,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.267
+ },
+ {
+  "file": "gems19-h19-4-multiline-corroborated-openness",
+  "n": 123779,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.198
+ },
+ {
+  "file": "gems20-h20-1-sarnnpu-powerlaw-pi0363-tilt-wi",
+  "n": 123829,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.201
+ },
+ {
+  "file": "gems16-h16-1-topo-geophys-baseline-ridges-20",
+  "n": 123939,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.197
+ },
+ {
+  "file": "gems10-h20-dem10-scarp-thin-20260927T1552230",
+  "n": 153957,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.384
+ },
+ {
+  "file": "pindrop-v4-nodes-20260925T152420Z-f347b70daa",
+  "n": 155021,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.088
+ },
+ {
+  "file": "gems10-h25-ctx-ridge-20260927T232947704150Z-",
+  "n": 174232,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.331
+ },
+ {
+  "file": "gemsdoe2-dual-family-union-f68e590f.tif",
+  "n": 183642,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.232
+ },
+ {
+  "file": "13gems_20261001_r13-lattice-s5_v2_zerofill.t",
+  "n": 206895,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.086
+ },
+ {
+  "file": "gems10-h16-continuation-20260927T06552107773",
+  "n": 310042,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.505
+ },
+ {
+  "file": "gems22-h23-a-dti-optimal-emission-6pct-20261",
+  "n": 335879,
+  "frac_dots_with_neighbor_1p4": 0.0,
+  "frac_within_3px_of_another_dot": 0.0,
+  "frac_in_cat_halo_3px": 0.2
+ }
+]

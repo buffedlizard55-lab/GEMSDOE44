@@ -134,7 +134,8 @@ docs/                         GitHub Pages site — index.html leads with the do
   index.html                  executive summary + one-click file
   how-to-submit.html          exact clicks, the exact Note, the range-error fix
   data.html                   auditable data table, grid contract, official links
-  method.html                 what was done in order, including the negative result
+  method.html                 what was done in order, including the negative results
+  validation.html             how the validation frame was chosen, and the probe evidence
   hypotheses.html             the ranked hypotheses, falsified ones kept in
   leaderboard.html            official snapshot + attribution caveat
   limitations.html            what stands in the way + flagged irregularities + next steps
@@ -150,6 +151,11 @@ scripts/
   fetch_official_mirrors.sh   hash-verified fetch, fails closed
   measure_population.py       H1 falsification test + population statistics
   measure_detectability.py    blocked AUC for catalogue-absent faults
+  measure_strands.py          geometry of the two fault compilations
+  fetch_probes.py             downloads family artifacts whose live scores were reported
+  rank_frames.py              ranks candidate local frames against those reported scores
+  probe_frame_validity.py     first falsification test of the pre-registered frame
+  analyze_halo.py             separates halo concentration from mass as score explanations
   run_selection.py            metric-aligned blocked field + mass selection  <- decisive
   run_holdout.py              exact-operator confirmation run
   build_submission.py         builds and independently verifies the artifact

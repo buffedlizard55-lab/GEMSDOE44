@@ -78,6 +78,7 @@ def page(title: str, body: str, subtitle: str = "") -> str:
 <a href="how-to-submit.html">How to submit</a>
 <a href="data.html">Data</a>
 <a href="method.html">Method</a>
+<a href="validation.html">Validation</a>
 <a href="hypotheses.html">Hypotheses</a>
 <a href="leaderboard.html">Leaderboard</a>
 <a href="limitations.html">Limitations</a>
@@ -151,6 +152,22 @@ download once a submission has been built and format-verified; it will never off
                  f"{x['heldout_dti']:.4f}", f"{x['incumbent_heldout_dti']:.4f}",
                  f"{x['delta_vs_incumbent']:+.4f}", f"{x['uniform_heldout_dti']:.4f}") for x in loo]
 
+    if loo:
+        validation_block = (
+            "<p>The candidate field and mass were chosen leave-one-quadrant-out on the primary frame. "
+            "Held-out result versus the real 0.2600 incumbent artifact, same frame, same metric:</p>"
+            + table(["fold", "field chosen", "mass", "candidate DTI", "incumbent DTI", "delta", "uniform DTI"], loo_rows)
+            + "<p><strong>Pooled:</strong> candidate {}, incumbent {}, delta <strong>{}</strong>, "
+              "positive folds {}/{}. Gate (>= +0.005 pooled and >= 3 of 4 folds positive): "
+              "<strong>{}</strong>.</p><p class='note'>Source: <code>registry/selection.json</code>. "
+              "The gate and the frame are the ones frozen in <code>registry/preregistration.json</code>.</p>".format(
+                pooled.get("candidate_heldout_dti"), pooled.get("incumbent_heldout_dti"), pooled.get("delta"),
+                pooled.get("positive_folds"), pooled.get("n_folds"),
+                "PASS" if pooled.get("gate_pass") else "FAIL")
+        )
+    else:
+        validation_block = ("<p class='note'>Selection results pending; the gate, the frames and the "
+                            "decision rule are frozen in <code>registry/preregistration.json</code>.</p>")
     body = f"""
 {hero}
 
@@ -189,16 +206,21 @@ analysis shows the family sits at its own emission optimum, so the remaining gap
 <em>field</em> problem, not an emission problem. This repository does three things differently,
 and each is falsifiable:</p>
 <ul>
-<li><strong>It selects on the metric, not on AUC.</strong> A first holdout (kept in
-<code>registry/holdout_partial.json</code>) showed that a supervised off-catalogue classifier with a
-spatially blocked pixel AUC of <strong>0.773</strong> still lost to uniform-random dots when its
-belief field was actually emitted and scored with the official metric. AUC is the wrong objective
-for a metric that only pays inside a 300 m kernel. Field and mass are therefore selected by the
-official metric on a spatially blocked frame.</li>
-<li><strong>It never uses the catalogue as a promotion frame.</strong> The catalogue cannot represent
-the target population: the competition scores faults the catalogue lacks. The primary frame here is
-the one real, officially published, locally available set of mapped faults that the given catalogue
-does <em>not</em> carry.</li>
+<li><strong>It chooses its validation frame by scoring already-scored artifacts on it.</strong>
+Nineteen family artifacts whose live scores were reported (0.0461 to 0.2600) were downloaded and
+scored on four candidate frames plus their own uniform controls. The catalogue frame is not merely
+weak, it is <em>inverted</em> (rho = −0.475) and it is degenerate under the official mask — its own
+truth pixels <em>are</em> the mask, so the truth set is empty and every artifact scores exactly
+0.000000. The frame this repository pre-registered first (SGMC faults &gt;300 m from the catalogue)
+also failed: rho = −0.054. The frame that survived is the SGMC strands within 300 m of the
+catalogue (rho_excess = +0.396, all 19 artifacts above uniform). The amendment is recorded as
+AM-44-01 and IR-44-09. <a href="validation.html">Validation</a> shows the whole table.</li>
+<li><strong>It emits by the metric's own arithmetic, at the metric's own spacing.</strong> Across the
+same 19 artifacts, the strongest measured correlate of a reported score is not a geological
+statistic but dot spacing: <code>Spearman(score, fraction of dots 8-adjacent to another dot) =
+−0.361</code>, and the three best artifacts have essentially zero adjacent dots while low scorers
+have 0.9. A dot beside another adds no new truth coverage and still costs 0.2 of FP. The emitter
+here is an exact greedy max-coverage solver that refuses any dot adding no new kernel credit.</li>
 <li><strong>It emits with the metric's own arithmetic.</strong> Because <code>TP_w</code> is a
 <em>max</em> over a 300 m disc, expected credit is submodular in the emitted set, so a fixed-order
 greedy emitter carries the standard (1 − 1/e) guarantee, and the stopping condition is the
@@ -206,8 +228,7 @@ closed-form break-even rule above rather than a tuned radius.</li>
 </ul>
 
 <h2>Validation, out of fold</h2>
-{"<p>The candidate field and mass were chosen leave-one-quadrant-out on the primary frame. Held-out result versus the real 0.2600 incumbent artifact, same frame, same metric:</p>" + table(
-    ["fold", "field chosen", "mass", "candidate DTI", "incumbent DTI", "delta", "uniform DTI"], loo_rows) + f"<p><strong>Pooled:</strong> candidate {pooled.get('candidate_heldout_dti')}, incumbent {pooled.get('incumbent_heldout_dti')}, delta <strong>{pooled.get('delta')}</strong>, positive folds {pooled.get('positive_folds')}/{pooled.get('n_folds')}. Gate (≥ +0.005 pooled and ≥ 3 of 4 folds positive): <strong>{'PASS' if pooled.get('gate_pass') else 'FAIL'}</strong>.</p><p class='note'>Source: <code>registry/selection.json</code>.</p>" if loo else "<p class='note'>Selection results pending; see <code>registry/selection.json</code>.</p>")}
+{validation_block}
 
 <h2>Honest limitations</h2>
 <p>Read <a href="limitations.html">Limitations and irregularities</a>. The three that matter most:
@@ -263,24 +284,31 @@ footprint carry no prediction and are outside the study area.</p>
 <p>The competition allows a limited number of scored submissions and requires one single file to be
 chosen for scoring across both prize rounds before the deadline. This repository therefore treats
 each upload as an experiment and never spends a slot on an artifact that has not first beaten the
-incumbent on the blocked primary frame — see <a href="method.html">Method</a>.</p>
+incumbent on the blocked primary frame — see <a href="method.html">Method</a>
+<a href="validation.html">Validation</a>.</p>
 """
     (DOCS / "how-to-submit.html").write_text(page("How to submit", body,
         "The exact clicks, the exact Note, and the fix for the range error"))
 
     # ---------------------------------------------------------------- data
+    man = load("data_manifest.json", {"files": []})
     rows = []
-    for k, v in (src.get("official_data") or []):
-        rows.append((esc(k), f"<span class='tag ok'>hash matched</span>", f"{v['bytes']:,}",
-                     f"<span class='mono'>{esc(v['sha256'][:24])}…</span>", esc(v.get("mirror", ""))))
+    for f in man.get("files", []):
+        rows.append((esc(f.get("id", "")), esc(f.get("role", ""))[:110] + "…",
+                     f"{f.get('bytes', 0):,}",
+                     f"<span class='mono'>{esc(str(f.get('sha256', ''))[:24])}…</span>",
+                     esc(f.get("provenance", ""))[:90] + "…"))
     body = f"""
 <h2>Competition data — auditable table</h2>
 <p>Four official files, each fetched from a public, hash-pinned mirror and verified against its
 sha256 before use. No file was used before its digest matched.</p>
-{table(["file", "status", "bytes", "sha256 (truncated)", "source mirror"], rows)}
-<p class="note">Source: <code>registry/sources.json</code>. The mirrors are owner-supplied copies of
+{table(["file", "role in this repository", "bytes", "sha256 (truncated)", "provenance"], rows)}
+<p class="note">Source: <code>registry/data_manifest.json</code>, whose sha256 values were computed
+from the bytes actually used here. The competition rasters are owner-supplied mirrors of
 login-walled DrivenData files: the pins prove <em>reproducibility</em>, not organizer
-authentication. Registered as irregularity IR-44-02 in <a href="limitations.html">Limitations</a>.</p>
+authentication. Registered as irregularity IR-44-02 in <a href="limitations.html">Limitations</a>.
+Reproduce with <code>bash scripts/fetch_official_mirrors.sh</code>, which fails closed on any
+digest mismatch.</p>
 
 <h2>Grid contract, read from the official bytes</h2>
 {table(["quantity", "value"], [
@@ -443,7 +471,7 @@ unauthenticated and are reproduced here only because they are the only live sign
     (esc("h27-4 solo d28"), "~40,199", "0.2708"),
     (esc("h33-2-B2 flank B=2"), "37,654", "<strong>0.2778</strong>"),
 ])}
-<p>The reported scores rise monotonically as the dot count falls. That is the marginal rule of the
+<p>Across the 19 artifacts with reported scores, the score falls as the dot count rises (Spearman = −0.653), and the three best sit in the 44,090–61,328 band. That is the marginal rule of the
 metric in action: each removed dot whose realised credit was below <code>0.2·DTI</code> was costing
 more than it earned. It is also the reason this repository treats mass as a first-class parameter
 chosen by blocked selection rather than by taste.</p>
@@ -455,6 +483,81 @@ supported. Flagged as IR-44-03 in <a href="limitations.html">Limitations</a>.</p
 """
     (DOCS / "leaderboard.html").write_text(page("Leaderboard", body,
         "Official snapshot, owner-reported history, and the artifact-attribution caveat"))
+
+    # ---------------------------------------------------------------- validation
+    rank = load("frame_ranking.json", {})
+    prob = load("probe_manifest.json", {"probes": []})
+    algn = load("probe_sgmc_alignment.json", [])
+    halo = load("halo_analysis.json", {})
+    strands = load("strands.json", {})
+    pre = load("preregistration.json", {})
+    am = (pre.get("amendments") or [{}])[-1]
+    fr = rank.get("verdict", {})
+    frame_rows = []
+    for name, v in fr.items():
+        frame_rows.append((esc(name), f"{v.get('truth_px', 0):,}",
+                           f"<strong>{v.get('rho_level')}</strong>" if v.get('rho_level') is not None else "—",
+                           f"<strong>{v.get('rho_excess')}</strong>",
+                           f"{v.get('probes_beating_uniform', '?')}/{v.get('n_probes', '?')}",
+                           f"{v.get('mean_dti')}"))
+    probe_rows = []
+    for a in sorted(algn, key=lambda r: -r["live"]):
+        probe_rows.append((esc(a["file"][:44]), f"{a['live']:.4f}", f"{a['n']:,}",
+                           f"{a['frac_dots_8adjacent']:.3f}", f"{a['frac_within_3px_of_N']:.3f}",
+                           f"{a['frac_within_3px_of_P']:.3f}"))
+    halo_cors = (halo.get("spearman_vs_live") or {})
+    cor_rows = [(esc(k), esc(v)) for k, v in sorted(halo_cors.items(), key=lambda kv: -abs(float(kv[1])))][:8]
+    reg = (halo.get("rank_regression") or {})
+    body = f"""
+<h2>What was tested, in order</h2>
+<p>Two failure modes decide this project. Both were found by measurement, and both are recorded
+against this repository's own earlier decisions.</p>
+
+<h3>1 · A catalogue-truth frame is degenerate, and an inverted frame is worse than none</h3>
+<p>Because the metric deletes known-fault pixels from <em>every</em> term, a frame whose truth is
+the catalogue has an empty truth set under the official mask: the score is exactly 0 for every
+artifact. Scored with the mask disabled it is worse than useless — the artifacts that score
+0.24–0.26 live score <em>lower</em> on it than the ones that score 0.05:</p>
+{table(["candidate frame", "truth px", "rho level", "rho excess", "probes above uniform", "mean DTI"], frame_rows)}
+<p class="note">rho is Spearman against the 19 reported live scores. <code>rho excess</code> uses each
+artifact's score minus its own uniform control at the same mass, which removes the mass effect.
+Source: <code>registry/frame_ranking.json</code>, produced by <code>scripts/rank_frames.py</code>
+from the probe set in <code>scripts/fetch_probes.py</code>.</p>
+<p><strong>Frame P (SGMC beyond 300 m of the catalogue) was this repository's pre-registered primary
+frame and it failed this test.</strong> It was replaced before any selection result was read:
+<em>{esc(am.get('change',''))}</em>. Trigger: {esc(am.get('trigger',''))[:400]}…
+Source: <code>registry/preregistration.json</code> amendment {esc(am.get('id','?'))}; IR-44-09.</p>
+
+<h3>2 · Dot spacing, not geology, is the largest measured correlate of a reported score</h3>
+<p>Each artifact below is real, was scored on the live board, and is on disk here. The columns are
+measured from its bytes: how many dots it carries, what fraction of those dots are 8-adjacent to
+another dot (pure waste under the metric), and what fraction sit within 300 m of the two SGMC
+frames.</p>
+{table(["artifact (owner-reported score)", "reported", "dots", "8-adjacent frac", "within 300 m of frame N", "of frame P"], probe_rows)}
+<p class="note">Sources: <code>registry/probe_manifest.json</code>,
+<code>registry/probe_sgmc_alignment.json</code>, <code>registry/halo_analysis.json</code>.
+Reported scores are owner-reported, not organizer receipts (IR-44-08).</p>
+<p>Rank correlations against the reported score, over all 19 artifacts:</p>
+{table(["measured property", "Spearman vs reported score"], cor_rows)}
+<p>The rank regression <code>{esc(reg.get('model',''))}</code> gives a coefficient of
+<strong>{esc(reg.get('coef_log_mass'))}</strong> on log mass and <strong>{esc(reg.get('coef_frac3'))}</strong>
+on the halo fraction, with R² = {esc(reg.get('r2'))}. The mechanism is exact under the official
+formula: two adjacent dots deliver the same truth coverage as one, while each costs 0.2 of FP and
+0.2 of the denominator.</p>
+
+<h3>3 · Where the strands are</h3>
+<p>The USGS State Geologic Map Compilation is <em>not</em> the competition catalogue: only 18.7% of
+catalogue pixels lie within 100 m of an SGMC pixel and the median catalogue pixel is 849 m from the
+nearest SGMC line. The SGMC raster used here carries {int((strands.get('A_comparison') or {}).get('sgmc_in_footprint_px', 0)):,} pixels
+inside the footprint, of which {int((strands.get('A_comparison') or {}).get('sgmc_off_known_px', 0)):,} are off the
+known-fault mask: {int((strands.get('A_comparison') or {}).get('sgmc_off_known_to_cat_distance_px_bins', {}).get('0-1', 0) + (strands.get('A_comparison') or {}).get('sgmc_off_known_to_cat_distance_px_bins', {}).get('1-3', 0)):,}
+within 300 m of the catalogue (frame N) and {int((strands.get('A_comparison') or {}).get('sgmc_off_known_to_cat_distance_px_bins', {}).get('>30', 0)):,} more
+than 3 km from it. The catalogue and the compilation are therefore two different maps of the same
+ground, which is what makes one usable as validation truth for the other.
+Source: <code>registry/strands.json</code> (<code>scripts/measure_strands.py</code>).</p>
+"""
+    (DOCS / "validation.html").write_text(page("Validation", body,
+        "The measured basis for trusting — or not trusting — every number in this repository"))
 
     # ---------------------------------------------------------------- limitations
     irr = load("irregularities.json", {"items": []})
@@ -476,6 +579,15 @@ data-blocked here, and the one-click site cannot be checked from inside the sand
 absent from the given catalogue are real mapped faults the catalogue lacks, but they are a
 pre-Quaternary-inclusive compilation and the hidden set need not share their statistics. The frame
 is used because it is the only local frame that cannot be won by copying the catalogue.</li>
+<li><strong>The validation frame was amended mid-session and the amendment is not free.</strong>
+Frame N's rank agreement with the reported live order is rho_excess = +0.396 at n = 19 (p ≈ 0.09):
+directional, not significant. It was chosen only after the pre-registered frame P failed
+(AM-44-01 / IR-44-09). A submission selected on frame N therefore carries a residual risk that is
+stated, not hidden.</li>
+<li><strong>No geological field here is validated against the hidden set.</strong> The field shipped
+is a supervised transfer of the USGS SGMC compilation; if the organizers' hidden faults do not
+resemble that compilation, the transfer is worth nothing (IR-44-12). This is unmeasurable from
+inside this sandbox.</li>
 <li><strong>Quadrant blocking is coarse.</strong> Half-map quadrants remove large-scale leakage but
 not regional structure that persists within a quadrant. Finer blocking would be stricter and is the
 next methodological upgrade.</li>
@@ -486,7 +598,7 @@ local frame is not guaranteed to map linearly onto the board.</li>
 
 <h2>Irregularities, flagged for review</h2>
 {table(["id", "what", "why it matters", "status"], [
-    (f"<strong>{esc(i['id'])}</strong>", esc(i["what"]), esc(i["why"]), f"<span class='tag warn'>{esc(i['status'])}</span>")
+    (f"<strong>{esc(i['id'])}</strong>", esc(i["what"]), esc(i.get("why", i.get("residual_risk", ""))), f"<span class='tag warn'>{esc(i['status'])}</span>")
     for i in irr.get("items", [])
 ])}
 

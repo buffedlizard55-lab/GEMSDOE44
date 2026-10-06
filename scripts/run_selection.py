@@ -1,34 +1,26 @@
-"""Metric-aligned, spatially blocked field + mass selection.  THE decisive experiment.
+"""Metric-aligned, spatially blocked field + emission selection.  THE decisive experiment.
 
-Why this design
----------------
-Fold 0 of the first holdout (registry/holdout_partial.json, kept for the record) produced the
-result that changed the design: a supervised off-catalogue classifier reached a blocked pixel
-AUC of 0.773, yet when its belief field was EMITTED and scored with the official metric on a
-held-out quadrant it scored 0.0766, while uniform-random dots scored 0.1341 and the live-scored
-0.2600 incumbent scored 0.1353.  A classifier's AUC is therefore NOT the right objective here:
-the metric pays only for dots that land within 300 m of scored truth.  The objective must be the
-metric itself, on a spatially blocked frame whose positives the catalogue does not already carry.
+What changed and why (protocol amendment, recorded in registry/preregistration.json)
+------------------------------------------------------------------------------------
+The first version of this script promoted on frame P (SGMC faults >300 m from the catalogue).
+Before reading any of its results, a fabricated-control test was run on 19 family artifacts whose
+live scores were reported (scripts/rank_frames.py): frame P reproduces the live order with
+rho_level = -0.054 and rho_excess = +0.19, i.e. it is useless-to-inverted.  Frame N (SGMC
+strands within 300 m of the catalogue, 17,493 px) is the only frame with a positive sign
+(rho_level +0.335, rho_excess +0.396) and all 19 artifacts beat a uniform control on it.
+The gate below therefore applies to frame N, and frame P is still reported as the falsified case.
 
-Leakage discipline
-------------------
-Every field that is learned is re-fitted inside each fold, using only the three training
-quadrants, and is used to predict only the held-out quadrant.  Fields that are not learned
-(distance transforms, concealment ranking) carry no fold information by construction.  Nothing
-in this file reads the held-out quadrant before it is scored.
+Blocking and mass scaling
+-------------------------
+Four quadrants, leave-one-quadrant-out.  A learned field is re-fitted inside each fold on the
+three training quadrants and used only on the held-out one.  Mass is scaled to the fold's share of
+the allowed area, so that the fold density equals the density of a global submission of that mass:
+    mass_fold = M_global * allowed_q / allowed_total
+This makes a fold DTI an unbiased estimate of the global DTI under spatial stationarity, because
+`DTI = T/(0.2(T+F)+0.8G)` is invariant when the numerator and both denominator terms scale with
+the region's share of truth and dots.
 
-FRAME P (primary)  truth = SGMC fault pixels more than 300 m from the competition catalogue.
-                   Real, officially published mapped faults that the given catalogue does not
-                   carry - the closest locally available analogue of the hidden label set.
-                   Because the positives are by construction far from the catalogue, this frame
-                   cannot be won by copying the catalogue.
-FRAME S (sanity)   truth = the catalogue itself.  Reported only, never used for selection.
-
-Scoring uses gems44.metric.binary_credit (exact for binary {0,1} files: two Euclidean distance
-transforms), which is what makes a 4-fold x 8-field x 6-mass sweep tractable on 2 vCPU.  The
-final artifact is re-confirmed with the 29-offset operator in scripts/run_holdout.py.
-
-Writes registry/selection.json.
+Writes registry/selection.json (and registry/selection_partial.json after every fold).
 """
 
 from __future__ import annotations
@@ -40,6 +32,7 @@ from pathlib import Path
 import numpy as np
 import rasterio
 from scipy import ndimage
+from sklearn.ensemble import HistGradientBoostingClassifier
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from gems44 import field as F  # noqa: E402
@@ -49,9 +42,9 @@ from gems44.scripts_common import (  # noqa: E402
     ROW_BLOCK, feature_block, load_bands, matrix_at, sample_rows,
 )
 
-MASSES = [4_000, 8_000, 14_000, 21_000, 30_000, 44_090]
+GLOBAL_MASSES = [21_000, 30_000, 44_090, 61_328]
 CAND_FRACTION = 0.06
-TRAIN_POS, TRAIN_NEG = 25_000, 60_000
+TRAIN_POS, TRAIN_NEG = 12_000, 40_000
 SEED = 44
 
 
@@ -60,10 +53,37 @@ def emit(belief: np.ndarray, allowed: np.ndarray, max_dots: int) -> np.ndarray:
     return F.emit_order_np(belief, cand, allowed, max_dots)
 
 
-def score(order: np.ndarray, shape, mass: int, truth, footprint, known) -> float:
+def score(order: np.ndarray, shape, mass: int, truth, valid, known) -> float:
     d = np.zeros(shape, dtype=bool)
-    d.ravel()[order[:mass]] = True
-    return float(dti_of(binary_credit(d, truth, valid=footprint, known=known)))
+    if mass > 0:
+        d.ravel()[order[:mass]] = True
+    return float(dti_of(binary_credit(d, truth, valid=valid, known=known)))
+
+
+def train(bands, width, pos_mask, neg_mask, rng):
+    pos = sample_rows(pos_mask, TRAIN_POS, rng)
+    neg = sample_rows(neg_mask, TRAIN_NEG, rng)
+    if pos.size < 200 or neg.size < 200:
+        return None
+    X = np.vstack([matrix_at(bands, width, pos), matrix_at(bands, width, neg)])
+    y = np.r_[np.ones(pos.size, np.int8), np.zeros(neg.size, np.int8)]
+    m = HistGradientBoostingClassifier(max_iter=200, learning_rate=0.08, max_depth=6,
+                                       min_samples_leaf=40, l2_regularization=1.0,
+                                       random_state=0, early_stopping=False)
+    m.fit(X, y)
+    del X
+    return m
+
+
+def predict_region(model, bands, width, r0, r1, c0, c1) -> np.ndarray:
+    out = np.zeros((r1 - r0, c1 - c0), dtype=np.float32)
+    for rb in range(r0, r1, ROW_BLOCK):
+        r1b = min(rb + ROW_BLOCK, r1)
+        fb = feature_block(bands, rb, r1b)
+        sc = model.predict_proba(fb.reshape(-1, fb.shape[-1]))[:, 1]
+        out[rb - r0:r1b - r0] = sc.reshape(r1b - rb, width)[:, c0:c1]
+        del fb, sc
+    return out
 
 
 def main() -> int:
@@ -73,11 +93,15 @@ def main() -> int:
     with rasterio.open("data/external/derived_sgmc_faults_100m_u8.tif") as src:
         sgmc = src.read(1) > 0
     sgmc &= g.footprint & ~g.known
-
     cat = g.footprint & (labels > 0)
     d_cat = ndimage.distance_transform_edt(~cat).astype(np.float32)
-    frame_p = sgmc & (d_cat > 3.0)
-    print(f"FRAME P truth px: {int(frame_p.sum()):,}   frame S truth px: {int(cat.sum()):,}")
+    frame = {
+        "N": sgmc & (d_cat <= 3.0),
+        "P": sgmc & (d_cat > 3.0),
+    }
+    allowed_all = g.footprint & ~g.known
+    print(f"frame N truth {int(frame['N'].sum()):,} px | frame P truth {int(frame['P'].sum()):,} px "
+          f"| allowed {int(allowed_all.sum()):,} px")
 
     quad = np.zeros(labels.shape, np.int8)
     quad[: g.height // 2, g.width // 2:] = 1
@@ -85,137 +109,171 @@ def main() -> int:
     quad[g.height // 2:, g.width // 2:] = 3
 
     bands = load_bands()
-    print("building the leak-free belief family...")
-    shared: dict[str, np.ndarray] = {}
-    for sigma in (3.0, 10.0, 30.0):
-        shared[f"prox{int(sigma)}"] = np.exp(-d_cat / sigma).astype(np.float32)
+    print("analytic shared fields...")
+    shared = {f"prox{s}": np.exp(-d_cat / s).astype(np.float32) for s in (3, 10, 30)}
     d2b = bands["depth_to_basement"].astype(np.float64)
     fin = np.isfinite(d2b)
-    d2b = np.where(fin, d2b, float(np.median(d2b[fin])))
+    med = float(np.median(d2b[fin]))
+    d2b = np.where(fin, d2b, med)
     rank = np.empty(d2b.size, np.float64)
     rank[np.argsort(d2b, axis=None)] = np.arange(d2b.size, dtype=np.float64)
-    shared["prox10_conceal"] = (shared["prox10"] * (0.35 + 1.65 * (rank / d2b.size).reshape(d2b.shape).astype(np.float32))).astype(np.float32)
+    shared["prox10_conceal"] = (shared["prox10"] *
+                                (0.35 + 1.65 * (rank / d2b.size).reshape(d2b.shape).astype(np.float32))
+                                ).astype(np.float32)
     del d2b, rank, fin
-    family = list(shared) + ["sup_offcat", "blend25", "blend50", "blend75"]
 
     inc = None
-    ip = Path("data/raw/incumbent_d28.tif")
-    if ip.exists():
-        with rasterio.open(ip) as src:
-            inc = np.isfinite(src.read(1)) & (src.read(1) > 0)
+    if Path("data/raw/incumbent_d28.tif").exists():
+        with rasterio.open("data/raw/incumbent_d28.tif") as src:
+            v = src.read(1)
+        inc = np.isfinite(v) & (v > 0)
 
+    family = list(shared) + ["sup_N", "sup_U", "blend_N", "blend_U"]
     report: dict = {
-        "frames": {"P": "sgmc_faults_beyond_300m_of_catalogue", "S": "catalogue (sanity only)",
-                   "P_truth_px": int(frame_p.sum()), "S_truth_px": int(cat.sum())},
-        "masses": MASSES, "candidate_fraction": CAND_FRACTION, "fields": family,
-        "leakage_discipline": "every learned field re-fitted inside each fold on the three training quadrants only",
+        "design": {
+            "frames": {"N": "sgmc strands within 300 m of the catalogue (PRIMARY)",
+                       "P": "sgmc strands beyond 300 m of the catalogue (falsified frame, secondary)"},
+            "frame_truth_px": {k: int(v.sum()) for k, v in frame.items()},
+            "global_masses": GLOBAL_MASSES,
+            "mass_scaling": "mass_fold = M_global * allowed_q / allowed_total",
+            "candidate_fraction": CAND_FRACTION,
+            "fields": family,
+            "leakage_discipline": "learned fields re-fitted per fold on the three training quadrants only",
+            "gate": "frame N: mean fold delta vs incumbent >= +0.005 and >= 3 of 4 folds positive",
+            "amendment": "primary frame changed from P to N by scripts/rank_frames.py before any sweep "
+                         "result was read; recorded in registry/preregistration.json and IR-44-09",
+        },
         "fold_results": {},
     }
+    total_allowed = int(allowed_all.sum())
 
     for q in range(4):
-        test = quad == q
-        truth = frame_p & test
-        if truth.sum() < 200:
-            continue
-        allowed = g.footprint & ~g.known & test
-        print(f"fold {q}: truth={int(truth.sum()):,} allowed={int(allowed.sum()):,}")
-
-        # ---- leak-free supervised field for this fold
-        pos_idx = sample_rows(frame_p & ~test, TRAIN_POS, rng)
-        neg_idx = sample_rows(g.footprint & ~g.known & ~sgmc & ~test, TRAIN_NEG, rng)
-        from sklearn.ensemble import HistGradientBoostingClassifier
-        Xp = matrix_at(bands, g.width, pos_idx)
-        Xn = matrix_at(bands, g.width, neg_idx)
-        X = np.vstack([Xp, Xn])
-        y = np.r_[np.ones(len(Xp), np.int8), np.zeros(len(Xn), np.int8)]
-        model = HistGradientBoostingClassifier(
-            max_iter=300, learning_rate=0.06, max_depth=6, min_samples_leaf=40,
-            l2_regularization=1.0, random_state=0, early_stopping=False,
-        )
-        model.fit(X, y)
-        del Xp, Xn, X
-        belief = np.zeros(labels.shape, np.float32)
-        c0, c1 = (0, g.width // 2) if q % 2 == 0 else (g.width // 2, g.width)
+      try:
         r0g, r1g = (0, g.height // 2) if q < 2 else (g.height // 2, g.height)
-        for r0 in range(r0g, r1g, ROW_BLOCK):
-            r1 = min(r0 + ROW_BLOCK, r1g)
-            fb = feature_block(bands, r0, r1)
-            sc = model.predict_proba(fb.reshape(-1, fb.shape[-1]))[:, 1]
-            belief[r0:r1, c0:c1] = sc.reshape(r1 - r0, g.width)[:, c0:c1]
-            del fb, sc
-        fold_fields = dict(shared)
-        fold_fields["sup_offcat"] = belief
-        for a in (0.25, 0.5, 0.75):
-            fold_fields[f"blend{int(a*100)}"] = ((belief ** a) * (shared["prox10"] ** (1 - a))).astype(np.float32)
+        c0, c1 = (0, g.width // 2) if q % 2 == 0 else (g.width // 2, g.width)
+        test = quad == q
+        allowed = allowed_all & test
+        n_allowed = int(allowed.sum())
+        masses = {M: max(int(round(M * n_allowed / total_allowed)), 1) for M in GLOBAL_MASSES}
+        max_mass = max(masses.values())
+        row: dict = {"allowed_px": n_allowed, "fold_masses": {str(k): v for k, v in masses.items()},
+                     "frame_truth_px": {k: int((v & test).sum()) for k, v in frame.items()}}
+        print(f"\nfold {q}: allowed={n_allowed:,} masses={masses}")
 
-        row: dict = {"truth_px": int(truth.sum())}
+        train_bg = allowed_all & ~test & ~sgmc
+        models = {
+            "sup_N": train(bands, g.width, frame["N"] & ~test, train_bg, rng),
+            "sup_U": train(bands, g.width, sgmc & ~test, train_bg, rng),
+        }
+        fields = dict(shared)
+        for name, model in models.items():
+            if model is None:
+                continue
+            fields[name] = predict_region(model, bands, g.width, r0g, r1g, c0, c1)
+        if "sup_N" in fields and "sup_U" in fields:
+            prox10_region = shared["prox10"][r0g:r1g, c0:c1]
+            for nm, key in (("blend_N", "sup_N"), ("blend_U", "sup_U")):
+                fields[nm] = (np.sqrt(np.maximum(fields[key], 0.0) * prox10_region)).astype(np.float32)
+
         for fname in family:
-            b = np.where(test, fold_fields[fname], 0.0).astype(np.float32)
-            order = emit(b, allowed, max(MASSES))
-            row[fname] = {str(m): round(score(order, labels.shape, m, truth, g.footprint, g.known), 6)
-                          for m in MASSES if order.size >= m}
-            print(f"   {fname:16s} emitted={order.size:>7,} " +
-                  " ".join(f"{row[fname].get(str(m), float('nan')):.4f}" for m in MASSES))
-        if inc is not None:
-            row["incumbent"] = round(float(dti_of(binary_credit(inc & test, truth, valid=g.footprint, known=g.known))), 6)
-        rr = np.random.default_rng(7 + q)
-        row["uniform"] = {}
-        for m in MASSES:
-            d = np.zeros(labels.shape, bool)
-            idx = rr.choice(np.nonzero(allowed.ravel())[0], size=min(m, int(allowed.sum())), replace=False)
-            d.ravel()[idx] = True
-            row["uniform"][str(m)] = round(float(dti_of(binary_credit(d, truth, valid=g.footprint, known=g.known))), 6)
+            if fname not in fields:
+                continue
+            b = np.zeros(labels.shape, np.float32)
+            b[r0g:r1g, c0:c1] = fields[fname][r0g:r1g, c0:c1]
+            order = emit(np.where(test, b, 0.0).astype(np.float32), allowed, max_mass)
+            row[fname] = {str(M): round(score(order, labels.shape, masses[M], frame["N"] & test,
+                                              g.footprint, g.known), 6) for M in GLOBAL_MASSES}
+            row[fname + "__frameP"] = {str(M): round(score(order, labels.shape, masses[M],
+                                                            frame["P"] & test, g.footprint, g.known), 6)
+                                       for M in GLOBAL_MASSES}
+            print(f"   {fname:16s} N: " + " ".join(f"{M//1000}k={row[fname][str(M)]:.4f}" for M in GLOBAL_MASSES)
+                  + "  | P@44090=" + f"{row[fname + '__frameP']['44090']:.4f}")
+
+        for fname, cmd in (("incumbent", None), ("uniform", None)):
+            if fname == "incumbent":
+                if inc is None:
+                    continue
+                dots = inc & test
+            else:
+                rr = np.random.default_rng(7 + q)
+                idx = rr.choice(np.nonzero(allowed.ravel())[0], size=min(max_mass, n_allowed), replace=False)
+                dots = np.zeros(labels.shape, bool)
+                dots.ravel()[idx] = True
+            row[fname] = {}
+            row[fname + "__frameP"] = {}
+            for M, m in masses.items():
+                if fname == "uniform":
+                    st = binary_credit(dots, frame["N"] & test, valid=g.footprint, known=g.known)
+                    sp = binary_credit(dots, frame["P"] & test, valid=g.footprint, known=g.known)
+                    row[fname][str(M)] = round(dti_of(st), 6)
+                    row[fname + "__frameP"][str(M)] = round(dti_of(sp), 6)
+                else:
+                    # the incumbent is compared at the SAME dot density; a raster-order prefix of
+                    # its dots would sample only the top rows, so draw a uniform random subset
+                    dots_idx = np.flatnonzero(dots.ravel())
+                    si = np.random.default_rng(1000 + q).choice(
+                        dots_idx, size=min(m, dots_idx.size), replace=False)
+                    row[fname][str(M)] = round(score(si, labels.shape, si.size,
+                                                     frame["N"] & test, g.footprint, g.known), 6)
+                    row[fname + "__frameP"][str(M)] = round(score(si, labels.shape, si.size,
+                                                                  frame["P"] & test, g.footprint, g.known), 6)
+            print(f"   {fname:16s} N: " + " ".join(f"{M//1000}k={row[fname][str(M)]:.4f}" for M in GLOBAL_MASSES))
+
         report["fold_results"][str(q)] = row
-        print(f"fold {q} done: incumbent={row.get('incumbent')} uniform@44090={row['uniform'].get('44090')}")
         Path("registry").mkdir(exist_ok=True)
         Path("registry/selection_partial.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
-        del belief, fold_fields, allowed
+        del fields, models
+      except Exception as exc:  # noqa: BLE001
+        print(f"fold {q} FAILED: {type(exc).__name__}: {exc}")
+        report["fold_results"][str(q)] = {"error": f"{type(exc).__name__}: {exc}"}
 
+    # ---- leave-one-quadrant-out choice on frame N
     folds = sorted(report["fold_results"], key=int)
     combos = []
     for fname in family:
-        for m in MASSES:
-            vals = [report["fold_results"][f].get(fname, {}).get(str(m)) for f in folds]
+        for M in GLOBAL_MASSES:
+            vals = [report["fold_results"][f].get(fname, {}).get(str(M)) for f in folds]
             if any(v is None for v in vals):
                 continue
-            combos.append((fname, m, [float(v) for v in vals]))
+            combos.append((fname, M, [float(v) for v in vals]))
     loo = []
     for i, q in enumerate(folds):
         others = [j for j in range(len(folds)) if j != i]
         best = max(combos, key=lambda c: float(np.mean([c[2][j] for j in others])))
+        inc_i = report["fold_results"][q]["incumbent"][str(best[1])]
         loo.append({"fold": int(q), "chosen_field": best[0], "chosen_mass": best[1],
-                    "heldout_dti": round(best[2][i], 6),
-                    "incumbent_heldout_dti": report["fold_results"][q].get("incumbent"),
-                    "delta_vs_incumbent": round(best[2][i] - report["fold_results"][q]["incumbent"], 6),
+                    "heldout_dti": round(best[2][i], 6), "incumbent_heldout_dti": inc_i,
+                    "delta_vs_incumbent": round(best[2][i] - inc_i, 6),
                     "uniform_heldout_dti": report["fold_results"][q]["uniform"][str(best[1])]})
-    deltas = [x["delta_vs_incumbent"] for x in loo]
+    d = [x["delta_vs_incumbent"] for x in loo]
+    best_all = max(combos, key=lambda c: float(np.mean(c[2])))
     report["leave_one_fold_out"] = loo
     report["pooled"] = {
         "candidate_heldout_dti": round(float(np.mean([x["heldout_dti"] for x in loo])), 6),
         "incumbent_heldout_dti": round(float(np.mean([x["incumbent_heldout_dti"] for x in loo])), 6),
-        "delta": round(float(np.mean(deltas)), 6),
-        "positive_folds": int(sum(1 for d in deltas if d > 0)), "n_folds": len(loo),
-        "gate_pass": bool(np.mean(deltas) >= 0.005 and sum(1 for d in deltas if d > 0) >= 3),
+        "delta": round(float(np.mean(d)), 6), "positive_folds": int(sum(1 for x in d if x > 0)),
+        "n_folds": len(loo), "gate_pass": bool(np.mean(d) >= 0.005 and sum(1 for x in d if x > 0) >= 3),
     }
-    best_all = max(combos, key=lambda c: float(np.mean(c[2])))
     report["best_mean_over_all_folds"] = {
         "field": best_all[0], "mass": best_all[1], "mean_dti": round(float(np.mean(best_all[2])), 6),
-        "note": "descriptive only - the promotion decision uses leave_one_fold_out, not this row",
+        "note": "descriptive; the promotion decision uses leave_one_fold_out",
     }
     Path("registry/selection.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
 
-    print("\n=== FRAME P, mean DTI over the 4 blocked folds ===")
-    print(f"{'field':16s}" + "".join(f"{m:>10d}" for m in MASSES))
+    print("\n=== FRAME N, mean fold DTI (density-matched mass) ===")
+    print(f"{'field':18s}" + "".join(f"{M:>9d}" for M in GLOBAL_MASSES))
     for fname in family:
         cells = []
-        for m in MASSES:
-            vals = [report["fold_results"][f].get(fname, {}).get(str(m)) for f in folds]
-            cells.append(f"{np.mean([v for v in vals if v is not None]):>10.4f}" if any(v is not None for v in vals) else f"{'-':>10s}")
-        print(f"{fname:16s}" + "".join(cells))
-    print(f"{'uniform':16s}" + "".join(f"{np.mean([report['fold_results'][f]['uniform'][str(m)] for f in folds]):>10.4f}" for m in MASSES))
-    print(f"{'incumbent':16s}" + f"{np.mean([report['fold_results'][f]['incumbent'] for f in folds]):>10.4f}")
-    print("\n" + json.dumps(report["pooled"], indent=1))
-    print("best mean:", json.dumps(report["best_mean_over_all_folds"], indent=1))
+        for M in GLOBAL_MASSES:
+            v = [report["fold_results"][f].get(fname, {}).get(str(M)) for f in folds]
+            cells.append(f"{np.mean([x for x in v if x is not None]):>9.4f}" if any(x is not None for x in v) else f"{'-':>9s}")
+        print(f"{fname:18s}" + "".join(cells))
+    for ctrl in ("incumbent", "uniform"):
+        if all(str(M) in report["fold_results"][f].get(ctrl, {}) for f in folds for M in GLOBAL_MASSES):
+            print(f"{ctrl:18s}" + "".join(f"{np.mean([report['fold_results'][f][ctrl][str(M)] for f in folds]):>9.4f}"
+                                          for M in GLOBAL_MASSES))
+    print("\n" + json.dumps({"pooled": report["pooled"],
+                             "best_mean": report["best_mean_over_all_folds"]}, indent=1))
     return 0
 
 

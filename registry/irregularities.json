@@ -1,62 +1,122 @@
 {
-  "schema": "gems44-irregularities-v1",
-  "note": "Defects, ambiguities and things that do not add up, flagged for human review. None of these is resolved by assumption.",
   "items": [
     {
+      "action_taken": "No claim about the hidden population is made anywhere in this repository. H1, which would have depended on the 'new geometry of an existing system' reading, was tested empirically against data instead and failed.",
       "id": "IR-44-01",
-      "what": "The organizers' answer to 'How were the new test faults identified?' (community thread 11527) could not be read by the fetch tool from this sandbox. The thread page returned the participant posts and the staff reply was not exposed in the rendered text.",
-      "why": "The provenance, fault type (surface vs buried) and spatial coverage of the hidden label set determine which physical signature should work. Guessing it is exactly the kind of assumption this project forbids.",
       "status": "open - a human with a browser can resolve it in one minute by opening the thread",
-      "action_taken": "No claim about the hidden population is made anywhere in this repository. H1, which would have depended on the 'new geometry of an existing system' reading, was tested empirically against data instead and failed."
+      "what": "The organizers' answer to 'How were the new test faults identified?' (community thread 11527) could not be read by the fetch tool from this sandbox. The thread page returned the participant posts and the staff reply was not exposed in the rendered text.",
+      "why": "The provenance, fault type (surface vs buried) and spatial coverage of the hidden label set determine which physical signature should work. Guessing it is exactly the kind of assumption this project forbids."
     },
     {
+      "action_taken": "The grid read from labels.tif agrees with the NaN footprint of sample_submission.tif pixel-for-pixel (5,167,373 px, checked by assertion in gems44/grid.py), and labels.tif and existing_faults.tif are byte-identical to each other in the manifest. Those are the only independent cross-checks available without DrivenData authentication.",
       "id": "IR-44-02",
-      "what": "All four official competition rasters used here are owner-supplied mirrors of login-walled DrivenData files, fetched from public GitHub repositories by the same account that owns this repository. They are pinned by sha256 and the pins matched exactly, but they are not organizer-authenticated.",
-      "why": "A pin proves the bytes are reproducible; it does not prove the bytes are the organizer's. If a mirror had been transcribed or re-exported, every measurement in this repository would be on the wrong grid or the wrong labels.",
       "status": "accepted with a stated control",
-      "action_taken": "The grid read from labels.tif agrees with the NaN footprint of sample_submission.tif pixel-for-pixel (5,167,373 px, checked by assertion in gems44/grid.py), and labels.tif and existing_faults.tif are byte-identical to each other in the manifest. Those are the only independent cross-checks available without DrivenData authentication."
+      "what": "All four official competition rasters used here are owner-supplied mirrors of login-walled DrivenData files, fetched from public GitHub repositories by the same account that owns this repository. They are pinned by sha256 and the pins matched exactly, but they are not organizer-authenticated.",
+      "why": "A pin proves the bytes are reproducible; it does not prove the bytes are the organizer's. If a mirror had been transcribed or re-exported, every measurement in this repository would be on the wrong grid or the wrong labels."
     },
     {
+      "action_taken": "The number is carried everywhere as two separate, labelled facts. It is never used as a target for model selection.",
       "id": "IR-44-03",
-      "what": "The brief states that GEMSDOE32 scored 0.2778. The live leaderboard shows 0.2778 at rank 13 for the participant extradr19, while GEMSDOE32's own README labels its named artifact UNSCORED with a projected 0.2747.",
-      "why": "Reporting a third party's score as our artifact's score would corrupt every calibration and promotion decision downstream.",
       "status": "flagged, not resolved",
-      "action_taken": "The number is carried everywhere as two separate, labelled facts. It is never used as a target for model selection."
+      "what": "The brief states that GEMSDOE32 scored 0.2778. The live leaderboard shows 0.2778 at rank 13 for the participant extradr19, while GEMSDOE32's own README labels its named artifact UNSCORED with a projected 0.2747.",
+      "why": "Reporting a third party's score as our artifact's score would corrupt every calibration and promotion decision downstream."
     },
     {
+      "action_taken": "Only the grid, dtype and outside-footprint convention are taken from it. This file's footprint convention is stated explicitly in docs/how-to-submit.html.",
       "id": "IR-44-04",
+      "status": "characterised",
       "what": "sample_submission.tif is described on the data page as a submission that predicts total fault absence, but its 60,988 positive cells are exactly the labelled catalogue fault pixels (values {0, 1, NaN}; the 1s coincide with labels.tif == 1).",
-      "why": "It is therefore not a 'no faults' template; it is the catalogue raster re-typed as float32. Anyone reading it as a null submission would draw wrong conclusions about what an empty prediction scores (an empty file scores exactly 0).",
-      "status": "characterised",
-      "action_taken": "Only the grid, dtype and outside-footprint convention are taken from it. This file's footprint convention is stated explicitly in docs/how-to-submit.html."
+      "why": "It is therefore not a 'no faults' template; it is the catalogue raster re-typed as float32. Anyone reading it as a null submission would draw wrong conclusions about what an empty prediction scores (an empty file scores exactly 0)."
     },
     {
+      "action_taken": "Every artifact in this repository is strictly binary {0, 1}. The domination argument is a test: tests/test_metric.py::test_binary_dominates_its_own_scaled_version.",
       "id": "IR-44-05",
+      "status": "characterised",
       "what": "The reference solution writes its prediction map RAW (not thresholded) and its own comment says 'it may be advantageous to threshold this map for better scoring'; the visualization in the same notebook uses a > 0.1 threshold.",
-      "why": "The organizer's baseline therefore ships a graded file. The metric is monotone in the scale of a probability map (proved and unit-tested here), so any graded file is strictly dominated by its own thresholded support. A participant who copies the baseline's output convention gives away score.",
-      "status": "characterised",
-      "action_taken": "Every artifact in this repository is strictly binary {0, 1}. The domination argument is a test: tests/test_metric.py::test_binary_dominates_its_own_scaled_version."
+      "why": "The organizer's baseline therefore ships a graded file. The metric is monotone in the scale of a probability map (proved and unit-tested here), so any graded file is strictly dominated by its own thresholded support. A participant who copies the baseline's output convention gives away score."
     },
     {
+      "action_taken": "AUC is no longer used to select anything. registry/holdout_partial.json keeps fold 0 verbatim so the effect stays on the record. scripts/run_selection.py scores fields with the official metric on blocked frames instead.",
       "id": "IR-44-06",
-      "what": "A supervised field with a spatially blocked pixel AUC of 0.773 (folds 0.762-0.789) produced a held-out metric score of 0.0766 at 44,090 dots, while uniform-random dots at the same mass scored 0.1341 on the same frame.",
-      "why": "This is a contradiction between the two ways of measuring the same field, and it invalidates AUC-based field selection for this competition. Until it is explained the project cannot rely on any ranking metric other than the official one.",
       "status": "measured, explained as a frame effect, but only on one fold",
-      "action_taken": "AUC is no longer used to select anything. registry/holdout_partial.json keeps fold 0 verbatim so the effect stays on the record. scripts/run_selection.py scores fields with the official metric on blocked frames instead."
+      "what": "A supervised field with a spatially blocked pixel AUC of 0.773 (folds 0.762-0.789) produced a held-out metric score of 0.0766 at 44,090 dots, while uniform-random dots at the same mass scored 0.1341 on the same frame.",
+      "why": "This is a contradiction between the two ways of measuring the same field, and it invalidates AUC-based field selection for this competition. Until it is explained the project cannot rely on any ranking metric other than the official one."
     },
     {
+      "action_taken": "The date of every leaderboard read is recorded next to the number. No target is stated as a fixed value.",
       "id": "IR-44-07",
-      "what": "The competition brief supplied to this project states that the highest score is 0.3195, while the live board read on 2026-10-06 shows 0.3345 at rank 1 and DARD's 0.3195 at rank 5.",
-      "why": "A target set from a stale read is already unreachable by the time it is used. Three days of board movement is worth about +0.015 at the top.",
       "status": "characterised",
-      "action_taken": "The date of every leaderboard read is recorded next to the number. No target is stated as a fixed value."
+      "what": "The competition brief supplied to this project states that the highest score is 0.3195, while the live board read on 2026-10-06 shows 0.3345 at rank 1 and DARD's 0.3195 at rank 5.",
+      "why": "A target set from a stale read is already unreachable by the time it is used. Three days of board movement is worth about +0.015 at the top."
     },
     {
+      "action_taken": "docs/leaderboard.html reports the owner-reported series as owner-reported and states plainly that no artifact here has an organizer score.",
       "id": "IR-44-08",
-      "what": "The competition brief asks for a review of 'why and how' a specific artifact scored 0.2778, but no organizer receipt exists in any material available here for any artifact belonging to this project family.",
-      "why": "Every score in this family's record is owner-reported or inferred by numeric coincidence.",
       "status": "open - resolvable only by uploading an artifact and reading the board",
-      "action_taken": "docs/leaderboard.html reports the owner-reported series as owner-reported and states plainly that no artifact here has an organizer score."
+      "what": "The competition brief asks for a review of 'why and how' a specific artifact scored 0.2778, but no organizer receipt exists in any material available here for any artifact belonging to this project family.",
+      "why": "Every score in this family's record is owner-reported or inferred by numeric coincidence."
+    },
+    {
+      "action_taken": "Before reading any sweep result, the primary frame was amended to frame N (SGMC strands within 300 m of the catalogue, 17,493 px) - the only frame with a positive sign on both statistics (rho_level +0.335, rho_excess +0.396, all 19 artifacts beating their uniform control). Amendment AM-44-01 in registry/preregistration.json. Frame P is still reported as the falsified case.",
+      "evidence": "registry/frame_ranking.json",
+      "id": "IR-44-09",
+      "residual_risk": "rho_excess = +0.396 at n=19 has p ~ 0.09: directional evidence, not proof. No local frame in this session is validated at the 0.05 level.",
+      "severity": "high",
+      "status": "open",
+      "what": "The pre-registered primary validation frame (frame P: SGMC faults >300 m from the catalogue, 62,122 px) failed its own validity test: across 19 family artifacts with reported live scores it reproduces the live order with rho_level = -0.054 / rho_excess = +0.188 (scripts/rank_frames.py).",
+      "why": "A promotion frame that cannot rank already-scored artifacts has no claim to rank a new one; using it would have shipped an artifact chosen by an inverted proxy."
+    },
+    {
+      "action_taken": "Catalogue frames are never used as promotion frames. Scored with the mask disabled they are still inverted (rho_level = -0.475 at n=19), quantifying the earlier three-artifact observation.",
+      "evidence": "registry/frame_ranking.json",
+      "id": "IR-44-10",
+      "residual_risk": "None for this session; any future catalogue-derived frame must carry both caveats.",
+      "severity": "high",
+      "status": "closed-by-design",
+      "what": "A catalogue-truth frame is degenerate under the official masking rule: the catalogue IS the known mask, so removing known pixels from the truth leaves an EMPTY truth set and every artifact scores exactly 0.000000 (observed on all 19 probes).",
+      "why": "Any prior-family result quoted from a catalogue-derived frame inherits this degeneracy; it explains why the earlier three-artifact catalogue proxy inverted the live board."
+    },
+    {
+      "action_taken": "Mass is set in the 44,090-61,328 band where the three best reported artifacts live; the selection run sweeps 14k/21k/30k/44,090/61,328 at density-matched fold mass.",
+      "evidence": "registry/halo_analysis.json",
+      "id": "IR-44-11",
+      "residual_risk": "The band's optimum is unmeasured; the family never reported a mass below 44,090.",
+      "severity": "medium",
+      "status": "open",
+      "what": "Mass is confounded with quality across the 19 scored artifacts: Spearman(reported score, dot count) = -0.653 (registry/halo_analysis.json). Mass is not destiny either: gems26-dilcond-oof-v1 scores 0.1223 with 60,068 dots while three artifacts of 120k-124k dots score 0.185-0.192 and one of 122,120 dots scores 0.0976.",
+      "why": "Choosing mass by taste is the largest single lever on this metric, and the family's own history is a mass-reduction history."
+    },
+    {
+      "action_taken": "The shipped field is trained on official feature bands with blocked folds; SGMC is used as the training LABEL and as the validation truth, never as a feature. Distance-to-SGMC fields are excluded from selection.",
+      "evidence": "registry/frame_validity.json, registry/frame_ranking.json",
+      "id": "IR-44-12",
+      "residual_risk": "If the hidden truth does not resemble the SGMC compilation, a feature-based field trained on SGMC transfers nothing. This is the central unmeasurable risk of this submission and is stated on the site.",
+      "severity": "medium",
+      "status": "open",
+      "what": "Circularity: a belief field built DIRECTLY from the SGMC raster (e.g. exp(-d_sgmc)) cannot be validated on any SGMC-truth frame, because truth and field share one source raster. Only feature-based fields (official 19 bands) can be validated on frame N, and only through spatially blocked folds.",
+      "why": "Without this rule a field built from the SGMC raster would score ~1.0 on an SGMC frame and the validation would be meaningless."
+    },
+    {
+      "action_taken": "The exact greedy max-coverage emitter is used, which refuses any dot that adds no new kernel credit; the shipped artifact is verified to have zero 8-adjacent dots.",
+      "evidence": "registry/probe_sgmc_alignment.json, registry/halo_analysis.json",
+      "id": "IR-44-13",
+      "residual_risk": "Descriptive at n=19; the mechanism itself (an adjacent dot adds no new truth coverage but costs 0.2 of FP) is exact under the official formula.",
+      "severity": "low",
+      "status": "open",
+      "what": "Dot spacing explains more of the reported score than any geological statistic measured here: Spearman(live, fraction of dots 8-adjacent to another dot) = -0.361; the three best reported artifacts have essentially zero adjacent dots (0.001-0.002) while low scorers have 0.88-0.99.",
+      "why": "It is the only design rule in this repository whose mechanism is exact under the official formula and whose effect is visible across 19 independent artifacts."
+    },
+    {
+      "action_taken": "The nested f-string was replaced by a precomputed block; the data page now reads registry/data_manifest.json; all eight pages build with `python scripts/build_site.py`. Any future edit to build_site.py must be followed by actually running it.",
+      "evidence": "registry/sources.json, docs/*.html (all eight pages now render from the registry)",
+      "id": "IR-44-14",
+      "residual_risk": "The site has still never been opened in a browser from inside this sandbox (*.github.io is unreachable here, HTTP 000); only its generated HTML has been inspected.",
+      "severity": "medium",
+      "status": "fixed-this-session",
+      "what": "The site generator scripts/build_site.py committed in the first commit of this session did not compile (nested f-string in the executive-summary body raised SyntaxError at import), so no page of the one-click site had ever been rendered. A second never-executed bug surfaced as soon as it did run: the data page iterated registry/sources.json's official_data entries as key/value pairs when they are dicts.",
+      "why": "The site is the user-facing delivery mechanism: without it the artifact cannot be downloaded in one click, which is a hard requirement of this brief."
     }
-  ]
+  ],
+  "note": "Defects, ambiguities and things that do not add up, flagged for human review. None of these is resolved by assumption.",
+  "schema": "gems44-irregularities-v1"
 }
