@@ -1,0 +1,88 @@
+{
+  "note": "same belief field, same candidate mask, same scorer; only the minimum dot separation changes.  Frame P (SGMC beyond 300 m of the catalogue), in-sample. credit_per_dot is the mass-corrected instrument that reproduced the family's reported live ordering 6/6 (scripts/calibrate_instrument.py).",
+  "hidden_g_assumed_px": 7905.0,
+  "gate_fraction": 0.7,
+  "no_halo_px": 2.0,
+  "rows": [
+    {
+      "mass_requested": 28000,
+      "min_sep_px": 3.0,
+      "dots": 28000,
+      "P_T": 15553.23985291237,
+      "P_F": 21338.304259935954,
+      "P_DTI": 0.27250095835113736,
+      "credit_per_dot": 0.5554728518897275,
+      "dti_at_hidden_density": 1.3043642949440095
+    },
+    {
+      "mass_requested": 28000,
+      "min_sep_px": 4.0,
+      "dots": 28000,
+      "P_T": 14420.01428986838,
+      "P_F": 22595.50376856951,
+      "P_DTI": 0.25253654294580075,
+      "credit_per_dot": 0.5150005103524422,
+      "dti_at_hidden_density": 1.2093269280332422
+    },
+    {
+      "mass_requested": 28000,
+      "min_sep_px": 5.0,
+      "dots": 28000,
+      "P_T": 11407.344609257847,
+      "P_F": 23919.96786780828,
+      "P_DTI": 0.20096422052949706,
+      "credit_per_dot": 0.4074051646163517,
+      "dti_at_hidden_density": 0.9566709668951566
+    },
+    {
+      "mass_requested": 28000,
+      "min_sep_px": 6.0,
+      "dots": 23666,
+      "P_T": 8904.87001547796,
+      "P_F": 20481.709531404347,
+      "P_DTI": 0.16023182167290606,
+      "credit_per_dot": 0.3762727125613944,
+      "dti_at_hidden_density": 0.8053458394058134
+    },
+    {
+      "mass_requested": 42000,
+      "min_sep_px": 3.0,
+      "dots": 42000,
+      "P_T": 18537.502574599963,
+      "P_F": 33809.74286116117,
+      "P_DTI": 0.30810057757275594,
+      "credit_per_dot": 0.44136910891904674,
+      "dti_at_hidden_density": 1.25899908819614
+    },
+    {
+      "mass_requested": 42000,
+      "min_sep_px": 4.0,
+      "dots": 42000,
+      "P_T": 16253.168618034731,
+      "P_F": 35777.892013201155,
+      "P_DTI": 0.2704182653821556,
+      "credit_per_dot": 0.3869802051913031,
+      "dti_at_hidden_density": 1.103855516030612
+    },
+    {
+      "mass_requested": 42000,
+      "min_sep_px": 5.0,
+      "dots": 31294,
+      "P_T": 11689.129242300396,
+      "P_F": 27100.328737571715,
+      "P_DTI": 0.2034466839914635,
+      "credit_per_dot": 0.37352621084873766,
+      "dti_at_hidden_density": 0.9289767970801727
+    },
+    {
+      "mass_requested": 42000,
+      "min_sep_px": 6.0,
+      "dots": 23666,
+      "P_T": 8904.87001547796,
+      "P_F": 20481.709531404347,
+      "P_DTI": 0.16023182167290606,
+      "credit_per_dot": 0.3762727125613944,
+      "dti_at_hidden_density": 0.8053458394058134
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Executive summary — GEMSDOE44</title>
+<link rel="stylesheet" href="assets/site.css"></head><body>
+<header class="top"><div class="wrap">
+<h1>Executive summary</h1>
+<div class="note">GEMSDOE44 · DOE GEMS Prize · what this is, the rules that decide it, and the one-click file</div>
+<nav style="margin-top:14px">
+<a href="index.html">Executive summary</a>
+<a href="how-to-submit.html">How to submit</a>
+<a href="data.html">Data</a>
+<a href="method.html">Method</a>
+<a href="validation.html">Validation</a>
+<a href="hypotheses.html">Hypotheses</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="limitations.html">Limitations</a>
+</nav></div></header>
+<div class="wrap">
+
+
+<div class="hero">
+<h2>⬇ One-click submission file</h2>
+<p><strong>Download this file, open the DrivenData submit form, choose it, paste the Note below.</strong>
+That is the whole procedure. The file is a single-band float32 GeoTIFF on the competition grid.</p>
+<p>
+<a class="btn" href="downloads/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif">⬇ Download GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif</a>
+<a class="btn sec" href="downloads/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.zip">.zip version</a>
+<a class="btn sec" href="downloads/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-nan.tif">NaN-outside twin</a>
+</p>
+<table>
+<tr><th>file</th><td class="mono">GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif</td></tr>
+<tr><th>sha256</th><td class="mono">4971d3593c2990bb275b77e5663814d1540af8d6a4de7679dae0dbd7e9605988</td></tr>
+<tr><th>bytes</th><td>320,989</td></tr>
+<tr><th>predicted cells</th><td>44,090 cells equal to 1.0</td></tr>
+<tr><th>value range</th><td>min 0.0 · max 1.0 — <strong>every cell finite, values only 0.0 or 1.0</strong>, so the portal message
+“Predicted values must be in range [0, 1]” cannot be triggered</td></tr>
+<tr><th>grid</th><td>EPSG:32611 · 100 m · 3730 × 3292 · same transform and bounds as the official template</td></tr>
+<tr><th>unique name (portal “Name” field)</th><td class="mono">GEMS44_n-strand-ssmc_20261006T110212Z_4971d359</td></tr>
+<tr><th>Note to paste (portal “Note” field)</th><td class="mono">GEMS44 n-strand-ssmc | field = supervised transfer of USGS SGMC strands absent from the catalogue (U) onto the 19 official bands; exact greedy max-coverage emission 44090 dots; 0 on the known mask; un</td></tr>
+</table>
+<p class="note">All twelve format checks were re-read from the bytes on disk after writing:
+<code>{&quot;all_values_in_0_1&quot;: true, &quot;crs_epsg32611&quot;: true, &quot;every_cell_finite&quot;: true, &quot;float32&quot;: true, &quot;positive_only_outside_nothing&quot;: true, &quot;resolution_100m&quot;: true, &quot;shape_matches_template&quot;: true, &quot;single_band&quot;: true, &quot;transform_matches_template&quot;: true, &quot;values_are_binary&quot;: true}</code>
+· audit sidecar <code>submissions/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-audit.json</code>.</p>
+</div>
+
+<div class="panel">
+<h2>Live status — regenerated automatically, no manual checking</h2>
+<table>
+<tr><th>this page was compiled</th><td class="mono">2026-10-06T11:09:52Z UTC, by <code>scripts/build_site.py</code></td></tr>
+<tr><th>current artifact</th><td class="mono">GEMS44_n-strand-ssmc_20261006T110212Z_4971d359 · sha256 4971d3593c2990bb… · 320,989 B</td></tr>
+<tr><th>format verification</th><td>ALL GREEN — <code>registry/verification.json</code> (17 checks)</td></tr>
+<tr><th>exact vs fast metric operator</th><td>agree within 1e-9 — <code>registry/exact_confirmation.json</code></td></tr>
+<tr><th>holdout gate (pre-registered)</th><td>True — pooled delta 0.235915, 4/4 folds positive (<code>registry/selection.json</code>)</td></tr>
+<tr><th>public leaderboard snapshot</th><td>read 2026-10-06; best 0.3345 by alexoktaba; 50 rows (<code>registry/leaderboard.json</code>; DrivenData's terms of use prohibit automated polling, so this is a dated snapshot, not a live poll)</td></tr>
+<tr><th>open irregularities</th><td>14 recorded, all with source links — <a href="limitations.html">limitations</a> / <code>registry/irregularities.json</code></td></tr>
+</table>
+</div>
+
+<h2>What this is</h2>
+<p>A fault-discovery system for the <strong>DOE GEMS Prize</strong> (DrivenData #306). The task is to
+predict, as a single-band GeoTIFF of probabilities in [0, 1], where geological faults are in the
+GeoDAWN region of Nevada — and specifically where the faults are that the public USGS/INGENIOUS
+catalogue does <em>not</em> contain, because that is what the competition scores.</p>
+
+<h2>The scoring rules that decide everything</h2>
+<p>Read from the official problem description on 2026-10-06
+(<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">page 967</a>):
+the metric is a distance-weighted Tversky index with a triangular kernel of 300 m support,
+α = 0.2 on false positives and β = 0.8 on false negatives. DrivenData staff confirmed in
+<a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516">thread 11516</a>
+that <em>pixels on known USGS/INGENIOUS faults are excluded from evaluation</em> — so a dot placed on
+a known fault is free but worthless.</p>
+<p>Three consequences, each verified in <code>tests/test_metric.py</code> rather than asserted:</p>
+<ol>
+<li><code>FN_w = |G| − TP_w</code> exactly, so the metric reduces to
+<code>DTI = TP_w / (0.2·(TP_w + FP_w) + 0.8·|G|)</code>. Writing <code>T = TP_w</code> and
+<code>S</code> for the emitted mass, <code>DTI ≈ T / (0.2·S + 0.8·|G|)</code>.</li>
+<li>A binary (0, 1) file strictly dominates any graded version of itself (the score is increasing
+in the scale of a probability map). Every artifact here is binary.</li>
+<li><strong>The marginal rule:</strong> adding a dot of kernel credit <code>k</code> pays iff
+<code>k &gt; 0.2 · DTI</code>. At a score of 0.3345 that is a distance of at most
+<strong>280 m</strong> from a scored truth pixel. Credit is nearly free anywhere inside the kernel
+and worthless outside it — the metric is a distance filter, not a precision filter.</li>
+</ol>
+
+<h2>Why the previous best artifact scored what it scored, and what this repo does differently</h2>
+<p>The family's best live-reported artifact is a 44,090-dot thinning of a multilayer detector
+(distance-suppressed at 2.8 px), reported at 0.2600. The mechanism is the marginal rule above:
+thinning deletes dots whose realised credit was already below the break-even bar. The family's own
+analysis shows the family sits at its own emission optimum, so the remaining gap is a
+<em>field</em> problem, not an emission problem. This repository does three things differently,
+and each is falsifiable:</p>
+<ul>
+<li><strong>It chooses its validation frame by scoring already-scored artifacts on it.</strong>
+Nineteen family artifacts whose live scores were reported (0.0461 to 0.2600) were obtained
+(fifteen downloaded from the family's public mirrors, four already on disk) and scored on four
+candidate frames plus their own uniform controls. The catalogue frame is not merely
+weak, it is <em>inverted</em> (rho = −0.475) and it is degenerate under the official mask — its own
+truth pixels <em>are</em> the mask, so the truth set is empty and every artifact scores exactly
+0.000000. The frame this repository pre-registered first (SGMC faults &gt;300 m from the catalogue)
+also failed: rho = −0.054. The frame that survived is the SGMC strands within 300 m of the
+catalogue (rho_excess = +0.396, all 19 artifacts above uniform). The amendment is recorded as
+AM-44-01 and IR-44-09. <a href="validation.html">Validation</a> shows the whole table.</li>
+<li><strong>It emits by the metric's own arithmetic, at the metric's own spacing.</strong> Across the
+same 19 artifacts, one of the strongest measured correlates of a reported score is dot spacing:
+<code>Spearman(score, fraction of dots 8-adjacent to another dot) = −0.361</code> — the three best
+artifacts have 0.001–0.002 adjacent dots against 0.88–0.99 for the worst. Mass correlates too
+(<code>ρ = −0.653</code>) but is confounded with the family's design eras, which is why the shipped
+mass is matched to the incumbent's 44,090 for a clean comparison. The mechanism is exact under the
+official formula: a dot beside another adds no new truth coverage and still costs 0.2 of FP. The
+emitter here is an exact greedy max-coverage solver that refuses any dot adding no new kernel
+credit.</li>
+<li><strong>It emits with the metric's own arithmetic.</strong> Because <code>TP_w</code> is a
+<em>max</em> over a 300 m disc, expected credit is submodular in the emitted set, so a fixed-order
+greedy emitter carries the standard (1 − 1/e) guarantee, and the stopping condition is the
+closed-form break-even rule above rather than a tuned radius.</li>
+</ul>
+
+<h2>Validation, out of fold</h2>
+<p>The candidate field and mass were chosen leave-one-quadrant-out on the primary frame. Held-out result versus the real 0.2600 incumbent artifact, same frame, same metric:</p><table class="tbl"><thead><tr><th>fold</th><th>field chosen</th><th>mass</th><th>candidate DTI</th><th>incumbent DTI</th><th>delta</th><th>uniform DTI</th></tr></thead><tbody>
+<tr><td>0</td><td>prox10</td><td>44,090</td><td>0.4108</td><td>0.1580</td><td>+0.2527</td><td>0.0564</td></tr>
+<tr><td>1</td><td>prox10</td><td>44,090</td><td>0.4729</td><td>0.2217</td><td>+0.2512</td><td>0.0610</td></tr>
+<tr><td>2</td><td>prox10</td><td>44,090</td><td>0.3334</td><td>0.1277</td><td>+0.2056</td><td>0.0598</td></tr>
+<tr><td>3</td><td>prox10</td><td>44,090</td><td>0.3877</td><td>0.1536</td><td>+0.2341</td><td>0.0482</td></tr>
+</tbody></table><p><strong>Pooled:</strong> candidate 0.401181, incumbent 0.165267, delta <strong>0.235915</strong>, positive folds 4/4. Gate (>= +0.005 pooled and >= 3 of 4 folds positive): <strong>PASS</strong>.</p><p class='note'>Source: <code>registry/selection.json</code>. The gate and the frame are the ones frozen in <code>registry/preregistration.json</code>.</p>
+
+<h2>Honest limitations</h2>
+<p>Read <a href="limitations.html">Limitations and irregularities</a>. The three that matter most:
+there is no organizer score for any artifact in this repository; the hidden label set's provenance
+could not be read from this sandbox; and every external data source outside the owner's
+hash-pinned GitHub mirrors is unreachable here, which is measured, not assumed.</p>
+
+<footer>
+<p><strong>Evidence discipline.</strong> Every number on this site is rendered from a JSON file in
+<code>registry/</code> that was written by a script in this repository, and the page names that file.
+Nothing here is asserted from memory. Where a value is an estimate from a model rather than a
+measurement, it is labelled as such. No organizer score is claimed for any artifact in this
+repository.</p>
+<p>GEMSDOE44 · DOE GEMS Prize (DrivenData #306) · source:
+<a href="https://github.com/buffedlizard55-lab/GEMSDOE44">github.com/buffedlizard55-lab/GEMSDOE44</a></p>
+</footer></div></body></html>

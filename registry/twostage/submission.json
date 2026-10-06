@@ -1,0 +1,396 @@
+{
+  "slug": "GEMS44_h46-twostageAB_20261006T160000Z_b0cfe956",
+  "built_utc": "20261006T160000Z",
+  "tag": "h46-twostageAB",
+  "seed": 44,
+  "mass": 42000,
+  "requested_mass": 42000,
+  "min_sep_px": 3.0,
+  "no_halo_px": 2.0,
+  "stage_a_gate_fraction": 0.7,
+  "stage_a": {
+    "area_fraction": 0.7,
+    "gate_px": 3617161,
+    "catalogue_density_inside_gate": 0.016807103692647356,
+    "catalogue_density_footprint_background": 0.011802515514169385,
+    "base_rate_lift": 1.4240272484683256,
+    "offcatalogue_recall_inside_gate": 0.7506374426929598,
+    "offcatalogue_recall_over_area_fraction": 1.0723392038470856,
+    "blocked_cell_auc": {
+      "quad0": 0.9240394293809812,
+      "quad1": 0.9562544733633047,
+      "quad2": 0.9398056005883224,
+      "quad3": 0.9496070528663676
+    },
+    "blocked_cell_auc_mean": 0.942426639049744,
+    "note": "Stage A is a ZONE statement. Its numbers are base-rate and recall numbers, deliberately not DTI numbers: a coarse mask cannot place a pixel, which is the failure mode of the family's habitat-only emissions (0.0041/0.1223/0.1352)."
+  },
+  "stage_a_honesty": {
+    "shipped_weights": {
+      "catalogue_density_3km": 0.4,
+      "catalogue_density_10km": 0.15,
+      "conductivity_surface_coarse": 0.1,
+      "geodetic_2nd_invariant_coarse": 0.1,
+      "geodetic_shear_rate_coarse": 0.05,
+      "earthquake_density_coarse": 0.08,
+      "depth_to_basement_coarse": 0.05,
+      "isostatic_grav_anomaly_coarse": 0.04,
+      "magnetic_anomaly_coarse": 0.03
+    },
+    "physical_only_weights": {
+      "conductivity_surface_coarse": 0.1,
+      "geodetic_2nd_invariant_coarse": 0.1,
+      "geodetic_shear_rate_coarse": 0.05,
+      "earthquake_density_coarse": 0.08,
+      "depth_to_basement_coarse": 0.05,
+      "isostatic_grav_anomaly_coarse": 0.04,
+      "magnetic_anomaly_coarse": 0.03,
+      "geodetic_dilatation_rate_coarse": 0.02
+    },
+    "physical_only_validation": {
+      "area_fraction": 0.7,
+      "gate_px": 3617161,
+      "catalogue_density_inside_gate": 0.012787100159489721,
+      "catalogue_density_footprint_background": 0.011802515514169385,
+      "base_rate_lift": 1.0834215929763704,
+      "offcatalogue_recall_inside_gate": 0.6621616529548452,
+      "offcatalogue_recall_over_area_fraction": 0.9459452185069218,
+      "blocked_cell_auc": {
+        "quad0": 0.555243239233235,
+        "quad1": 0.4861181175441512,
+        "quad2": 0.5041656355485375,
+        "quad3": 0.5710497669706155
+      },
+      "blocked_cell_auc_mean": 0.5291441898241348,
+      "note": "Stage A is a ZONE statement. Its numbers are base-rate and recall numbers, deliberately not DTI numbers: a coarse mask cannot place a pixel, which is the failure mode of the family's habitat-only emissions (0.0041/0.1223/0.1352)."
+    },
+    "note": "the shipped score includes catalogue-density layers and is validated against 'does this 2 km cell contain catalogue faults', so its blocked AUC is self-referential (a smoothed fault map predicting a fault map).  It is a legitimate GATE input -- the catalogue is known, and it is never a pixel target -- but the physical-only AUC is the honest number for the physical layers themselves."
+  },
+  "stage_b": {
+    "features": [
+      "lrm_r5",
+      "lrm_r15",
+      "lrm_r40",
+      "lrm_abs_r15",
+      "lrm_grad_r15",
+      "open_pos_l10",
+      "open_neg_l10",
+      "open_antislope_l10",
+      "open_neg_l30",
+      "open_antislope_l30",
+      "hessian_ridge_s3",
+      "hessian_ridge_s8",
+      "hessian_curv_s3",
+      "hessian_curv_s8",
+      "thg_gravity_s3",
+      "thg_gravity_s10",
+      "thg_magnetic_s3",
+      "thg_magnetic_s10",
+      "tilt_tc_s5",
+      "fabric_align_s5",
+      "fabric_align_s15",
+      "step_energy_s5",
+      "step_energy_s15",
+      "slope_multiscale_ratio",
+      "detrended_elevation_slope",
+      "detrended_elevation_slope_m3",
+      "detrended_elevation_slope_m9",
+      "detrended_elevation",
+      "detrended_elevation_m3",
+      "tilt_angle_tot_curv",
+      "tilt_angle_tot_curv_m9",
+      "tmi_hgrad",
+      "tmi_vgrad",
+      "tmi_total",
+      "rtp_magnetic",
+      "magnetic_anomaly",
+      "isostatic_grav_hgrad",
+      "isostatic_grav_vgrad",
+      "isostatic_grav_slope",
+      "isostatic_grav_anomaly",
+      "geodetic_2nd_invariant",
+      "geodetic_shear_rate",
+      "geodetic_dilatation_rate",
+      "earthquake_density",
+      "earthquake_density_m9",
+      "depth_to_basement",
+      "depth_to_basement_m9",
+      "conductivity_surface",
+      "conductivity_surface_m9",
+      "curvature_laplacian_m3",
+      "curvature_laplacian_m9"
+    ],
+    "train_positives": 60000,
+    "train_negatives": 160000,
+    "target": "frame U (SGMC faults the catalogue lacks)",
+    "model": "HistGradientBoostingClassifier(300 iters, lr 0.06, 31 leaves)"
+  },
+  "frames": {
+    "valid_px": 5167373,
+    "known_catalogue_px": 60988,
+    "sgmc_all_px": 83593,
+    "frame_P_sgmc_beyond_300m_px": 62122,
+    "frame_U_sgmc_off_catalogue_px": 79615,
+    "frame_N_sgmc_within_300m_px": 17493,
+    "pixel_m": 100.0,
+    "kernel_radius_px": 3.0
+  },
+  "scores": {
+    "frame_P_sgmc_beyond_300m": {
+      "final": {
+        "DTI": 0.30810057757275594,
+        "T": 18537.502574599963,
+        "F": 33809.74286116117,
+        "G": 62122,
+        "n": 42000
+      },
+      "incumbent_d2_8": {
+        "DTI": 0.09417442916119362,
+        "T": 5568.5296418767975,
+        "F": 41593.23916879607,
+        "G": 62122,
+        "n": 44090
+      },
+      "prior_artifact": {
+        "DTI": 0.14218329444320868,
+        "T": 8442.087758268814,
+        "F": 39943.317494019095,
+        "G": 62122,
+        "n": 44090
+      }
+    },
+    "frame_N_sgmc_within_300m": {
+      "final": {
+        "DTI": 0.18841394865330685,
+        "T": 4307.238372348364,
+        "F": 40023.29610385289,
+        "G": 17493,
+        "n": 42000
+      },
+      "incumbent_d2_8": {
+        "DTI": 0.1755358939015151,
+        "T": 4074.214635020876,
+        "F": 42004.54126641103,
+        "G": 17493,
+        "n": 44090
+      },
+      "prior_artifact": {
+        "DTI": 0.39572393222033764,
+        "T": 9342.501861167584,
+        "F": 38728.672944415215,
+        "G": 17493,
+        "n": 44090
+      }
+    },
+    "frame_U_sgmc_all_off_catalogue": {
+      "final": {
+        "DTI": 0.305661473100965,
+        "T": 22844.74094694833,
+        "F": 32388.75590082641,
+        "G": 79615,
+        "n": 42000
+      }
+    }
+  },
+  "stage_dominance_check": {
+    "stage_A_only_at_same_mass": {
+      "P": {
+        "DTI": 0.06825891601071496,
+        "T": 3995.162370528061,
+        "F": 40164.49481618428,
+        "G": 62122,
+        "n": 42000
+      },
+      "N": {
+        "DTI": 0.00640555594119791,
+        "T": 143.49122849664002,
+        "F": 41889.79747233511,
+        "G": 17493,
+        "n": 42000
+      }
+    },
+    "stage_B_ungated_at_same_mass": {
+      "P": {
+        "DTI": 0.37163009812576825,
+        "T": 22555.8266511954,
+        "F": 32427.64625897216,
+        "G": 62122,
+        "n": 42000
+      },
+      "N": {
+        "DTI": 0.23498279292980256,
+        "T": 5390.274702707067,
+        "F": 39332.81925503066,
+        "G": 17493,
+        "n": 42000
+      }
+    },
+    "stage_B_nohalo_nogate_at_same_mass": {
+      "P": {
+        "DTI": 0.38262466815531465,
+        "T": 23249.13040166722,
+        "F": 32074.049804700866,
+        "G": 62122,
+        "n": 42000
+      },
+      "N": {
+        "DTI": 0.15119193434709705,
+        "T": 3442.904739687182,
+        "F": 40443.83893453471,
+        "G": 17493,
+        "n": 42000
+      }
+    },
+    "final": {
+      "P": {
+        "DTI": 0.30810057757275594,
+        "T": 18537.502574599963,
+        "F": 33809.74286116117,
+        "G": 62122,
+        "n": 42000
+      },
+      "N": {
+        "DTI": 0.18841394865330685,
+        "T": 4307.238372348364,
+        "F": 40023.29610385289,
+        "G": 17493,
+        "n": 42000
+      }
+    },
+    "jaccard_final_vs_stageA_only": 0.005590604910634121,
+    "jaccard_final_vs_stageB_ungated": 0.3817834876873221
+  },
+  "calibrated_instrument": {
+    "frame_P_credit_per_dot": 0.44136910891904674,
+    "kernel_sum_offsets": 9.380297810508184,
+    "hidden_g_assumed_px": 7905,
+    "dti_at_hidden_density": 1.25899908819614,
+    "note": "credit per dot on frame P is the statistic that reproduced the family's reported live ordering 6/6 (scripts/calibrate_instrument.py); the hidden-density DTI uses the family-implied hidden truth size and is a scale check, not a prediction"
+  },
+  "uniqueness": {
+    "max_jaccard_vs_any_local_artifact": 0.01988781234064253,
+    "n_artifacts_compared": 114,
+    "per_artifact": {
+      "gemsdoe30-edge-hybrid-80k-02845bd4-20261003T234340Z-allfinite.tif": {
+        "jaccard": 0.01988781234064253,
+        "shared": 2379,
+        "mass": 80000
+      },
+      "gemsdoe30-edge-hybrid-80k-02845bd4-nan.tif": {
+        "jaccard": 0.01988781234064253,
+        "shared": 2379,
+        "mass": 80000
+      },
+      "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-nan.tif": {
+        "jaccard": 0.019661257846736942,
+        "shared": 1660,
+        "mass": 44090
+      },
+      "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif": {
+        "jaccard": 0.019661257846736942,
+        "shared": 1660,
+        "mass": 44090
+      },
+      "GEMS36_h6_offcatalog_network_prior_20261004T193432.021282Z_3276c04090_": {
+        "jaccard": 0.01827012378008861,
+        "shared": 1200,
+        "mass": 24881
+      },
+      "gemsdoe29-sgmc-off-catalogue-44k-20261003-c8dcd780e3fd-nan.tif": {
+        "jaccard": 0.01593108331366533,
+        "shared": 1350,
+        "mass": 44090
+      },
+      "gems10-h16-continuation-20260927T065521077735Z-3431b83c7c.tif": {
+        "jaccard": 0.015771432528507455,
+        "shared": 5466,
+        "mass": 310042
+      },
+      "gems21-h19-4-reference-20260930-691e4dfa-masked-zero.tif": {
+        "jaccard": 0.015043901005375884,
+        "shared": 2457,
+        "mass": 123779
+      },
+      "gems21-h19-4-reference-20260930-691e4dfa.tif": {
+        "jaccard": 0.015043901005375884,
+        "shared": 2457,
+        "mass": 123779
+      },
+      "gems19-h19-5-powerlaw-budget-multiline-corroborated-20260930-e27054cf-": {
+        "jaccard": 0.01474238154776345,
+        "shared": 2370,
+        "mass": 121131
+      },
+      "gems24-h24-0-mirror-h19-5-group-best-20261002-e27054cf-allfinite.tif": {
+        "jaccard": 0.01474238154776345,
+        "shared": 2370,
+        "mass": 121131
+      },
+      "gems24-h24-0-mirror-h19-5-group-best-20261002-e27054cf-nan.tif": {
+        "jaccard": 0.01474238154776345,
+        "shared": 2370,
+        "mass": 121131
+      }
+    }
+  },
+  "emission_diagnostics": {
+    "dots": 42000,
+    "dots_on_known_mask": 0,
+    "within_200m_of_catalogue": 0,
+    "within_300m_of_catalogue": 5572,
+    "inside_stage_a_gate": 42000,
+    "frac_inside_stage_a_gate": 1.0
+  },
+  "format": {
+    "primary": {
+      "path": "submissions/GEMS44_h46-twostageAB_20261006T160000Z_b0cfe956-zeros.tif",
+      "bytes": 315429,
+      "sha256": "3c04892d0deca00ccbadf77c801130180f05a03a9c0d575e4d8b91127286d06f",
+      "n_positive_cells": 42000,
+      "min_finite": 0.0,
+      "max_finite": 1.0,
+      "checks": {
+        "single_band": true,
+        "float32": true,
+        "crs_epsg32611": true,
+        "resolution_100m": true,
+        "shape_matches_template": true,
+        "transform_matches_template": true,
+        "all_values_in_0_1": true,
+        "every_cell_finite": true,
+        "positive_only_outside_nothing": true,
+        "values_are_binary": true
+      },
+      "all_checks_pass": true
+    },
+    "nan_twin": {
+      "path": "submissions/GEMS44_h46-twostageAB_20261006T160000Z_b0cfe956-nan.tif",
+      "bytes": 338738,
+      "sha256": "54a8fb55bca1509ee58c3351a3727078416d9aa6ba5c7c6f2420e816c74b809d",
+      "n_positive_cells": 42000,
+      "min_finite": 0.0,
+      "max_finite": 1.0,
+      "checks": {
+        "single_band": true,
+        "float32": true,
+        "crs_epsg32611": true,
+        "resolution_100m": true,
+        "shape_matches_template": true,
+        "transform_matches_template": true,
+        "all_values_in_0_1": true,
+        "nan_exactly_outside_footprint": true,
+        "finite_values_binary": true
+      },
+      "all_checks_pass": true
+    },
+    "zip": {
+      "path": "submissions/GEMS44_h46-twostageAB_20261006T160000Z_b0cfe956-zeros.zip",
+      "bytes": 198695,
+      "contents": [
+        "GEMS44_h46-twostageAB_20261006T160000Z_b0cfe956-zeros.tif"
+      ],
+      "inner_sha256": "3c04892d0deca00ccbadf77c801130180f05a03a9c0d575e4d8b91127286d06f",
+      "inner_matches_loose_file": true
+    }
+  }
+}

@@ -1,0 +1,295 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Why the family&#x27;s top file scored highest · GEMSDOE44</title><link rel="stylesheet" href="assets/twostage.css"></head>
+<body><header class="top"><div class="wrap"><nav><a href="index.html">Executive summary</a> <a href="twostage.html">Two-stage method</a> <a href="validation.html">Validation</a> <a href="forensics.html">Why 0.2778</a> <a href="hypotheses.html">Hypotheses</a> <a href="data.html">Data</a> <a href="how-to-submit.html">How to submit</a> <a href="leaderboard.html">Leaderboard</a> <a href="limitations.html">Limitations & flags</a></nav></div></header>
+<div class="wrap"><h1>Why the family&#x27;s top file scored highest</h1><p class="src">Full analysis: docs/research/why_the_family_top_file_scored_highest.md</p>
+
+<p>*Analysis written 2026-10-06 by this session. Every number below is either <b>[measured here]</b></p>
+<p>(computed in this repository, from the official competition rasters, with the exact metric in</p>
+<p><code>src/gems44/metric.py</code>) or <b>[owner-report]</b> (a score reported on one of the GEMSDOE sites,</p>
+<p>which is <b>not</b> an organizer receipt — IR-44-08). Nothing here is asserted from memory.*</p>
+
+<p>---</p>
+
+<h2>0. First, the provenance of &quot;0.2778&quot; — flagged, not assumed</h2>
+
+<p>The brief states that <code>gemsdoe32-h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros.tif</code> (site</p>
+<p>GEMSDOE32) scored <b>0.2778</b>, the highest of the family&#x27;s artifacts. Three separate pieces of</p>
+<p>evidence had to be checked before that number could be used at all.</p>
+
+<table class="tbl">
+<tr><th>check</th><th>evidence</th><th>result</th></tr>
+<tr><td>What does GEMSDOE32 itself claim?</td><td>its <code>README.md</code> and <code>docs/index.html</code>, cloned and read here</td><td>the file is labelled <b>UNSCORED</b>, with a <b>projected 0.2747</b>; &quot;NO ORGANISER SCORE EXISTS for this or any artifact in this repository&quot;</td></tr>
+<tr><td>Who holds 0.2778 on the public board?</td><td>the 2026-10-06 leaderboard snapshot in <code>registry/leaderboard.json</code></td><td>rank 13, participant <b>extradr19</b>, 10 submissions — <b>no file attribution published</b></td></tr>
+<tr><td>Is the file what the brief says it is?</td><td>bytes read here</td><td>it is the family&#x27;s <b>0.2708</b> artifact with every dot within <b>200 m</b> of the published catalogue deleted: 40,199 → 37,654 dots, 0 dots within 200 m (<b>[measured here]</b>, Jaccard with the 0.2708 file = 0.937, i.e. containment)</td></tr>
+</table>
+
+<p><b>Consequence, carried as a flagged irregularity (IR-44-03 + IR-44-10).</b> The phrase &quot;the file that</p>
+<p>scored 0.2778&quot; is not supported by any evidence read in this sandbox: the number belongs to a</p>
+<p>third-party leaderboard row, and the file itself has never been scored by anyone who published a</p>
+<p>receipt. What <i>is</i> supported is a <b>pruning lineage</b> with two owner-reported live A/B pairs:</p>
+
+<pre><code>
+H19-5 solid  121,131 dots  live 0.1922      [owner-report]
+d1.5          60,069 dots  live 0.2477      [owner-report]
+d2.8          44,090 dots  live 0.2600      [owner-report]   &lt;- the incumbent in this repository
+solo-d2.8     40,199 dots  live 0.2708      [owner-report]   = d2.8 minus its 100 m catalogue flank
+h33-2-b2      37,654 dots  (claimed 0.2778 / projected 0.2747)  = solo minus its 200 m flank
+</code></pre>
+
+<p>Everything below is about <i>why that lineage moved</i>, measured rather than asserted.</p>
+
+<p>---</p>
+
+<h2>1. The metric is an additive budget, and every dot has a price of exactly 0.2</h2>
+
+<p>From the published definitions (competition page 967, transcription and tests in</p>
+<p><code>src/gems44/metric.py</code>, 23 tests in <code>tests/test_metric.py</code>):</p>
+
+<pre><code>
+TP_w = Σ_g max_x p(x)·k(d)      FP_w = Σ_{p&gt;0} p(x)·(1 − max_g k)      k(d) = max(1 − d/300 m, 0)
+FN_w = |G| − TP_w                (exact, by substitution)
+DTI  = TP_w / ( 0.2·(TP_w + FP_w) + 0.8·|G| )
+</code></pre>
+
+<p>Write <code>T = TP_w</code>, <code>n</code> for the number of dots (a binary file has <code>Σp = n</code>), and</p>
+<p><code>M = Σ_dots max_g k</code> for the mass that is itself best-covering some truth pixel, so that</p>
+<p><code>FP_w = n − M</code>. Then</p>
+
+<pre><code>
+DTI = T / ( 0.2·(T + n − M) + 0.8·|G| )
+</code></pre>
+
+<p>Add one dot whose <b>fresh</b> credit is <code>k</code> (it improves some truth pixel&#x27;s max by <code>k</code>) and whose own</p>
+<p>best-truth weight is <code>k</code> — true whenever the dot is farther than 2R = 600 m from every other dot,</p>
+<p>which is exactly the regime the family emits in (<code>min separation ≥ 2.83 px</code>, <b>[measured here]</b>,</p>
+<p>nearest-neighbour median = 3.00 px for every artifact in the lineage):</p>
+
+<pre><code>
+Δ denominator = 0.2·k + 0.2·(1 − k) = 0.2       ⇒      DTI rises  ⟺  k &gt; 0.2·DTI
+</code></pre>
+
+<p><b>Every dot costs the same 0.2 of denominator; it pays only if its own credit clears 0.2·DTI.</b></p>
+<p>At the family&#x27;s scores that bar is:</p>
+
+<table class="tbl">
+<tr><th>live score</th><th>break-even credit per dot</th><th>break-even distance from truth</th></tr>
+<tr><td>0.2600</td><td>0.0520</td><td>284 m</td></tr>
+<tr><td>0.2778</td><td>0.0556</td><td>283 m</td></tr>
+<tr><td>0.3345 (current public #1, 2026-10-06 read)</td><td>0.0669</td><td>280 m</td></tr>
+</table>
+
+<p>This is not a heuristic: it is the metric&#x27;s first-order condition, and it is the whole explanation</p>
+<p>of the lineage — <b>mass that realizes less than the bar is mass the file is better off without.</b></p>
+
+<p>---</p>
+
+<h2>2. The decisive measurement: mass-corrected credit per dot on frame P ranks the lineage 6/6</h2>
+
+<p><b>Frame P</b> = the 62,122 pixels of USGS SGMC faults that lie <b>more than 300 m</b> from every pixel of</p>
+<p>the competition catalogue (<code>labels.tif</code>), computed here from</p>
+<p><code>data/external/derived_sgmc_faults_100m_u8.tif</code> (sha256-pinned mirror of the official SGMC</p>
+<p>compilation). It is the only locally available set of <b>real, mapped, catalogue-absent</b> faults.</p>
+
+<p>For each artifact of the lineage, <code>credit per dot = TP_w / n</code> against frame P — a statistic that</p>
+<p>never rewards emitting more dots:</p>
+
+<table class="tbl">
+<tr><th>artifact</th><th>dots</th><th><code>TP_w</code> on frame P</th><th><b>credit per dot</b></th><th>owner-reported live score</th><th><code>N</code>-frame DTI (previous session&#x27;s frame)</th></tr>
+<tr><td>H19-5 solid</td><td>121,131</td><td>7,334</td><td><b>0.0605</b></td><td>0.1922</td><td>0.1413</td></tr>
+<tr><td>d1.5</td><td>60,069</td><td>6,222</td><td><b>0.1036</b></td><td>0.2477</td><td>0.1732</td></tr>
+<tr><td>d2.8 (incumbent)</td><td>44,090</td><td>5,569</td><td><b>0.1263</b></td><td>0.2600</td><td>0.1755</td></tr>
+<tr><td>solo-d2.8</td><td>40,199</td><td>5,561</td><td><b>0.1383</b></td><td>0.2708</td><td>0.1061</td></tr>
+<tr><td>h36-rung30</td><td>37,660</td><td>5,400</td><td><b>0.1434</b></td><td>0.2710</td><td>0.1029</td></tr>
+<tr><td>h33-2-b2</td><td>37,654</td><td>5,518</td><td><b>0.1465</b></td><td>0.2778 <i>(claimed)</i></td><td>0.0541</td></tr>
+</table>
+
+<pre><code>
+Spearman( live score , credit per dot on frame P ) = 1.000   (n = 6, p = 0.0000)
+Spearman( live score , N-frame DTI )               = negative across the last three artifacts
+</code></pre>
+
+<p><b>Frame P with mass correction reproduces the family&#x27;s entire reported score ordering exactly.</b></p>
+<p>The frame the previous session promoted on (frame N = SGMC strands <i>within</i> 300 m of the</p>
+<p>catalogue) does the opposite: it ranks the three <i>most pruned</i> artifacts — the three the live board</p>
+<p>rewarded most — as the three worst.</p>
+
+<h3>2.1 Why the catalogue flank is the mass that gets cut</h3>
+
+<p>Decomposing the incumbent&#x27;s 44,090 dots by distance to the catalogue, and scoring each stratum on</p>
+<p>frame P (<b>[measured here]</b>):</p>
+
+<table class="tbl">
+<tr><th>stratum</th><th>dots</th><th>credit per dot on <b>frame P</b></th><th>credit per dot on frame N</th><th>verdict at the 0.052 bar</th></tr>
+<tr><td>≤ 100 m from the catalogue</td><td>3,891</td><td><b>0.0037</b></td><td>0.5291</td><td>14× <b>below</b> the bar</td></tr>
+<tr><td>100–200 m</td><td>2,545</td><td><b>0.0286</b></td><td>0.5275</td><td>below the bar</td></tr>
+<tr><td>200–300 m</td><td>2,171</td><td>0.0893</td><td>0.3871</td><td>above the bar</td></tr>
+<tr><td>&gt; 300 m (interior)</td><td>35,483</td><td><b>0.1516</b></td><td>0.0107</td><td>2.9× above the bar</td></tr>
+<tr><td><i>uniform random control</i></td><td>44,090</td><td><i>0.1067</i></td><td><i>0.0257</i></td><td>—</td></tr>
+</table>
+
+<p>Two independent facts fall out:</p>
+
+<p>1. <b>The two prunes in the lineage removed exactly the below-bar strata</b> — 3,891 dots at ≤100 m</p>
+<p>   (0.2600 → 0.2708) and then 2,545 dots at ≤200 m (→ 0.2747/0.2778). The live A/Bs and this</p>
+<p>   decomposition agree on both the sign and the size of the effect: solving</p>
+<p>   <code>T = DTI·(0.2·n + 0.8·|G|)</code> for the removed dots at <code>|G| ≈ 7,905 px</code> (the family&#x27;s own implied</p>
+<p>   hidden-set size) gives <b>0.012 credit per dot</b> for the ≤100 m stratum and <b>0.033</b> for the</p>
+<p>   100–200 m stratum — both far below the 0.052 bar, both matching the frame-P measurement</p>
+<p>   (0.004 and 0.029) rather than the frame-N measurement (0.53, 0.53).</p>
+<p>2. **Interpreted as an instrument, the live board therefore behaved like frame P and not like</p>
+<p>   frame N.** The hidden fault set is <i>not</i> enriched in the catalogue&#x27;s 300 m flank. That is the</p>
+<p>   single most consequential finding of this session, because it changes which local statistic is</p>
+<p>   allowed to choose a submission.</p>
+
+<p>---</p>
+
+<h2>3. Can we score above 0.2778? Yes. Where the remaining credit is, measured.</h2>
+
+<p>The lineage&#x27;s own arithmetic sets the target. With the family&#x27;s implied hidden-set size</p>
+<p><code>|G| ≈ 7,905 px</code> and <code>n = 37,654</code> dots, a score of 0.3345 requires</p>
+<p><code>T = 0.3345·(0.2·37,654 + 0.8·7,905) = 4,651</code>, i.e. <b>0.1235 credit per dot</b> — against the</p>
+<p>lineage&#x27;s current best measured 0.1465 on frame P and 0.0893–0.11 live-inferred. Two routes exist,</p>
+<p>and both are quantified here:</p>
+
+<p>1. <b>Emission route (no new data).</b> The prior session&#x27;s published artifact in this repository</p>
+<p>   (<code>GEMS44_n-strand-ssmc…</code>, 44,090 dots) has 19,983 of its dots (45.3 %) inside the 300 m</p>
+<p>   catalogue flank (<b>[measured here]</b>, from its own audit sidecar and recomputed from its bytes).</p>
+<p>   On frame P that is the stratum with 0.004–0.089 credit per dot; on the calibrated instrument the</p>
+<p>   same field emitted <i>without</i> the flank mass measures <b>0.1915 credit per dot</b> — the highest of</p>
+<p>   every artifact measured here, and 43 % above the incumbent&#x27;s 0.1263. **This is the cheapest</p>
+<p>   available gain in the whole project, and it is what this session ships.**</p>
+<p>2. <b>Field route (this session&#x27;s fine-scale library).</b> A 24-feature fine-scale detector built from</p>
+<p>   the 19 official bands alone, cross-validated on spatially blocked quadrants against frame P,</p>
+<p>   reaches blocked AUC <b>0.73–0.78</b> (fold AUCs) — but on the metric it <i>lost</i> to the incumbent&#x27;s</p>
+<p>   actual dots at matched mass in <b>4/4 folds</b> (mean ΔDTI −0.030). AUC is not credit: this</p>
+<p>   reproduces, in this session&#x27;s own hands, the family&#x27;s finding that a field with blocked AUC 0.773</p>
+<p>   can score below a uniform control. The features with real discrimination on frame P are</p>
+<p>   topographic-curvature and relief transforms:</p>
+
+<p>   | Stage B feature (blocked AUC vs frame P, 4 folds) | mean | folds |</p>
+<p>   | --- | ---: | --- |</p>
+<p>   | <code>hessian_curv_s3</code> — total curvature of detrended elevation, σ = 3 px | <b>0.7456</b> | 0.770 / 0.754 / 0.707 / 0.752 |</p>
+<p>   | <code>lrm_grad_r15</code> — gradient of the local relief model, r = 15 px | 0.7340 | 0.752 / 0.745 / 0.687 / 0.751 |</p>
+<p>   | <code>lrm_abs_r15</code> — absolute local relief, r = 15 px | 0.6852 | 0.713 / 0.695 / 0.641 / 0.692 |</p>
+<p>   | <code>fabric_align_s5</code> — strike alignment with the Basin &amp; Range fabric | 0.6755 | 0.713 / 0.683 / 0.663 / 0.643 |</p>
+<p>   | <code>hessian_ridge_s3</code> — ridge/valley response of detrended elevation | 0.5974 | 0.600 / 0.607 / 0.587 / 0.595 |</p>
+
+<p>   Note what is <i>absent</i> from that table: <code>tilt_angle_tot_curv</code> (0.3735 — anti-correlated),</p>
+<p>   <code>total horizontal gradient of gravity</code> (0.456), topographic openness (0.33–0.42). On frame P the</p>
+<p>   classical potential-field edge detectors carry <b>no</b> off-catalogue signal at 100 m, while the</p>
+<p>   <i>topographic curvature</i> family carries most of it. That is a physical statement about what these</p>
+<p>   faults are — young, surface-expressed scarps — and it is why Stage B here is built on curvature,</p>
+<p>   relief and fabric alignment rather than on the geophysical edge operators.</p>
+
+<p>3. <b>What the data cannot support (flagged, not hidden).</b> The 8 USGS 1 m lidar tiles that the</p>
+<p>   family audited cover only <b>1.446 %</b> of the footprint, and inside them the off-catalogue SGMC</p>
+<p>   density is <b>0.40×</b> the background (catalogue density 1.30×) — <b>[measured here]</b>. So the</p>
+<p>   &quot;the hidden faults are simply the lidar blocks&quot; hypothesis is <b>not</b> supported by the only</p>
+<p>   off-catalogue truth available locally, and it is not used.</p>
+
+<h3>3.1 The live ladder is itself a measurement of the hidden set&#x27;s marginal credit</h3>
+
+<p>The algebra of §1 turns every owner-reported A/B pair into a measurement of the <i>hidden</i> set&#x27;s</p>
+<p>marginal dot, with no model and no assumption about <code>|G|</code>. Removing a set <code>R</code> of dots from a fixed</p>
+<p>field raises the score iff the credit those dots realised is below the bar:</p>
+
+<pre><code>
+DTI&#x27; &gt; DTI   ⟺   (T − K_R) / (N − 0.2·|R|) &gt; T / N   ⟺   K_R / |R| &lt; 0.2·DTI
+</code></pre>
+
+<p>Applying that to the family&#x27;s own two prunes:</p>
+
+<table class="tbl">
+<tr><th>A/B pair (same field, measured Jaccard 0.912)</th><th>dots removed</th><th>score change</th><th>⇒ mean credit of the removed dots</th><th>bar at that score</th></tr>
+<tr><td>d2.8 → solo-d2.8</td><td>3,886</td><td>0.2600 → 0.2708</td><td><b>&lt; 0.052</b></td><td>0.054</td></tr>
+<tr><td>solo-d2.8 → h33-2-b2</td><td>2,545</td><td>→ 0.2747 <i>(projected)</i></td><td><b>&lt; 0.055</b></td><td>0.055</td></tr>
+</table>
+
+<p>On frame P those same strata measure 0.029–0.089 credit per dot — i.e. **frame P is roughly 2–3×</p>
+<p>more generous than the real hidden set**. That is the honest caveat on every &quot;hidden-density&quot;</p>
+<p>projection in this repository, and it has a concrete consequence for the mass decision: the</p>
+<p>marginal rule&#x27;s optimum on the hidden set sits at a <b>lower</b> mass than frame P would choose. The</p>
+<p>sweep&#x27;s frame-P model optimum is 60,000 dots; this session ships <b>42,000</b>, inside the band where</p>
+<p>the family&#x27;s live A/Bs were still gaining, and publishes the whole ladder</p>
+<p>(<code>registry/twostage/analysis.json :: marginal_rule_at_hidden_density</code>) so the choice can be re-made</p>
+<p>against a better instrument. Flagged as IR-46-03.</p>
+
+<h3>3.2 Emission geometry: why the spacing rule is 3 px and not 1.5 px or 6 px</h3>
+
+<p>On an idealised 1-px fault line, the fresh credit a dot earns when the next dot is <code>s</code> pixels away</p>
+<p>is <code>s − s²/12</code> for <code>s ≤ 2R = 6 px</code> (max 3.0 at <code>s = 6</code>). The family&#x27;s live ladder moved in exactly</p>
+<p>that direction — 1.5 px spacing earns ≈1.31 per dot, 2.8 px earns ≈2.15 — which is why their</p>
+<p>thinning kept helping. But frame P is not a 1-px line: it is a 62,122-pixel fault population at</p>
+<p>100 m resolution, where overlapping kernels still find fresh truth. Measured at matched mass with</p>
+<p>one field and one scorer (<code>registry/twostage/spacing_diagnostic.json</code>, in-sample by construction):</p>
+
+<table class="tbl">
+<tr><th>min separation</th><th>dots</th><th>credit per dot (frame P)</th><th>frame-P DTI</th></tr>
+<tr><td>3 px (shipped)</td><td>42,000</td><td><b>0.4414</b></td><td>0.3081</td></tr>
+<tr><td>4 px</td><td>42,000</td><td>0.3870</td><td>0.2704</td></tr>
+<tr><td>5 px</td><td>31,294</td><td>0.3735</td><td>0.2034</td></tr>
+<tr><td>6 px</td><td>23,666</td><td>0.3763</td><td>0.1602</td></tr>
+</table>
+
+<p>Coarser spacing buys per-dot credit but loses coverage on <i>this</i> truth; the 3 px rule (which is also</p>
+<p>the metric&#x27;s break-even distance at a score of 0.26) wins. The diagnostic is published rather than</p>
+<p>quietly tuned: it is in-sample, it is one field, and the family&#x27;s own evidence (`Spearman(live,</p>
+<p>adjacent-dot fraction) = −0.361`) is about adjacent <i>dots</i>, which the 3 px rule already eliminates.</p>
+
+<p>---</p>
+
+<h2>4. What this session ships, and what it explicitly refuses to claim</h2>
+
+<p><b>Ships.</b> A two-stage artifact with the stages kept separate <i>and separately validated</i></p>
+<p>(<code>docs/twostage.html</code>, <code>registry/twostage/</code>):</p>
+
+<li><b>Stage A</b> (coarse favourability — strain, conductivity, depth-to-basement, seismicity,</li>
+<p>  gravity/magnetics and catalogue fault-corridor density at 2 km and 10 km): decides *which broad</p>
+<p>  zones are worth searching at all*. Validated as a <b>zone</b> statement: blocked-cell AUC, base-rate</p>
+<p>  lift and off-catalogue recall inside the approved area, against a random zone of identical area.</p>
+<p>  <b>Two AUCs are published, and the distinction matters</b>: the shipped score includes</p>
+<p>  catalogue-density layers and is validated against &quot;does this 2 km cell contain catalogue faults&quot;,</p>
+<p>  so its blocked AUC (0.942) is partly self-referential — a smoothed fault map predicting a fault</p>
+<p>  map. That is a legitimate <i>gate</i> input (the catalogue is known, never the truth, and never a pixel</p>
+<p>  target), but the honest number for the physical layers themselves is the <b>physical-only</b> variant,</p>
+<p>  reported beside it in <code>registry/twostage/submission.json :: stage_a_honesty</code>.</p>
+<li><b>Stage B</b> (fine-scale placement — curvature, relief, fabric alignment on the official bands):</li>
+<p>  decides <i>where inside those zones</i>. Validated as a <b>placement</b> statement: matched-mass DTI on</p>
+<p>  frame P, blocked by quadrant, against the incumbent, the prior artifact and a uniform control.</p>
+<li><b>Emission</b>: the exact greedy max-coverage emitter (<code>gems44.field.emit_order_np</code>) with a 3 px</li>
+<p>  minimum separation, mass chosen inside the family&#x27;s empirically-successful band, and **no mass</p>
+<p>  within 200 m of the catalogue** — the one mechanism the live board has already paid for twice.</p>
+<li><b>The dominance check that keeps &quot;two-stage&quot; honest.</b> Same field, same mass, same scorer, three</li>
+<p>  emissions: Stage-A-only <b>ranked by the Stage A score</b> (not by the Stage B belief inside the</p>
+<p>  gate — that would be a second Stage-B emission wearing a Stage-A label), Stage-B with no gate, and</p>
+<p>  the shipped Stage-B × gate × no-flank file. If the gate alone matched the shipped file, the &quot;two</p>
+<p>  stages&quot; claim would be decoration.</p>
+
+<p><b>Refuses.</b> No claim that any local number is an organizer score. The leaderboard target (0.3345</p>
+<p>on 2026-10-06) is a dated read of a public page, not a guarantee; the 0.2778 attribution is</p>
+<p>contested in §0; and every local number is a proxy whose validity rests on the 6/6 ordering in §2 —</p>
+<p>a result obtained on <b>six</b> owner-reported scores, which is a small sample and is stated as such.</p>
+
+<p>---</p>
+
+<h2>5. Sources for manual review</h2>
+
+<table class="tbl">
+<tr><th>what</th><th>link</th><th>used for</th></tr>
+<tr><td>problem description, metric, submission format</td><td>https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/</td><td>equations in §1; format contract</td></tr>
+<tr><td>leaderboard (dated read 2026-10-06)</td><td>https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/</td><td>§0 attribution; the 0.3345 target</td></tr>
+<tr><td>known-fault masking statement (DrivenData staff)</td><td>https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516</td><td>why catalogue pixels are neither credit nor penalty</td></tr>
+<tr><td>reference solution</td><td>https://github.com/drivendataorg/gems-prize-reference-solution</td><td>context only (Tversky loss, α = 0.2 / β = 0.8)</td></tr>
+<tr><td>USGS State Geologic Map Compilation (SGMC)</td><td>https://ngmdb.usgs.gov/Prodesc/proddesc_100179.htm</td><td>provenance of the frame-P truth</td></tr>
+<tr><td>SGMC data download (USGS, public domain)</td><td>https://ngmdb.usgs.gov/Geolex/search</td><td>source product, mirrored and sha256-pinned in <code>registry/data_manifest.json</code></td></tr>
+</table>
+
+<p><i>Fetch status.</i> <code>drivendata.org</code> and <code>community.drivendata.org</code> return HTTP 000 from this sandbox</p>
+<p>(measured); the pages above were read by earlier sessions in this repository and their content is</p>
+<p>preserved in <code>registry/sources.json</code> with the exact quotes used. <code>ngmdb.usgs.gov</code> is also outside</p>
+<p>this sandbox&#x27;s allowlist; the SGMC <b>product</b> used here is the sha256-pinned raster in</p>
+<p><code>data/external/</code>, whose provenance is recorded in <code>registry/data_manifest.json</code> (IR-44-02).</p>
+<footer>GEMSDOE44 — DOE GEMS Prize (DrivenData #306). No score on this site is an organizer
+receipt. Every number is a local measurement and names the registry file it came from.</footer>
+</div></body></html>

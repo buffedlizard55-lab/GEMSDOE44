@@ -1,0 +1,33 @@
+{
+  "probe_utc": "2026-10-06T16:05:56Z",
+  "command": "curl -s -o /dev/null -w '%{http_code}' --max-time 5 https://HOST/",
+  "interpretation": "000 = no connection from this sandbox (DNS/allowlist/proxy refusal), not proof that the host is down.  The DrivenData data tab, the USGS earthquake catalogue, the 3DEP lidar buckets and every open-geoscience repository tested are unreachable; only github.com / api.github.com / codeload.github.com work for code and pypi.org / files.pythonhosted.org for wheels.  Consequence: every layer used by the shipped artifact is derived from the 19 official bands, the competition catalogue and the SGMC raster; hypotheses needing new external data are recorded as DATA-BLOCKED, and no claim of obtainability is made without a code in this file.",
+  "http_code_by_host": {
+    "api.github.com": "200",
+    "basemap.nationalmap.gov": "000",
+    "codeload.github.com": "301",
+    "community.drivendata.org": "000",
+    "data.openei.org": "000",
+    "data.usgs.gov": "000",
+    "dataverse.harvard.edu": "000",
+    "earthexplorer.usgs.gov": "000",
+    "earthquake.usgs.gov": "000",
+    "files.osf.io": "000",
+    "files.pythonhosted.org": "404",
+    "gdr.openei.org": "000",
+    "github.com": "200",
+    "huggingface.co": "000",
+    "ngmdb.usgs.gov": "000",
+    "nrel.gov": "000",
+    "portal.opentopography.org": "000",
+    "prd-tnm.s3.amazonaws.com": "000",
+    "pypi.org": "200",
+    "raw.githubusercontent.com": "000",
+    "s3.amazonaws.com": "000",
+    "storage.googleapis.com": "000",
+    "www.drivendata.org": "000",
+    "www.opentopography.org": "000",
+    "www.sciencebase.gov": "000",
+    "zenodo.org": "000"
+  }
+}

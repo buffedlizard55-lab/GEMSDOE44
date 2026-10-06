@@ -1,0 +1,132 @@
+{
+  "protocol": {
+    "frames": {
+      "valid_px": 5167373,
+      "known_catalogue_px": 60988,
+      "sgmc_all_px": 83593,
+      "frame_P_sgmc_beyond_300m_px": 62122,
+      "frame_U_sgmc_off_catalogue_px": 79615,
+      "frame_N_sgmc_within_300m_px": 17493,
+      "pixel_m": 100.0,
+      "kernel_radius_px": 3.0
+    },
+    "feature_names": [
+      "lrm_r5",
+      "lrm_r15",
+      "lrm_r40",
+      "lrm_abs_r15",
+      "lrm_grad_r15",
+      "open_pos_l10",
+      "open_neg_l10",
+      "open_antislope_l10",
+      "open_neg_l30",
+      "open_antislope_l30",
+      "hessian_ridge_s3",
+      "hessian_ridge_s8",
+      "hessian_curv_s3",
+      "hessian_curv_s8",
+      "thg_gravity_s3",
+      "thg_gravity_s10",
+      "thg_magnetic_s3",
+      "thg_magnetic_s10",
+      "tilt_tc_s5",
+      "fabric_align_s5",
+      "fabric_align_s15",
+      "step_energy_s5",
+      "step_energy_s15",
+      "slope_multiscale_ratio"
+    ],
+    "incumbent": "data/raw/incumbent_d28.tif",
+    "seed": 44,
+    "truth": "frame P = SGMC faults > 300 m from the catalogue (never the catalogue itself)",
+    "mass": "matched to the incumbent's dot count per quadrant",
+    "metric": "exact gems44.metric.dti"
+  },
+  "folds": [
+    {
+      "quadrant": 0,
+      "auc": 0.7674,
+      "mass": 20744,
+      "incumbent": {
+        "DTI": 0.100294,
+        "T": 2297.027306,
+        "F": 19697.241486,
+        "G": 23130,
+        "n": 20744
+      },
+      "candidate": {
+        "DTI": 0.063553,
+        "T": 1433.958682,
+        "F": 18862.555167,
+        "G": 23130,
+        "n": 20627
+      },
+      "delta_candidate_minus_incumbent": -0.036742
+    },
+    {
+      "quadrant": 1,
+      "auc": 0.7758,
+      "mass": 11394,
+      "incumbent": {
+        "DTI": 0.09825,
+        "T": 2069.643928,
+        "F": 10487.968407,
+        "G": 23192,
+        "n": 11394
+      },
+      "candidate": {
+        "DTI": 0.074662,
+        "T": 1549.591744,
+        "F": 9456.25222,
+        "G": 23192,
+        "n": 11292
+      },
+      "delta_candidate_minus_incumbent": -0.023588
+    },
+    {
+      "quadrant": 2,
+      "auc": 0.734,
+      "mass": 5767,
+      "incumbent": {
+        "DTI": 0.103147,
+        "T": 316.282749,
+        "F": 5603.409397,
+        "G": 2353,
+        "n": 5767
+      },
+      "candidate": {
+        "DTI": 0.057288,
+        "T": 171.741091,
+        "F": 5405.594944,
+        "G": 2353,
+        "n": 5648
+      },
+      "delta_candidate_minus_incumbent": -0.045859
+    },
+    {
+      "quadrant": 3,
+      "auc": 0.7659,
+      "mass": 6185,
+      "incumbent": {
+        "DTI": 0.072976,
+        "T": 882.659462,
+        "F": 5805.677069,
+        "G": 13447,
+        "n": 6185
+      },
+      "candidate": {
+        "DTI": 0.059684,
+        "T": 712.111815,
+        "F": 5156.315514,
+        "G": 13447,
+        "n": 6150
+      },
+      "delta_candidate_minus_incumbent": -0.013291
+    }
+  ],
+  "mass_matched": {
+    "mean_delta": -0.029869999999999997,
+    "folds_positive": 0,
+    "n_folds": 4
+  }
+}

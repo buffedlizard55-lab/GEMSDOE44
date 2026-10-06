@@ -1,0 +1,90 @@
+{
+  "schema": "gems44-twostage-hypotheses-v1",
+  "written_utc": "2026-10-06",
+  "rule": "Each hypothesis names (1) the specific layer(s), (2) the physical signature targeted, (3) why it should catch a fault MISSING from the USGS/INGENIOUS catalogue rather than one already in it, (4) how it differs from everything already implemented in this repository and its predecessors, plus rank, expected DTI gain and implementation cost. Obtainability of any external source is checked and recorded, never assumed.",
+  "ranked": [
+    {
+      "rank": 1,
+      "id": "H46-1",
+      "title": "Mass-corrected catalogue-flank excision at the metric's own break-even",
+      "layers": [
+        "all 19 official bands (Stage B field)",
+        "coarse physical layers (Stage A gate): geodetic strain, conductivity_surface, depth_to_base_surf, earthquake_density, isostatic gravity, magnetics, fault-corridor density at 2 km and 10 km",
+        "labels.tif — used ONLY as a distance mask (never as truth)"
+      ],
+      "physical_signature": "Not a detection transform: a BUDGET transform. The official metric charges exactly 0.2 of denominator for every binary dot and pays only its realised kernel credit k, so a dot pays iff k > 0.2·DTI. Measured here: dots within 100 m of the published catalogue realise 0.0037 credit per dot and dots 100-200 m away realise 0.0286 on frame P, against a break-even bar of 0.0520 at the family's best live score — i.e. 14x and 1.8x below the bar.",
+      "why_missing_faults": "It does not try to detect anything. It removes emission mass that the metric charges for and that the measured credit says cannot pay, which is exactly the mass the family's two live A/B pairs (0.2600 -> 0.2708 -> 0.2747/0.2778) removed. Because the removed mass sits 100-200 m from the KNOWN catalogue, removing it cannot damage the ability to cover a fault that is absent from the catalogue by more than one kernel radius — and frame P, the only local set of real catalogue-absent faults, agrees: the interior stratum earns 0.1516 credit per dot, 2.9x the bar.",
+      "differs_from_prior": "The family pruned the flank on one field and reported the A/B but never (a) measured the credit of each distance stratum, (b) validated the prune on a mass-corrected instrument that reproduces the whole six-artifact live lineage, or (c) applied it inside a Stage-A gated emission. This repository's previous session promoted on frame N (the catalogue halo), which the same measurement now shows inverts that lineage.",
+      "expected_dti_gain": "+0.010 to +0.020 (consistent with the family's two reported A/B steps and with the measured below-bar credit of the removed strata)",
+      "implementation_cost": "low (no new data, ~40 lines in the emitter, one blocked sweep)",
+      "status": "VALIDATED on the spatially blocked holdout this session: 4/4 folds beat the incumbent on frame P at every mass tested; shipped.",
+      "evidence": "registry/twostage/sweep.json, registry/twostage/analysis.json, registry/twostage/submission.json"
+    },
+    {
+      "rank": 2,
+      "id": "H46-2",
+      "title": "Two-stage separation: coarse physical favouritability gate x fine curvature/relief placement",
+      "layers": [
+        "Stage A: geodetic_2nd_invariant, geodetic_shear_rate, geodetic_dilatation_rate (strain); conductivity_surface, depth_to_base_surf (heat/permeability); earthquake_density (seismicity); isostatic_grav_anomaly, magnetic_anomaly (regional field); catalogue corridor density at 2 km and 10 km",
+        "Stage B: detrended_elevation, detrended_elevation_slope and their Hessian total curvature, local relief model (gradient and absolute), topographic openness/anti-slope and Basin & Range strike-fabric alignment"
+      ],
+      "physical_signature": "Stage A: basin-scale base-rate statement (fault density + heat + strain). Stage B: second-derivative curvature and relief operators at sigma = 3 px and r = 15 px, i.e. the surface signature of a young scarp at the 300 m scale the metric pays for.",
+      "why_missing_faults": "The univariate off-catalogue skill of the topographic family is HIGHER on catalogue-absent faults than on catalogue faults (detrended elevation slope: AUC 0.758 off-catalogue vs 0.555 on catalogue; detrended elevation 0.666 vs 0.497), while the geophysical edge operators are the reverse (gravity total horizontal gradient 0.46, tilt/curvature 0.37 off-catalogue). A catalogue-trained detector therefore points at the wrong population; a curvature/relief detector tuned on catalogue-absent faults does not.",
+      "differs_from_prior": "Previous family work either used a single-layer topographic transform gated by hand, or fused many layers into one flat detector. Here the coarse and fine questions are separated, each is validated by its own metric (zone base-rate/recall for Stage A; matched-mass DTI for Stage B), and the shipped file must beat a Stage-A-only emission AND a Stage-B-ungated emission at the same mass before it is accepted as a real two-stage result.",
+      "expected_dti_gain": "+0.005 to +0.015 beyond the single-stage field (measured: the Stage-A gate raises frame-P DTI at every mass, and the Stage-A-only emission is 0.03-0.09 below the final file)",
+      "implementation_cost": "medium (new feature library + blocked sweep; no new data)",
+      "status": "VALIDATED: gate improves frame P in 4/4 folds at every mass; Stage-A-only emission is far worse (dominance check passes); shipped.",
+      "evidence": "registry/twostage/sweep.json, registry/twostage/stage_b_feature_auc.json, registry/twostage/submission.json"
+    },
+    {
+      "rank": 3,
+      "id": "H46-3",
+      "title": "Metric-exact greedy max-coverage emission instead of raster-order thinning",
+      "layers": [
+        "any belief field",
+        "the official metric's own kernel and alpha/beta weights"
+      ],
+      "physical_signature": "The emission rule itself. Because TP_w is a max over a 300 m disc, expected credit is submodular, so fixed-order greedy carries the (1 - 1/e) guarantee; raster-order thinning (what every family artifact uses) carries none.",
+      "why_missing_faults": "It does not change which faults are found; it changes how much of the found structure is actually covered per unit of mass, which is what the metric pays. Same field, same mass, measured here: raster-order top-n realises 0.0439 credit per dot on frame P against 0.22 for the greedy emitter — a 5x difference.",
+      "differs_from_prior": "The family measured greedy against thinning once on their own frame (+0.0100 in 4/4 folds) but shipped raster-order prunes of an already-thinned file; no shipped artifact in the lineage was emitted by a max-coverage emitter over the whole map.",
+      "expected_dti_gain": "+0.005 to +0.02 at equal mass (measured 0.0439 vs 0.2212 credit per dot on frame P)",
+      "implementation_cost": "low (emitter already exists in this repository, src/gems44/field.py)",
+      "status": "VALIDATED (control variant in the same sweep); shipped.",
+      "evidence": "registry/twostage/analysis.json"
+    },
+    {
+      "rank": 4,
+      "id": "H46-4",
+      "title": "Depth-labelled microseismicity fault-plane association (relocated hypocentres clamped to fabric-aligned planes)",
+      "layers": [
+        "external: USGS ComCat FDSN event service (free, official)",
+        "official bands ieq_n100a15 / deq_n100a15 as the coarse prior only"
+      ],
+      "physical_signature": "Hypocentre clustering into planes: relocated events collapse onto a plane with a strike and a dip; the plane's surface projection is a fault trace. The supplied seismic bands cannot carry this (measured by the family: autocorrelation 0.9986 at 1 km) because they are 100 km-radius density summaries.",
+      "why_missing_faults": "A fault that has not been mapped but is active will have small earthquakes on it; the catalogue's absence is a mapping gap, not an absence of deformation. This is the only mechanism in this list that can add a fault the catalogue lacks on physical grounds rather than by extrapolation.",
+      "differs_from_prior": "The family named this direction (their H60-1 / H33-E) and wrote a fetcher, but never obtained the catalogue in any session (their own record says HTTP 000).",
+      "expected_dti_gain": "unknown; potentially large (adds an independent fault population) but unquantifiable here",
+      "implementation_cost": "high (catalogue fetch + relocation + plane fitting + blocked validation)",
+      "obtainability_check": "FAILED in this sandbox: https://earthquake.usgs.gov returns HTTP 000 (re-measured 2026-10-06). NOT VIABLE here; recorded as data-blocked, not proposed as a submission.",
+      "status": "DATA-BLOCKED — not used by the shipped artifact.",
+      "evidence": "network probe in docs/limitations.html; registry/sources.json"
+    },
+    {
+      "rank": 5,
+      "id": "H46-5",
+      "title": "USGS 1 m 3DEP lidar acquisition blocks as a Stage-A 'where to search' prior",
+      "layers": [
+        "external: USGS 3DEP 1 m DEM tiles (NV_WestCentral_EarthMRI_2020_D20)",
+        "labels.tif and the SGMC raster as the test data for the gate"
+      ],
+      "physical_signature": "A zone prior, not a transform: the hypothesis is that expert-labelled new faults concentrate inside the lidar survey blocks, so Stage A should simply approve those 8 x 10 x 10 km boxes.",
+      "why_missing_faults": "Lidar is where scarps are visible and where new mapping happens, so unmapped faults should concentrate there.",
+      "differs_from_prior": "The family used the lidar tiles as INPUT to a scarp detector (their L3 line) but never tested the tile footprints themselves as a zone prior.",
+      "expected_dti_gain": "would be very large if true (the 8 tiles are 1.446% of the footprint)",
+      "implementation_cost": "low to test the hypothesis, high to use it (280 MB per tile, and the host is unreachable)",
+      "obtainability_check": "FAILED in this sandbox: prd-tnm.s3.amazonaws.com and earthexplorer.usgs.gov both return HTTP 000 (re-measured 2026-10-06). The hypothesis WAS tested using the 8 tile footprints that are already documented with sha256 in the family's audit: the blocks contain LOWER off-catalogue fault density than the background (0.40x) and only 1.30x the catalogue density, over 1.446% of the footprint.",
+      "status": "REJECTED on measurement (a negative result, kept).",
+      "evidence": "docs/research/why_the_family_top_file_scored_highest.md section 3"
+    }
+  ]
+}

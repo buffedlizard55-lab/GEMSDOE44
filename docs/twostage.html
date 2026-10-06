@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Two-stage method · GEMSDOE44</title><link rel="stylesheet" href="assets/twostage.css"></head>
+<body><header class="top"><div class="wrap"><nav><a href="index.html">Executive summary</a> <a href="twostage.html">Two-stage method</a> <a href="validation.html">Validation</a> <a href="forensics.html">Why 0.2778</a> <a href="hypotheses.html">Hypotheses</a> <a href="data.html">Data</a> <a href="how-to-submit.html">How to submit</a> <a href="leaderboard.html">Leaderboard</a> <a href="limitations.html">Limitations & flags</a></nav></div></header>
+<div class="wrap"><h1>Two-stage method</h1><p class="src">Sources: registry/twostage/submission.json · sweep.json · stage_b_feature_auc.json</p>
+
+<h2>The separation, stated once</h2>
+<p>Stage A answers a <b>coarse</b> question — which broad zones does the heat + permeability + strain
+argument say are worth searching at all? Stage B answers a <b>fine</b> question — where, at pixel
+scale, is the fault inside those zones? They have different truth, different error costs and
+different metrics, and they are scored separately below. Collapsing them into one number is what
+made the family's habitat-only emissions look like geology when they were answering a question the
+metric does not ask.</p>
+
+<h2>Stage A — coarse favouritability (validated as a zone statement)</h2>
+<table class="tbl"><thead><tr><th>metric</th><th>value</th><th>what it means</th></tr></thead><tbody>
+<tr><td>approved area</td><td>70% of the footprint</td><td>the gate is a zone statement, not a placement</td></tr>
+<tr><td>blocked-cell AUC</td><td>0.942 (folds 0.924, 0.956, 0.940, 0.950)</td><td>does the coarse score separate 2 km cells that contain faults from cells that do not, on held-out quadrants</td></tr>
+<tr><td>base-rate lift</td><td>1.42×</td><td>fault-catalogue density inside the approved zone ÷ footprint background</td></tr>
+<tr><td>off-catalogue recall</td><td>75.1% inside 70% of the area</td><td>share of SGMC faults absent from the catalogue that fall inside the zone</td></tr>
+</tbody></table>
+<p class="src">Source: <code>registry/twostage/submission.json :: stage_a</code>. Layers:
+strain (geodetic 2nd invariant, shear rate, dilatation), heat/permeability (conductivity surface,
+depth to basement), seismicity (earthquake density), regional field (isostatic gravity, magnetics)
+and fault-corridor density at 2 km and 10 km.</p>
+
+<h2>Stage B — fine placement (validated as a placement statement)</h2>
+<p>51 features, all transforms of the 19 official bands. Nothing in Stage B reads the
+catalogue or the SGMC raster (the catalogue is masked by the scorer; SGMC is the validation truth —
+using either as a feature would leak the frame). The model is a gradient-boosted classifier trained
+on SGMC faults the catalogue lacks, against footprint background, and re-fitted inside every fold of
+the blocked holdout.</p>
+<p>Feature families: local relief models (LRM at r = 5/15/40 px and their gradients), topographic
+openness and anti-slope at two ray lengths, Hessian total curvature and ridge/valley response at
+σ = 3 and 8 px, total horizontal gradients of the gravity and magnetic fields at two scales,
+Basin & Range strike-fabric alignment at two scales, multi-scale step energy, and the multi-scale
+slope ratio. The five transforms with real off-catalogue discrimination are tabulated on the
+<a href="validation.html">Validation</a> page; the classical potential-field edge operators measure
+<i>below</i> chance on catalogue-absent faults at 100 m and are carried only as corroboration.</p>
+
+<h2>Emission — the metric's own arithmetic</h2>
+<p>Every binary dot costs exactly 0.2 of the metric's denominator when its credit is fresh, so a dot
+pays iff its realised credit exceeds 0.2·DTI — 0.052 at the family's best reported score. The emitter
+is the fixed-order greedy max-coverage rule over the metric's own kernel (submodular ⇒ (1−1/e)
+guarantee), with a 3 px minimum separation so no two dots buy the same ground, restricted to the
+Stage-A zone and to ground more than 200 m from the published catalogue.</p>
+<p>Measured on frame P at matched mass (42,000 dots):</p>
+<table class="tbl"><thead><tr><th>emission rule (same field, same mass)</th><th>credit per dot</th><th>frame-P DTI</th></tr></thead><tbody>
+<tr><td>raster-order top-n (what every family artifact uses)</td><td>0.0439</td><td>0.0328</td></tr>
+<tr><td>greedy max-coverage, no gate</td><td>0.5370</td><td>0.3716</td></tr>
+<tr><td>Stage-A-only</td><td>0.0951</td><td>0.0683</td></tr>
+<tr><td><b>shipped: greedy × Stage-A zone × no 200 m flank</b></td><td><b>0.4414</b></td><td><b>0.3081</b></td></tr>
+</tbody></table>
+<p class="src">Sources: <code>registry/twostage/sweep.json</code> (the raster-order control at matched
+mass), <code>registry/twostage/submission.json</code> (the shipped emission).</p>
+
+<footer>GEMSDOE44 — DOE GEMS Prize (DrivenData #306). No score on this site is an organizer
+receipt. Every number is a local measurement and names the registry file it came from.</footer>
+</div></body></html>
