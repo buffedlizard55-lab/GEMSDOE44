@@ -39,8 +39,8 @@ Source: <code>registry/frame_ranking.json</code>, produced by <code>scripts/rank
 from the probe set in <code>scripts/fetch_probes.py</code>.</p>
 <p><strong>Frame P (SGMC beyond 300 m of the catalogue) was this repository's pre-registered primary
 frame and it failed this test.</strong> It was replaced before any selection result was read:
-<em>Promotion frame moved from the pre-registered frame P (SGMC faults &gt;300 m from the catalogue) to frame N (SGMC strands within 300 m of the catalogue, 17,493 px).</em>. Trigger: scripts/rank_frames.py scored 19 family artifacts with reported live scores on four candidate frames and on their own uniform controls (scripts/fetch_probes.py; registry/probe_manifest.json). Frame P: rho_level -0.054, rho_excess +0.188. Frame N: rho_level +0.335, rho_excess +0.396, all 19 probes above their uniform control. Frame U (all SGMC off-catalogue): rho_level -0.393. Frame S0 (catalogue, …
-Source: <code>registry/preregistration.json</code> amendment AM-44-01; IR-44-09.</p>
+<em>Two selection details fixed in advance: (a) the shipped MASS is 44,090, matched to the incumbent&#x27;s published mass so that a live A/B differs only in field and emission; (b) the shipped FIELD is chosen by the frame-N gate first, and among gate-passing fields by the best mean frame-P score at that mass (a robustness tie-break, because frame P is the only frame that is not halo-dominated even though it cannot rank artifacts).</em>. Trigger: Fold 0 of the swept run showed the catalogue-proximity fields (prox3/prox10/prox30) win frame N by a wide margin while covering almost nothing outside the halo (frame-P 0.002), and the supervised fields lose frame N while covering the wider map better. A declared tie-break is needed so that the choice is not made after seeing which field wins.…
+Source: <code>registry/preregistration.json</code> amendment AM-44-02; IR-44-09.</p>
 
 <h3>2 · Dot spacing, not geology, is the largest measured correlate of a reported score</h3>
 <p>Each artifact below is real, was scored on the live board, and is on disk here. The columns are

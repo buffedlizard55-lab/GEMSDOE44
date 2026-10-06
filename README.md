@@ -70,6 +70,30 @@ message cannot be triggered by this file. The reason the message normally appear
 `-nan.tif` twin for anyone who prefers the official template's convention, are documented in
 [`docs/how-to-submit.html`](docs/how-to-submit.html).
 
+### 1.1 Submission record
+
+| field | value |
+| --- | --- |
+| file | `GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif` (320,989 B) |
+| sha256 | `4971d3593c2990bb275b77e5663814d1540af8d6a4de7679dae0dbd7e9605988` |
+| zip | `GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.zip` (210,323 B, inner member byte-identical) |
+| predicted cells | 44,090 cells, all exactly 1.0 |
+| portal Name / Note | `GEMS44_n-strand-ssmc_20261006T110212Z_4971d359` / "GEMS44 n-strand-ssmc | field = supervised transfer of USGS SGMC strands absent from the catalogue (U) onto the 19 offici…" |
+| held-out evidence | candidate 0.401181 vs incumbent 0.165267 (delta +0.235915), 4/4 folds positive |
+| format verification | 17 checks, 0 failures — [`registry/verification.json`](registry/verification.json) |
+| request checklist | 11 PASS / 1 PARTIAL / 1 PENDING / 0 FAIL — [`registry/request_checklist.json`](registry/request_checklist.json) |
+| uniqueness | max Jaccard against any obtainable prior artifact **0.0202**; against the 0.2600 incumbent **0.0121** |
+
+### 1.2 Why the emitter is spaced, not dense
+
+Nineteen already-scored family artifacts were measured for how many of their dots sit 8-adjacent to
+another dot. The rank correlation with the live score is **−0.361**: the three best artifacts in the
+family (0.2449, 0.2477, 0.2600) have an adjacency fraction of 0.001–0.002, the worst have 0.88–0.99,
+and the family's own "DTI-optimal emission" attempt at 335,879 dots scored 0.1002. A dot adjacent to
+a dot that already covers the same ground buys almost no new truth coverage while paying the full
+false-positive weight. The emitter therefore enforces a minimum separation of 3 px
+(`--min-sep`, default 3.0) and the audit reports the verified neighbour count.
+
 ---
 
 ## 2. What this repository does differently
@@ -123,6 +147,9 @@ officially published, locally available set of mapped faults the given catalogue
 | Hypothesis H1 (anisotropic splay prior) | **FALSIFIED** — offset-angle statistics identical to a matched random control | `registry/population.json` |
 | Live leaderboard | rank 1 **0.3345**; the brief's 0.3195 is rank 5 on this read | `registry/leaderboard.json` |
 | Format validation | CRS, resolution, shape, transform, dtype, band count, range, finiteness — re-read from disk | `submissions/*-audit.json` |
+| Emission fix (spacing) | `min_sep = 3 px` enforced and verified by exact neighbour count; the dense artifact (0.99168 adjacency) was superseded and deleted | `registry/verification.json :: pass_a_contract` |
+| Artifact verification | 17 checks green: contract read back from the shipped bytes, zip byte-identity, metric re-derived by an independent padded-shift implementation plus hand-computed toy cases | `registry/verification.json` |
+| Request checklist | 11 PASS, 1 PARTIAL (the 0.2778 attribution — IR-44-03), 1 PENDING (PR/merge) | `registry/request_checklist.json` |
 
 ---
 

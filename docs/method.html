@@ -76,7 +76,46 @@ the official metric on a held-out quadrant. Held-out DTI at 44,090 dots was
 incumbent artifact scored <strong>0.1353</strong> on the same frame. That single fold is preserved
 in <code>registry/holdout_partial.json</code> and it is the reason this repository selects on the
 metric rather than on AUC.</p>
-
+<p>The shipped artifact was re-scored with the exact 29-offset operator (gems44.metric.dti) and independently with the two-distance-transform path (binary_credit). All pairs agree to &lt; 1e-9, which is the last check before upload.</p><pre>{
+  &quot;N_sgmc_within_300m&quot;: {
+    &quot;artifact&quot;: {
+      &quot;abs_diff&quot;: 5.551115123125783e-17,
+      &quot;exact&quot;: 0.395723932,
+      &quot;fast&quot;: 0.395723932
+    },
+    &quot;delta_artifact_minus_incumbent_exact&quot;: 0.220188,
+    &quot;incumbent&quot;: {
+      &quot;abs_diff&quot;: 0.0,
+      &quot;exact&quot;: 0.175535894,
+      &quot;fast&quot;: 0.175535894
+    },
+    &quot;truth_px&quot;: 17493,
+    &quot;uniform_same_mass&quot;: {
+      &quot;abs_diff&quot;: 6.938893903907228e-18,
+      &quot;exact&quot;: 0.046870174,
+      &quot;fast&quot;: 0.046870174
+    }
+  },
+  &quot;P_sgmc_beyond_300m&quot;: {
+    &quot;artifact&quot;: {
+      &quot;abs_diff&quot;: 0.0,
+      &quot;exact&quot;: 0.142183294,
+      &quot;fast&quot;: 0.142183294
+    },
+    &quot;delta_artifact_minus_incumbent_exact&quot;: 0.048009,
+    &quot;incumbent&quot;: {
+      &quot;abs_diff&quot;: 1.3877787807814457e-17,
+      &quot;exact&quot;: 0.094174429,
+      &quot;fast&quot;: 0.094174429
+    },
+    &quot;truth_px&quot;: 62122,
+    &quot;uniform_same_mass&quot;: {
+      &quot;abs_diff&quot;: 0.0,
+      &quot;exact&quot;: 0.077595242,
+      &quot;fast&quot;: 0.077595242
+    }
+  }
+}</pre><p class='note'>Source: <code>registry/exact_confirmation.json</code>.</p>
 
 <footer>
 <p><strong>Evidence discipline.</strong> Every number on this site is rendered from a JSON file in

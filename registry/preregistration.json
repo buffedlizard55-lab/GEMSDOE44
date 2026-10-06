@@ -9,6 +9,15 @@
       "residual_risk": "Frame N's rho_excess = +0.396 at n=19 (p ~ 0.09) is directional, not conclusive; registered as IR-44-09 and stated on the site.",
       "trigger": "scripts/rank_frames.py scored 19 family artifacts with reported live scores on four candidate frames and on their own uniform controls (scripts/fetch_probes.py; registry/probe_manifest.json). Frame P: rho_level -0.054, rho_excess +0.188. Frame N: rho_level +0.335, rho_excess +0.396, all 19 probes above their uniform control. Frame U (all SGMC off-catalogue): rho_level -0.393. Frame S0 (catalogue, mask disabled): rho_level -0.475.",
       "unchanged": "The gate is unchanged: mean held-out delta vs the 0.2600 incumbent >= +0.005 with >= 3 of 4 blocked folds positive, at density-matched mass; no idea is promoted that has not beaten the incumbent on the primary frame."
+    },
+    {
+      "at_utc": "2026-10-06T10:35:00Z",
+      "before_reading_any_sweep_result": true,
+      "change": "Two selection details fixed in advance: (a) the shipped MASS is 44,090, matched to the incumbent's published mass so that a live A/B differs only in field and emission; (b) the shipped FIELD is chosen by the frame-N gate first, and among gate-passing fields by the best mean frame-P score at that mass (a robustness tie-break, because frame P is the only frame that is not halo-dominated even though it cannot rank artifacts).",
+      "id": "AM-44-02",
+      "residual_risk": "A halo-dominated frame N can reward a stencil rather than a prediction; the tie-break deliberately refuses the pure stencil in favour of a field that also covers the rest of the map, and the artifact's own diagnostics report how much mass sits outside the halo.",
+      "trigger": "Fold 0 of the swept run showed the catalogue-proximity fields (prox3/prox10/prox30) win frame N by a wide margin while covering almost nothing outside the halo (frame-P 0.002), and the supervised fields lose frame N while covering the wider map better. A declared tie-break is needed so that the choice is not made after seeing which field wins.",
+      "unchanged": "The gate itself, the frames, the density-matched fold mass and the exact-operator confirmation."
     }
   ],
   "blocking": {

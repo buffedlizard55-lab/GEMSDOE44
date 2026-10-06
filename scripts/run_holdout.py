@@ -1,4 +1,14 @@
-"""Preregistered spatially blocked holdout for the GEMS44 candidate field.
+"""SUPERSEDED - DO NOT RUN.  Kept for provenance only.
+
+This was the first holdout harness.  Its frame ("SGMC absent from the catalogue", i.e. today's
+frame P) failed an independent validity test against 19 live-scored artifacts (rho_level -0.054;
+registry/frame_ranking.json), and its mass was not density-scaled per fold.  scripts/run_selection.py
+replaced it: frames N (primary) and P (secondary), density-matched fold mass, and
+scripts/confirm_exact.py re-checks the shipped artifact with the exact 29-offset operator.
+
+Original docstring follows.
+
+Preregistered spatially blocked holdout for the GEMS44 candidate field.
 
 Frames (both 4-quadrant spatially blocked, leave-one-quadrant-out):
 

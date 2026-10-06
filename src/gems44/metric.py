@@ -57,7 +57,12 @@ def kernel(d_px: np.ndarray | float, radius_px: float = RADIUS_PX) -> np.ndarray
 
 
 def kernel_offsets(radius_px: float = RADIUS_PX) -> list[tuple[int, int, float]]:
-    """All integer offsets with k > 0, each with its kernel weight. R=3 -> 29 offsets."""
+    """All integer offsets with k > 0, each with its kernel weight.
+
+    R = 3 px -> the 29 integer offsets with k >= 0 collapse to 25 with k > 0, because k is
+    exactly 0 at d = R (the four axis offsets at distance 3 fall out; all 25 remaining
+    offsets have d <= 2.828 px).  Verified by the tests, not assumed.
+    """
     r = int(np.ceil(radius_px))
     out: list[tuple[int, int, float]] = []
     for dy in range(-r, r + 1):

@@ -42,15 +42,16 @@ from gems44.scripts_common import (  # noqa: E402
     ROW_BLOCK, feature_block, load_bands, matrix_at, sample_rows,
 )
 
-GLOBAL_MASSES = [21_000, 30_000, 44_090, 61_328]
+GLOBAL_MASSES = [30_000, 44_090, 61_328]
 CAND_FRACTION = 0.06
-TRAIN_POS, TRAIN_NEG = 12_000, 40_000
+TRAIN_POS, TRAIN_NEG = 8_000, 30_000
 SEED = 44
+MIN_SEP = 3.0  # H7: no dot within 3 px (300 m) of another; see field.emit_order_np
 
 
 def emit(belief: np.ndarray, allowed: np.ndarray, max_dots: int) -> np.ndarray:
     cand = F.quantile_candidates(belief, allowed, CAND_FRACTION)
-    return F.emit_order_np(belief, cand, allowed, max_dots)
+    return F.emit_order_np(belief, cand, allowed, max_dots, min_sep=MIN_SEP)
 
 
 def score(order: np.ndarray, shape, mass: int, truth, valid, known) -> float:
@@ -67,7 +68,7 @@ def train(bands, width, pos_mask, neg_mask, rng):
         return None
     X = np.vstack([matrix_at(bands, width, pos), matrix_at(bands, width, neg)])
     y = np.r_[np.ones(pos.size, np.int8), np.zeros(neg.size, np.int8)]
-    m = HistGradientBoostingClassifier(max_iter=200, learning_rate=0.08, max_depth=6,
+    m = HistGradientBoostingClassifier(max_iter=150, learning_rate=0.08, max_depth=6,
                                        min_samples_leaf=40, l2_regularization=1.0,
                                        random_state=0, early_stopping=False)
     m.fit(X, y)
@@ -128,7 +129,11 @@ def main() -> int:
             v = src.read(1)
         inc = np.isfinite(v) & (v > 0)
 
-    family = list(shared) + ["sup_N", "sup_U", "blend_N", "blend_U"]
+    # Trimmed family: prox3/prox30/prox10_conceal proved identical or uninformative on fold 0 of
+    # the preceding run (prox3 == prox10 == prox30 exactly, since both order candidates by the same
+    # monotone distance), and blend_N was dominated by blend_U on frame N.  The controls that matter
+    # are kept: the pure proximity stencil (prox10), the two supervised fields, and the blend.
+    family = ["prox10", "sup_N", "sup_U", "blend_U"]
     report: dict = {
         "design": {
             "frames": {"N": "sgmc strands within 300 m of the catalogue (PRIMARY)",
@@ -136,7 +141,7 @@ def main() -> int:
             "frame_truth_px": {k: int(v.sum()) for k, v in frame.items()},
             "global_masses": GLOBAL_MASSES,
             "mass_scaling": "mass_fold = M_global * allowed_q / allowed_total",
-            "candidate_fraction": CAND_FRACTION,
+            "candidate_fraction": CAND_FRACTION, "min_sep_px": MIN_SEP,
             "fields": family,
             "leakage_discipline": "learned fields re-fitted per fold on the three training quadrants only",
             "gate": "frame N: mean fold delta vs incumbent >= +0.005 and >= 3 of 4 folds positive",
@@ -165,21 +170,21 @@ def main() -> int:
             "sup_N": train(bands, g.width, frame["N"] & ~test, train_bg, rng),
             "sup_U": train(bands, g.width, sgmc & ~test, train_bg, rng),
         }
-        fields = dict(shared)
+        print(f"   [fold {q}] models fitted", flush=True)
+        fields = {k: v[r0g:r1g, c0:c1] for k, v in shared.items()}
         for name, model in models.items():
             if model is None:
                 continue
             fields[name] = predict_region(model, bands, g.width, r0g, r1g, c0, c1)
         if "sup_N" in fields and "sup_U" in fields:
-            prox10_region = shared["prox10"][r0g:r1g, c0:c1]
-            for nm, key in (("blend_N", "sup_N"), ("blend_U", "sup_U")):
-                fields[nm] = (np.sqrt(np.maximum(fields[key], 0.0) * prox10_region)).astype(np.float32)
+            for nm, key in (("blend_U", "sup_U"),):
+                fields[nm] = (np.sqrt(np.maximum(fields[key], 0.0) * fields["prox10"])).astype(np.float32)
 
         for fname in family:
             if fname not in fields:
                 continue
             b = np.zeros(labels.shape, np.float32)
-            b[r0g:r1g, c0:c1] = fields[fname][r0g:r1g, c0:c1]
+            b[r0g:r1g, c0:c1] = fields[fname]
             order = emit(np.where(test, b, 0.0).astype(np.float32), allowed, max_mass)
             row[fname] = {str(M): round(score(order, labels.shape, masses[M], frame["N"] & test,
                                               g.footprint, g.known), 6) for M in GLOBAL_MASSES}

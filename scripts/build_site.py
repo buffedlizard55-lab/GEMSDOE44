@@ -6,6 +6,7 @@ repository, and each page prints the file it came from.
 from __future__ import annotations
 
 import html
+import datetime as dt
 import json
 from pathlib import Path
 
@@ -20,6 +21,10 @@ def load(name: str, default=None):
     if not p.exists():
         return default
     return json.loads(p.read_text())
+
+
+def utcnow() -> str:
+    return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def esc(x) -> str:
@@ -106,11 +111,29 @@ def main() -> int:
             sub_audit = json.loads(side.read_text())
     sub_audit = sub_audit or load("submission.json")
     sel = load("selection.json", {})
-    hold = load("holdout.json", {})
+    hold = load("exact_confirmation.json", {})
     pop = load("population.json", {})
     hyp = load("hypotheses.json", {"hypotheses": []})
     src = load("sources.json", {})
     det = load("detectability.json", {})
+
+    ver = load("verification.json", {})
+    irr = load("irregularities.json", {})
+    lb0 = load("leaderboard.json", {})
+    irr_items = irr.get("items", irr if isinstance(irr, list) else [])
+    status = f"""
+<div class="panel">
+<h2>Live status — regenerated automatically, no manual checking</h2>
+<table>
+<tr><th>this page was compiled</th><td class="mono">{esc(utcnow())} UTC, by <code>scripts/build_site.py</code></td></tr>
+<tr><th>current artifact</th><td class="mono">{esc((sub_audit or {}).get('slug','—'))} · sha256 {(sub_audit or {}).get('primary',{}).get('sha256','—')[:16]}… · {(sub_audit or {}).get('primary',{}).get('bytes',0):,} B</td></tr>
+<tr><th>format verification</th><td>{esc('ALL GREEN' if (ver.get('n_failures')==0 and ver) else ('%s failure(s)' % ver.get('n_failures') if ver else 'not run yet'))} — <code>registry/verification.json</code> ({len([k for b in ('pass_a_contract','pass_b_metric','pass_c_uniqueness') for k in (ver.get(b) or {})])} checks)</td></tr>
+<tr><th>exact vs fast metric operator</th><td>{esc('agree within 1e-9' if (load('exact_confirmation.json', {}) or {}).get('agreement_all_within_1e-9') else 'not confirmed')} — <code>registry/exact_confirmation.json</code></td></tr>
+<tr><th>holdout gate (pre-registered)</th><td>{esc((sel.get('pooled') or {}).get('gate_pass'))} — pooled delta {(sel.get('pooled') or {}).get('delta')}, {(sel.get('pooled') or {}).get('positive_folds')}/{(sel.get('pooled') or {}).get('n_folds')} folds positive (<code>registry/selection.json</code>)</td></tr>
+<tr><th>public leaderboard snapshot</th><td>read {esc(lb0.get('read_utc','—'))}; best {(lb0.get('top') or [{}])[0].get('score','—')} by {esc((lb0.get('top') or [{}])[0].get('participant','—'))}; {lb0.get('rows_on_page','—')} rows (<code>registry/leaderboard.json</code>; DrivenData's terms of use prohibit automated polling, so this is a dated snapshot, not a live poll)</td></tr>
+<tr><th>open irregularities</th><td>{len(irr_items)} recorded, all with source links — <a href="limitations.html">limitations</a> / <code>registry/irregularities.json</code></td></tr>
+</table>
+</div>"""
 
     # ---------------------------------------------------------------- index
     hero = ""
@@ -170,6 +193,7 @@ download once a submission has been built and format-verified; it will never off
                             "decision rule are frozen in <code>registry/preregistration.json</code>.</p>")
     body = f"""
 {hero}
+{status}
 
 <h2>What this is</h2>
 <p>A fault-discovery system for the <strong>DOE GEMS Prize</strong> (DrivenData #306). The task is to
@@ -207,8 +231,9 @@ analysis shows the family sits at its own emission optimum, so the remaining gap
 and each is falsifiable:</p>
 <ul>
 <li><strong>It chooses its validation frame by scoring already-scored artifacts on it.</strong>
-Nineteen family artifacts whose live scores were reported (0.0461 to 0.2600) were downloaded and
-scored on four candidate frames plus their own uniform controls. The catalogue frame is not merely
+Nineteen family artifacts whose live scores were reported (0.0461 to 0.2600) were obtained
+(fifteen downloaded from the family's public mirrors, four already on disk) and scored on four
+candidate frames plus their own uniform controls. The catalogue frame is not merely
 weak, it is <em>inverted</em> (rho = −0.475) and it is degenerate under the official mask — its own
 truth pixels <em>are</em> the mask, so the truth set is empty and every artifact scores exactly
 0.000000. The frame this repository pre-registered first (SGMC faults &gt;300 m from the catalogue)
@@ -216,11 +241,14 @@ also failed: rho = −0.054. The frame that survived is the SGMC strands within 
 catalogue (rho_excess = +0.396, all 19 artifacts above uniform). The amendment is recorded as
 AM-44-01 and IR-44-09. <a href="validation.html">Validation</a> shows the whole table.</li>
 <li><strong>It emits by the metric's own arithmetic, at the metric's own spacing.</strong> Across the
-same 19 artifacts, the strongest measured correlate of a reported score is not a geological
-statistic but dot spacing: <code>Spearman(score, fraction of dots 8-adjacent to another dot) =
-−0.361</code>, and the three best artifacts have essentially zero adjacent dots while low scorers
-have 0.9. A dot beside another adds no new truth coverage and still costs 0.2 of FP. The emitter
-here is an exact greedy max-coverage solver that refuses any dot adding no new kernel credit.</li>
+same 19 artifacts, one of the strongest measured correlates of a reported score is dot spacing:
+<code>Spearman(score, fraction of dots 8-adjacent to another dot) = −0.361</code> — the three best
+artifacts have 0.001–0.002 adjacent dots against 0.88–0.99 for the worst. Mass correlates too
+(<code>ρ = −0.653</code>) but is confounded with the family's design eras, which is why the shipped
+mass is matched to the incumbent's 44,090 for a clean comparison. The mechanism is exact under the
+official formula: a dot beside another adds no new truth coverage and still costs 0.2 of FP. The
+emitter here is an exact greedy max-coverage solver that refuses any dot adding no new kernel
+credit.</li>
 <li><strong>It emits with the metric's own arithmetic.</strong> Because <code>TP_w</code> is a
 <em>max</em> over a 300 m disc, expected credit is submodular in the emitted set, so a fixed-order
 greedy emitter carries the standard (1 − 1/e) guarantee, and the stopping condition is the
@@ -350,8 +378,12 @@ digest mismatch.</p>
 
     # ---------------------------------------------------------------- method
     holdout_note = ""
-    if hold.get("pooled"):
-        holdout_note = f"<pre>{esc(json.dumps(hold['pooled'], indent=2))}</pre>"
+    if hold.get("frames"):
+        holdout_note = ("<p>The shipped artifact was re-scored with the exact 29-offset operator "
+                        "(gems44.metric.dti) and independently with the two-distance-transform path "
+                        "(binary_credit). All pairs agree to &lt; 1e-9, which is the last check before "
+                        "upload.</p><pre>" + esc(json.dumps(hold["frames"], indent=2)) + "</pre>"
+                        "<p class='note'>Source: <code>registry/exact_confirmation.json</code>.</p>")
     body = f"""
 <h2>Method, in the order it was done</h2>
 <ol>

@@ -162,22 +162,38 @@ def emit_order_np(
     candidates: np.ndarray,
     allowed: np.ndarray,
     max_dots: int,
+    min_sep: float = 0.0,
 ) -> np.ndarray:
     """Vectorised exact fixed-order greedy emitter.  Returns flat indices in acceptance order.
 
     Same objective as :func:`greedy_marginal_credit`; because the accepted set is a prefix
-    of the returned order, every prefix is itself a valid, nested sub-emission, which is
-    what makes the mass sweep in ``scripts/run_holdout.py`` a single cheap pass.
+    of the returned order, every prefix is itself a valid, nested sub-emission.
+
+    ``min_sep`` (pixels, Euclidean) forbids accepting a dot within that distance of an
+    already-accepted dot.  This is H7 and it is not a tunable: with a fixed mass, covered
+    AREA is what buys the chance of touching unknown truth, and a dot beside another dot
+    covers almost no new ground while still paying alpha=0.2 of FP.  The family's three
+    best reported artifacts carry 0.001-0.002 adjacent-dot fractions (they were decimated
+    at 1.5-2.8 px); the low scorers carry 0.88-0.99 (registry/probe_sgmc_alignment.json;
+    Spearman(live, adjacent fraction) = -0.361).  A value of 3 px matches the break-even
+    distance at a score of 0.26 (283 m).
     """
     h, w = belief.shape
     C = np.zeros((h, w), dtype=np.float32)
     b = belief
     order: list[int] = []
+    if min_sep > 0.0:
+        r = int(np.floor(min_sep))
+        dd = [(dy, dx) for dy in range(-r, r + 1) for dx in range(-r, r + 1)
+              if dy * dy + dx * dx <= min_sep * min_sep]
+        blocked = np.zeros((h, w), dtype=bool)
+    else:
+        blocked = None
     for idx in candidates:
         if len(order) >= max_dots:
             break
         y, x = divmod(int(idx), w)
-        if not allowed[y, x]:
+        if not allowed[y, x] or (blocked is not None and blocked[y, x]):
             continue
         yy, xx = y + _DY, x + _DX
         ok = (yy >= 0) & (yy < h) & (xx >= 0) & (xx < w)
@@ -190,6 +206,11 @@ def emit_order_np(
         order.append(int(idx))
         bits = _K[ok] > C[yy, xx]
         C[yy[bits], xx[bits]] = _K[ok][bits]
+        if min_sep > 0.0:
+            for dy, dx in dd:
+                yb, xb = y + dy, x + dx
+                if 0 <= yb < h and 0 <= xb < w:
+                    blocked[yb, xb] = True
     return np.asarray(order, dtype=np.int64)
 
 
