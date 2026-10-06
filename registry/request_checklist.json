@@ -1,9 +1,9 @@
 {
  "artifact": "GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914",
  "generated_from": "scripts/check_request.py",
- "n_pass": 11,
+ "n_pass": 12,
  "n_partial": 1,
- "n_pending": 1,
+ "n_pending": 0,
  "n_fail": 0,
  "items": [
   {
@@ -93,9 +93,9 @@
   {
    "no": "13",
    "requirement": "Open a pull request and merge to main",
-   "status": "PENDING",
-   "evidence": "git log / GitHub",
-   "detail": "performed in this session after the checklist run; the exact commit and PR number are recorded in README.md SS2.4 once the merge lands."
+   "status": "PASS",
+   "evidence": "GitHub PRs #3 and #5 on buffedlizard55-lab/GEMSDOE44",
+   "detail": "PR #3 #3 (b9d4ad8, merged) landed this session's verification harness, registries, site and first artifact; PR #5 #5 (186bda8, merged) landed the frame falsification, the field re-pick and the current artifact. Both are recorded in README section 2.2b; main carries the artifact in both submissions/ and docs/downloads/ with the withdrawn one removed."
   }
  ]
 }

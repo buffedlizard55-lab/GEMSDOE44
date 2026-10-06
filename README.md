@@ -173,10 +173,11 @@ IR-44-15 and the consequence is that the previously shipped artifact
 (`..._4971d359-zeros.tif`, frame-N selected, 34.7% of its dots inside the ring) was withdrawn and
 replaced by the current one.
 
-**Merge record.** PR #3 (this session's first artifact, verification harness, registries and site) was
-merged into `main` as `b9d4ad8`; the sibling sessions' work had already landed as PR #1 (`bcad3e2`) and
-PR #2 (`988fd44`). The follow-up commit carrying the frame re-ranking, the ring analysis and the
-current artifact is merged as the next PR from this same branch.
+**Merge record.** PR #3 (first artifact, verification harness, registries, site) merged as `b9d4ad8`;
+PR #5 (frame falsification, field re-pick, ring rule, current artifact) merged as `186bda8`. Sibling
+sessions had already landed as PR #1 (`bcad3e2`), PR #2 (`988fd44`) and PR #4 (`3efb86b`), and their
+files survive every merge: the check in `scripts/check_request.py` item 13 and the
+[`docs/sibling/`](docs/sibling/) directory both assert it.
 
 ### 2.2c The final admissibility table (six frames, 19 live-scored artifacts)
 

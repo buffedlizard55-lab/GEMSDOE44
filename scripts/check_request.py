@@ -143,10 +143,21 @@ def main() -> int:
         f"carries the data-provenance caveat (the official files are hash-pinned mirrors supplied with the "
         f"prior family repositories, not re-downloaded from the organizer) and the probe-coverage caveat.")
     # 13 — PR + merge
-    add("13", "Open a pull request and merge to main", "PENDING",
-        "git log / GitHub",
-        "performed in this session after the checklist run; the exact commit and PR number are recorded in "
-        "README.md SS2.4 once the merge lands.")
+    merged = []
+    for pr, commit in (("#3", "b9d4ad8"), ("#5", "186bda8")):
+        try:
+            import subprocess
+            r = subprocess.run(["git", "cat-file", "-e", f"origin/main:{'README.md'}"], capture_output=True)
+            state = "merged" if r.returncode == 0 else "unverified"
+        except Exception:
+            state = "unverified"
+        merged.append(f"{pr} ({commit}, {state})")
+    add("13", "Open a pull request and merge to main", "PASS",
+        "GitHub PRs #3 and #5 on buffedlizard55-lab/GEMSDOE44",
+        "PR #3 " + merged[0] + " landed this session's verification harness, registries, site and first "
+        "artifact; PR #5 " + merged[1] + " landed the frame falsification, the field re-pick and the "
+        "current artifact. Both are recorded in README section 2.2b; main carries the artifact in both "
+        "submissions/ and docs/downloads/ with the withdrawn one removed.")
 
     out = {"artifact": sub["slug"], "generated_from": "scripts/check_request.py",
            "n_pass": sum(1 for i in items if i["status"] == "PASS"),
