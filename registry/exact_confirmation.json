@@ -1,14 +1,14 @@
 {
   "agreement_all_within_1e-9": true,
-  "artifact": "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359",
+  "artifact": "GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914",
   "frames": {
     "N_sgmc_within_300m": {
       "artifact": {
-        "abs_diff": 5.551115123125783e-17,
-        "exact": 0.395723932,
-        "fast": 0.395723932
+        "abs_diff": 0.0,
+        "exact": 0.136571338,
+        "fast": 0.136571338
       },
-      "delta_artifact_minus_incumbent_exact": 0.220188,
+      "delta_artifact_minus_incumbent_exact": -0.038965,
       "incumbent": {
         "abs_diff": 0.0,
         "exact": 0.175535894,
@@ -24,10 +24,10 @@
     "P_sgmc_beyond_300m": {
       "artifact": {
         "abs_diff": 0.0,
-        "exact": 0.142183294,
-        "fast": 0.142183294
+        "exact": 0.36392381,
+        "fast": 0.36392381
       },
-      "delta_artifact_minus_incumbent_exact": 0.048009,
+      "delta_artifact_minus_incumbent_exact": 0.269749,
       "incumbent": {
         "abs_diff": 1.3877787807814457e-17,
         "exact": 0.094174429,
@@ -42,5 +42,5 @@
     }
   },
   "mass": 44090,
-  "operator_note": "exact = gems44.metric.dti (29 offsets); fast = binary_credit (2 EDTs)"
+  "operator_note": "exact = gems44.metric.dti (25 positive-weight kernel offsets, R=3px); fast = binary_credit (closed form on two Euclidean distance transforms)"
 }

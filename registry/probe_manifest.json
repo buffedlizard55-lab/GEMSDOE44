@@ -9,7 +9,8 @@
     },
     {
       "bytes": 1765159,
-      "file": "data/probes/gems10-h16-continuation-20260927T065521077735Z-3431b83c7c.tif",
+      "file": "gems10-h16-continuation-20260927T065521077735Z-3431b83c7c.tif",
+      "fragment": "h16-continuation",
       "mirror_size": 1765159,
       "path": "docs/downloads/gems10-h16-continuation-20260927T065521077735Z-3431b83c7c.tif",
       "repo": "buffedlizard55-lab/GEMSDOE10",
@@ -18,7 +19,8 @@
     },
     {
       "bytes": 969784,
-      "file": "data/probes/13gems_20261001_r13-lattice-s5_v2_zerofill.tif",
+      "file": "13gems_20261001_r13-lattice-s5_v2_zerofill.tif",
+      "fragment": "lattice-s5",
       "mirror_size": 969784,
       "path": "docs/downloads/13gems_20261001_r13-lattice-s5_v2_zerofill.tif",
       "repo": "buffedlizard55-lab/13GEMSDOE",
@@ -27,7 +29,8 @@
     },
     {
       "bytes": 1717585,
-      "file": "data/probes/gems10-h20-dem10-scarp-thin-20260927T155223039488Z-ffc91a1686.tif",
+      "file": "gems10-h20-dem10-scarp-thin-20260927T155223039488Z-ffc91a1686.tif",
+      "fragment": "h20-dem10-scarp-thin",
       "mirror_size": 1717585,
       "path": "docs/downloads/gems10-h20-dem10-scarp-thin-20260927T155223039488Z-ffc91a1686.tif",
       "repo": "buffedlizard55-lab/GEMSDOE10",
@@ -36,7 +39,8 @@
     },
     {
       "bytes": 1708516,
-      "file": "data/probes/gems16-h18-3a-topo-geophys-x-complexity-prior-20260930-c502dfab-nan.tif",
+      "file": "gems16-h18-3a-topo-geophys-x-complexity-prior-20260930-c502dfab-nan.tif",
+      "fragment": "complexity-prior",
       "mirror_size": 1708516,
       "path": "docs/downloads/gems16-h18-3a-topo-geophys-x-complexity-prior-20260930-c502dfab-nan.tif",
       "repo": "buffedlizard55-lab/16GEMSDOE",
@@ -45,7 +49,8 @@
     },
     {
       "bytes": 1972196,
-      "file": "data/probes/gems22-h23-a-dti-optimal-emission-6pct-20261002-e2ec4b49-nan.tif",
+      "file": "gems22-h23-a-dti-optimal-emission-6pct-20261002-e2ec4b49-nan.tif",
+      "fragment": "dti-optimal-emission-6pct",
       "mirror_size": 1972196,
       "path": "docs/downloads/gems22-h23-a-dti-optimal-emission-6pct-20261002-e2ec4b49-nan.tif",
       "repo": "buffedlizard55-lab/GEMSDOE22",
@@ -54,7 +59,8 @@
     },
     {
       "bytes": 777822,
-      "file": "data/probes/pindrop-v4-nodes-20260925T152420Z-f347b70daa.tif",
+      "file": "pindrop-v4-nodes-20260925T152420Z-f347b70daa.tif",
+      "fragment": "pindrop-v4-nodes",
       "mirror_size": 777822,
       "path": "docs/downloads/pindrop-v4-nodes-20260925T152420Z-f347b70daa.tif",
       "repo": "buffedlizard55-lab/GEMSDOE3",
@@ -63,7 +69,8 @@
     },
     {
       "bytes": 475760,
-      "file": "data/probes/gems26-dilcond-oof-v1-20261003-47629f496133-nan.tif",
+      "file": "gems26-dilcond-oof-v1-20261003-47629f496133-nan.tif",
+      "fragment": "dilcond-oof-v1",
       "mirror_size": 475760,
       "path": "docs/downloads/gems26-dilcond-oof-v1-20261003-47629f496133-nan.tif",
       "repo": "buffedlizard55-lab/GEMSDOE26",
@@ -72,7 +79,8 @@
     },
     {
       "bytes": 1772935,
-      "file": "data/probes/gems10-h25-ctx-ridge-20260927T232947704150Z-6452ae1d00.tif",
+      "file": "gems10-h25-ctx-ridge-20260927T232947704150Z-6452ae1d00.tif",
+      "fragment": "ctx-ridge",
       "mirror_size": 1772935,
       "path": "docs/downloads/gems10-h25-ctx-ridge-20260927T232947704150Z-6452ae1d00.tif",
       "repo": "buffedlizard55-lab/GEMSDOE10",
@@ -81,7 +89,8 @@
     },
     {
       "bytes": 469858,
-      "file": "data/probes/12GEMSDOE_r7-nms3-dem10-scarp_0c9199f14e62.tif",
+      "file": "12GEMSDOE_r7-nms3-dem10-scarp_0c9199f14e62.tif",
+      "fragment": "nms3-dem10-scarp",
       "mirror_size": 469858,
       "path": "docs/downloads/12GEMSDOE_r7-nms3-dem10-scarp_0c9199f14e62.tif",
       "repo": "buffedlizard55-lab/12GEMSDOE",
@@ -90,7 +99,8 @@
     },
     {
       "bytes": 1692444,
-      "file": "data/probes/gemsdoe23-h30-arrangement-matched-habitat-20261002-0d4e02e8-nan.tif",
+      "file": "gemsdoe23-h30-arrangement-matched-habitat-20261002-0d4e02e8-nan.tif",
+      "fragment": "arrangement-matched-habitat",
       "mirror_size": 1692444,
       "path": "docs/downloads/gemsdoe23-h30-arrangement-matched-habitat-20261002-0d4e02e8-nan.tif",
       "repo": "buffedlizard55-lab/GEMSDOE23",
@@ -105,7 +115,8 @@
     },
     {
       "bytes": 568065,
-      "file": "data/probes/gemsdoe2-dual-family-union-f68e590f.tif",
+      "file": "gemsdoe2-dual-family-union-f68e590f.tif",
+      "fragment": "dual-family-union",
       "mirror_size": 568065,
       "path": "docs/gemsdoe2-dual-family-union-f68e590f.tif",
       "repo": "buffedlizard55-lab/GEMSDOE2",
@@ -120,7 +131,8 @@
     },
     {
       "bytes": 1620739,
-      "file": "data/probes/gems10-h28-dotted-ridge-20260928T020256236880Z-6452ae1d00.tif",
+      "file": "gems10-h28-dotted-ridge-20260928T020256236880Z-6452ae1d00.tif",
+      "fragment": "h28-dotted-ridge",
       "mirror_size": 1620739,
       "path": "docs/downloads/gems10-h28-dotted-ridge-20260928T020256236880Z-6452ae1d00.tif",
       "repo": "buffedlizard55-lab/GEMSDOE10",
@@ -129,7 +141,8 @@
     },
     {
       "bytes": 1718028,
-      "file": "data/probes/gems16-h16-1-topo-geophys-baseline-ridges-20260930-df20f65e-nan.tif",
+      "file": "gems16-h16-1-topo-geophys-baseline-ridges-20260930-df20f65e-nan.tif",
+      "fragment": "baseline-ridges",
       "mirror_size": 1718028,
       "path": "docs/downloads/gems16-h16-1-topo-geophys-baseline-ridges-20260930-df20f65e-nan.tif",
       "repo": "buffedlizard55-lab/16GEMSDOE",
@@ -138,7 +151,8 @@
     },
     {
       "bytes": 1717074,
-      "file": "data/probes/gems20-h20-1-sarnnpu-powerlaw-pi0363-tilt-wingcrack-20260930-be0e8f6b-nan.tif",
+      "file": "gems20-h20-1-sarnnpu-powerlaw-pi0363-tilt-wingcrack-20260930-be0e8f6b-nan.tif",
+      "fragment": "sarnnpu-powerlaw",
       "mirror_size": 1717074,
       "path": "docs/downloads/gems20-h20-1-sarnnpu-powerlaw-pi0363-tilt-wingcrack-20260930-be0e8f6b-nan.tif",
       "repo": "buffedlizard55-lab/20GEMSDOE",
@@ -147,7 +161,8 @@
     },
     {
       "bytes": 1716768,
-      "file": "data/probes/gems19-h19-4-multiline-corroborated-openness-thermal-pop-20260930-691e4dfa-nan.tif",
+      "file": "gems19-h19-4-multiline-corroborated-openness-thermal-pop-20260930-691e4dfa-nan.tif",
+      "fragment": "h19-4-multiline",
       "mirror_size": 1716768,
       "path": "docs/downloads/gems19-h19-4-multiline-corroborated-openness-thermal-pop-20260930-691e4dfa-nan.tif",
       "repo": "buffedlizard55-lab/19GEMSDOE",
@@ -157,34 +172,42 @@
     {
       "bytes": 1712322,
       "file": "gems19-h19-5-powerlaw-budget-multiline-corroborated-20260930-e27054cf-nan.tif",
-      "path": "data/probes/gems19-h19-5-powerlaw-budget-multiline-corroborated-20260930-e27054cf-nan.tif",
+      "fragment": "powerlaw-budget-multiline",
+      "mirror_size": 1712322,
+      "path": "docs/downloads/gems19-h19-5-powerlaw-budget-multiline-corroborated-20260930-e27054cf-nan.tif",
       "repo": "buffedlizard55-lab/19GEMSDOE",
       "reported_score": 0.1922,
-      "status": "already local"
+      "status": "fetched"
     },
     {
       "bytes": 1635084,
       "file": "gems27-topo-gap-closure-t-v2-on-d1-5-20261002-5512495c6bd1-nan.tif",
-      "path": "data/probes/gems27-topo-gap-closure-t-v2-on-d1-5-20261002-5512495c6bd1-nan.tif",
+      "fragment": "topo-gap-closure-t-v2-on-d1-5",
+      "mirror_size": 1635084,
+      "path": "docs/downloads/gems27-topo-gap-closure-t-v2-on-d1-5-20261002-5512495c6bd1-nan.tif",
       "repo": "buffedlizard55-lab/GEMSDOE27",
       "reported_score": 0.2449,
-      "status": "already local"
+      "status": "fetched"
     },
     {
       "bytes": 1632732,
       "file": "gems24-h25-1-dotted-h19-5-d1-5-20261002-989f59505db1-nan.tif",
-      "path": "data/probes/gems24-h25-1-dotted-h19-5-d1-5-20261002-989f59505db1-nan.tif",
+      "fragment": "dotted-h19-5-d1-5",
+      "mirror_size": 1632732,
+      "path": "docs/downloads/gems24-h25-1-dotted-h19-5-d1-5-20261002-989f59505db1-nan.tif",
       "repo": "buffedlizard55-lab/GEMSDOE24",
       "reported_score": 0.2477,
-      "status": "already local"
+      "status": "fetched"
     },
     {
       "bytes": 1603424,
       "file": "gems24-h25-1-dotted-h19-5-d2-8-20261002-e56ea318af89-nan.tif",
-      "path": "data/probes/gems24-h25-1-dotted-h19-5-d2-8-20261002-e56ea318af89-nan.tif",
+      "fragment": "dotted-h19-5-d2-8",
+      "mirror_size": 1603424,
+      "path": "docs/downloads/gems24-h25-1-dotted-h19-5-d2-8-20261002-e56ea318af89-nan.tif",
       "repo": "buffedlizard55-lab/GEMSDOE24",
       "reported_score": 0.26,
-      "status": "already local"
+      "status": "fetched"
     }
   ]
 }

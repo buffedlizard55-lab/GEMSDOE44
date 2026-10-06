@@ -1,0 +1,345 @@
+{
+ "artifacts": {
+  "0.2600_anchor_probe": {
+   "0 < d <= 100 m": {
+    "dots": 3891,
+    "frac": 0.08825
+   },
+   "100 m < d <= 200 m  <- the ring the claim is about": {
+    "dots": 2545,
+    "frac": 0.05772
+   },
+   "200 m < d <= 300 m": {
+    "dots": 2171,
+    "frac": 0.04924
+   },
+   "beyond 300 m": {
+    "dots": 35483,
+    "frac": 0.80479
+   },
+   "file": "gems32-probe-S1-ANCHOR-identical-to-live-02600.tif",
+   "on the known catalogue (d = 0)": {
+    "dots": 0,
+    "frac": 0.0
+   },
+   "total_dots": 44090
+  },
+  "0.2600_repro_44090": {
+   "0 < d <= 100 m": {
+    "dots": 3891,
+    "frac": 0.08825
+   },
+   "100 m < d <= 200 m  <- the ring the claim is about": {
+    "dots": 2545,
+    "frac": 0.05772
+   },
+   "200 m < d <= 300 m": {
+    "dots": 2171,
+    "frac": 0.04924
+   },
+   "beyond 300 m": {
+    "dots": 35483,
+    "frac": 0.80479
+   },
+   "file": "gemsdoe32-d28-ref02600-repro-44090-20261004T183200Z-426073b6-zeros.tif",
+   "on the known catalogue (d = 0)": {
+    "dots": 0,
+    "frac": 0.0
+   },
+   "total_dots": 44090
+  },
+  "0.2778_artifact": {
+   "0 < d <= 100 m": {
+    "dots": 0,
+    "frac": 0.0
+   },
+   "100 m < d <= 200 m  <- the ring the claim is about": {
+    "dots": 0,
+    "frac": 0.0
+   },
+   "200 m < d <= 300 m": {
+    "dots": 2171,
+    "frac": 0.05766
+   },
+   "beyond 300 m": {
+    "dots": 35483,
+    "frac": 0.94234
+   },
+   "file": "gemsdoe32-h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros.tif",
+   "on the known catalogue (d = 0)": {
+    "dots": 0,
+    "frac": 0.0
+   },
+   "total_dots": 37654
+  },
+  "0.2778_plus_h33_1": {
+   "0 < d <= 100 m": {
+    "dots": 0,
+    "frac": 0.0
+   },
+   "100 m < d <= 200 m  <- the ring the claim is about": {
+    "dots": 43,
+    "frac": 0.00112
+   },
+   "200 m < d <= 300 m": {
+    "dots": 2182,
+    "frac": 0.0566
+   },
+   "beyond 300 m": {
+    "dots": 36329,
+    "frac": 0.94229
+   },
+   "file": "gemsdoe32-h33-h33-2b2-plus-h33-1-20261004T220000Z-31588dc7-zeros.tif",
+   "on the known catalogue (d = 0)": {
+    "dots": 0,
+    "frac": 0.0
+   },
+   "total_dots": 38554
+  },
+  "h32d_submodular_46090": {
+   "0 < d <= 100 m": {
+    "dots": 4093,
+    "frac": 0.0888
+   },
+   "100 m < d <= 200 m  <- the ring the claim is about": {
+    "dots": 2693,
+    "frac": 0.05843
+   },
+   "200 m < d <= 300 m": {
+    "dots": 2308,
+    "frac": 0.05008
+   },
+   "beyond 300 m": {
+    "dots": 36996,
+    "frac": 0.80269
+   },
+   "file": "gemsdoe32-h32d-submodular-multipysics-46090-20261004T183200Z-4de30601-zeros.tif",
+   "on the known catalogue (d = 0)": {
+    "dots": 0,
+    "frac": 0.0
+   },
+   "total_dots": 46090
+  },
+  "lazygreedy_maxcov_44090": {
+   "0 < d <= 100 m": {
+    "dots": 3487,
+    "frac": 0.07909
+   },
+   "100 m < d <= 200 m  <- the ring the claim is about": {
+    "dots": 2816,
+    "frac": 0.06387
+   },
+   "200 m < d <= 300 m": {
+    "dots": 2334,
+    "frac": 0.05294
+   },
+   "beyond 300 m": {
+    "dots": 35453,
+    "frac": 0.80411
+   },
+   "file": "gems32-lazygreedy-maxcov-44090-supconfined-zeros.tif",
+   "on the known catalogue (d = 0)": {
+    "dots": 0,
+    "frac": 0.0
+   },
+   "total_dots": 44090
+  }
+ },
+ "bands": [
+  "on the known catalogue (d = 0)",
+  "0 < d <= 100 m",
+  "100 m < d <= 200 m  <- the ring the claim is about",
+  "200 m < d <= 300 m",
+  "beyond 300 m"
+ ],
+ "cannot_verify": "the 0.2708 artifact (H27-4) is not present in this sandbox, so the step 0.2708 -> 0.2778 cannot be reproduced byte for byte here",
+ "pairwise": {
+  "0.2600_anchor_probe vs 0.2600_repro_44090": {
+   "jaccard": 1.0,
+   "only_A": 0,
+   "only_B": 0,
+   "removed_band_profile": {
+    "0 < d <= 100 m": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "100 m < d <= 200 m  <- the ring the claim is about": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "200 m < d <= 300 m": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "beyond 300 m": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "on the known catalogue (d = 0)": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "total_dots": 0
+   },
+   "shared": 44090,
+   "subset_relation": "0.2600_anchor_probe is a subset of 0.2600_repro_44090"
+  },
+  "0.2600_anchor_probe vs 0.2778_artifact": {
+   "jaccard": 0.854,
+   "only_A": 6436,
+   "only_B": 0,
+   "removed_band_profile": {
+    "0 < d <= 100 m": {
+     "dots": 3891,
+     "frac": 0.60457
+    },
+    "100 m < d <= 200 m  <- the ring the claim is about": {
+     "dots": 2545,
+     "frac": 0.39543
+    },
+    "200 m < d <= 300 m": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "beyond 300 m": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "on the known catalogue (d = 0)": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "total_dots": 6436
+   },
+   "shared": 37654,
+   "subset_relation": "0.2778_artifact is a subset of 0.2600_anchor_probe"
+  },
+  "0.2600_anchor_probe vs 0.2778_plus_h33_1": {
+   "jaccard": 0.8379,
+   "only_A": 6413,
+   "only_B": 877,
+   "shared": 37677
+  },
+  "0.2600_anchor_probe vs h32d_submodular_46090": {
+   "jaccard": 0.9356,
+   "only_A": 500,
+   "only_B": 2500,
+   "shared": 43590
+  },
+  "0.2600_anchor_probe vs lazygreedy_maxcov_44090": {
+   "jaccard": 0.2872,
+   "only_A": 24417,
+   "only_B": 24417,
+   "shared": 19673
+  },
+  "0.2600_repro_44090 vs 0.2778_artifact": {
+   "jaccard": 0.854,
+   "only_A": 6436,
+   "only_B": 0,
+   "removed_band_profile": {
+    "0 < d <= 100 m": {
+     "dots": 3891,
+     "frac": 0.60457
+    },
+    "100 m < d <= 200 m  <- the ring the claim is about": {
+     "dots": 2545,
+     "frac": 0.39543
+    },
+    "200 m < d <= 300 m": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "beyond 300 m": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "on the known catalogue (d = 0)": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "total_dots": 6436
+   },
+   "shared": 37654,
+   "subset_relation": "0.2778_artifact is a subset of 0.2600_repro_44090"
+  },
+  "0.2600_repro_44090 vs 0.2778_plus_h33_1": {
+   "jaccard": 0.8379,
+   "only_A": 6413,
+   "only_B": 877,
+   "shared": 37677
+  },
+  "0.2600_repro_44090 vs h32d_submodular_46090": {
+   "jaccard": 0.9356,
+   "only_A": 500,
+   "only_B": 2500,
+   "shared": 43590
+  },
+  "0.2600_repro_44090 vs lazygreedy_maxcov_44090": {
+   "jaccard": 0.2872,
+   "only_A": 24417,
+   "only_B": 24417,
+   "shared": 19673
+  },
+  "0.2778_artifact vs 0.2778_plus_h33_1": {
+   "jaccard": 0.9767,
+   "only_A": 0,
+   "only_B": 900,
+   "removed_band_profile": {
+    "0 < d <= 100 m": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "100 m < d <= 200 m  <- the ring the claim is about": {
+     "dots": 43,
+     "frac": 0.04778
+    },
+    "200 m < d <= 300 m": {
+     "dots": 11,
+     "frac": 0.01222
+    },
+    "beyond 300 m": {
+     "dots": 846,
+     "frac": 0.94
+    },
+    "on the known catalogue (d = 0)": {
+     "dots": 0,
+     "frac": 0.0
+    },
+    "total_dots": 900
+   },
+   "shared": 37654,
+   "subset_relation": "0.2778_artifact is a subset of 0.2778_plus_h33_1"
+  },
+  "0.2778_artifact vs h32d_submodular_46090": {
+   "jaccard": 0.7991,
+   "only_A": 457,
+   "only_B": 8893,
+   "shared": 37197
+  },
+  "0.2778_artifact vs lazygreedy_maxcov_44090": {
+   "jaccard": 0.2607,
+   "only_A": 20750,
+   "only_B": 27186,
+   "shared": 16904
+  },
+  "0.2778_plus_h33_1 vs h32d_submodular_46090": {
+   "jaccard": 0.7848,
+   "only_A": 1334,
+   "only_B": 8870,
+   "shared": 37220
+  },
+  "0.2778_plus_h33_1 vs lazygreedy_maxcov_44090": {
+   "jaccard": 0.2574,
+   "only_A": 21634,
+   "only_B": 27170,
+   "shared": 16920
+  },
+  "h32d_submodular_46090 vs lazygreedy_maxcov_44090": {
+   "jaccard": 0.275,
+   "only_A": 26641,
+   "only_B": 24641,
+   "shared": 19449
+  }
+ },
+ "written_utc": "2026-10-06"
+}

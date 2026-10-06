@@ -1,0 +1,40 @@
+{
+ "filename": "gemsdoe44-habitat-20261006T152640Z-fe7721db-zeros.tif",
+ "size_bytes": 136474,
+ "sha256": "42b77433f34e1231ae0795ed5567632fc43b79d119aac198f94f0d946d43b6c2",
+ "count": 1,
+ "dtype": "float32",
+ "shape": [
+  3730,
+  3292
+ ],
+ "crs": "EPSG:32611",
+ "transform": [
+  100.0,
+  0.0,
+  243350.0,
+  0.0,
+  -100.0,
+  4508550.0,
+  0.0,
+  0.0,
+  1.0
+ ],
+ "nodata": null,
+ "checks": {
+  "single_band": true,
+  "dtype_float32": true,
+  "dimensions_3730x3292": true,
+  "crs_epsg_32611": true,
+  "official_transform": true,
+  "all_finite": true,
+  "no_nan": true,
+  "no_inf": true,
+  "no_nodata_tag": true,
+  "range_0_1_inclusive": true,
+  "min": 0.0,
+  "max": 1.0,
+  "emitted_positive_pixels": 45000,
+  "all_checks_passed": true
+ }
+}

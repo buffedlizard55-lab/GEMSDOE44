@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Irregularities register · GEMSDOE44</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <div class="brand">GEMSDOE<span>44</span></div>
+    <a href="index.html">Home</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="hypotheses.html">Hypotheses</a>
+    <a href="holdout.html">Holdout</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="sources.html">Sources</a>
+    <a class="on" href="irregularities.html">Irregularities</a>
+  </div>
+</header>
+<main class="wrap">
+
+<h1>Irregularities register — flagged for review, not hidden</h1>
+<p class="sub">Anything noticed while working that a reviewer should weigh: data conflicts,
+sandbox limitations, circularity risks, and places where our numbers are models rather than
+measurements. Each row states what we did about it.</p>
+
+<table>
+<tr><th>id</th><th>irregularity</th><th>evidence</th><th>handling</th></tr>
+<tr>
+<td>IR-44-BAND6-01</td>
+<td><b>Band-6 semantics conflict between two of the group's own sites.</b> GEMSDOE25
+<code>band_semantics.json</code> measured Spearman 0.9999 between band 6 and the GeoDAWN
+<b>radiometric total-counts</b> product (K/Th/U correlations 0.886/0.913/0.717). GEMSDOE32's
+hypothesis page quotes the organizer band description as “tilt angle or total curvature —
+magnetic field derivative FOR EDGE DETECTION” and registered H61-3 (TDR zero-crossing on band 6)
+on that reading.</td>
+<td>GEMSDOE25 <code>evidence/band_semantics.json</code> (measurement) vs GEMSDOE32 hypotheses.html (quote). The official problem page shows both radiometric and magnetic products in the feature set, so both readings are textually plausible — which is exactly why the conflict matters.</td>
+<td>We follow the <b>measurement</b> (radiometric counts) — a measured Spearman 0.9999 against the source product outranks a quoted label. Consequence: G44-H5/H61-3-style transforms on band 6 are treated as radiometric, not magnetic. Flagged here for a reviewer with the original band spec sheet.</td>
+</tr>
+<tr>
+<td>IR-44-PROXY-01</td>
+<td><b>Catalogue-proxy ceiling.</b> All blocked-holdout validation uses the visible catalogue as
+truth. The hidden set is off-catalogue by construction, so no local instrument can reward a
+genuinely new fault (same caveat as GEMSDOE32 IR-32-PROXY-01).</td>
+<td>competition problem description: “newly identified faults … not included in the existing USGS fault database … comprise the test dataset”.</td>
+<td>Stage-1 and Stage-2 numbers are reported <b>per stage</b> and explicitly labelled “proxy DTI vs catalogue”. The mirror model is a labelled <span class="pill model">model</span>. No claim on this site reads as an organiser score.</td>
+</tr>
+<tr>
+<td>IR-44-METRIC-01</td>
+<td><b>Server-side distance convention not public.</b> The official page states “distance to the
+nearest ground truth pixel … triangular kernel, 300 m support” without specifying the lattice
+distance (Euclidean/Manhattan/Chebyshev). The reference solution contains no DTI code.</td>
+<td><code>tests/test_metric.py</code> verifies our implementation of the <i>published formulae</i> (Euclidean pixel distance) against a brute-force reference; the convention choice is documented in <code>metric.py</code>.</td>
+<td>Flagged, not papered over. For 0/1 dots with a 3-px kernel the convention difference is small and bounded; a submission scored under a different convention than ours would differ slightly, which is true of every participant.</td>
+</tr>
+<tr>
+<td>IR-44-CIRC-01</td>
+<td><b>Partial circularity of the relay/endpoint prior (G44-H3).</b> The 290 gap links are
+derived from catalogue segment endpoints, so a holdout that uses the catalogue as truth
+partially rewards the prior by construction (measured lift: p99 relay lift ≈ 6×10⁶ — i.e., the
+catalogue sits on its own gaps).</td>
+<td><code>evidence/stage2_holdout.json</code> channel diagnostics; lift computed in this session's channel diagnostics (raw p99 catalogue/field ratio).</td>
+<td>The channel is reported <b>separately</b> in the holdout so its effect is visible, the B=2 flank mask keeps emission off the mapped line, and the physical reading (relay ramps host unmapped faulting) is the one we want for the <i>hidden</i> set — the circularity inflates the proxy, it does not fake the mechanism. Disclosed.</td>
+</tr>
+<tr>
+<td>IR-44-EGRESS-01</td>
+<td><b>Sandbox egress is allow-listed</b> (github.com, pypi.org, drivendata.org via reader;
+dropbox.com, usgs.gov, sciencebase.gov, docs.nlr.gov, nbmg.unr.edu, gdr.openei.org not
+reachable). Official data therefore enters via the group's sha256-pinned GitHub mirrors, each
+pin naming the official source URL; byte-for-byte verification is in
+<code>evidence/verify_rasters.json</code>.</td>
+<td>HTTP 000 probes recorded this session; GEMSDOE repo <code>data/bridge/manifest.json</code> (pins + official mirror URLs).</td>
+<td>Every file we use from a mirror carries its sha256 pin and its official URL on the
+<a href="sources.html">sources page</code>. Items needing direct egress (DEM tiles, MCRE vector,
+rules PDF bytes) are registered, not claimed: <a href="hypotheses.html">G44-R1/R2</a>.</td>
+</tr>
+<tr>
+<td>IR-44-TARGET-DRIFT-01</td>
+<td><b>The brief's target score is stale.</b> The brief states 0.3195 is the highest score; the
+live leaderboard read this session shows <b>0.3345</b> (DARD's 0.3195 is now #5; the group's
+0.2778 is now #13).</td>
+<td>leaderboard fetch 2026-10-06 (this session), rows 1–25 recorded.</td>
+<td><a href="leaderboard.html">Leaderboard page</a> carries the live read with a “re-read every
+session” rule; the slot-gate decision uses the live number.</td>
+</tr>
+<tr>
+<td>IR-44-CLAIMS-01</td>
+<td><b>In-group scores are owner-reported.</b> The score history in the brief (0.2778, 0.2708,
+0.2600, …) comes from the group's own sites; none is independently verified here.</td>
+<td>sibling sites' self-reported submissions lists.</td>
+<td>All such numbers carry the <span class="pill claim">claim</span> class on every page; they are used for ablation logic (what worked / what failed), never as ground truth.</td>
+</tr>
+<tr>
+<td>IR-44-MIRROR-SIGMA-01</td>
+<td><b>Mirror-model σ is borrowed, then swept.</b> σ=1.85 px is the group's owner-report-derived
+inference (GEMSDOE25 H28), not a measurement of the hidden set.</td>
+<td>GEMSDOE25 H28 calibration records (owner report); our sweep 1.5/1.85/2.5 px in <code>evidence/mirror_model.json</code>.</td>
+<td>Results are reported per-σ so the sensitivity is visible; conclusions are only drawn when they hold across the sweep.</td>
+</tr>
+<tr>
+<td>IR-44-WELLS-CRS-01</td>
+<td><b>Heat-flow well CSV carries only source-CRS coordinates.</b> The sidecar JSON documents the
+source CRS (USAEAC_83_117 Albers, centre −117°, std parallels 29.5/45.5, false easting/northing 0)
+verbatim; we reproject to WGS84→EPSG:32611 with pyproj (NAD83↔WGS84 frame difference ≈ 1–2 m,
+negligible at 100 m resolution).</td>
+<td><code>docs/data/sb_heat_flow_in_footprint.json</code> (GEMSDOE28 mirror); sanity check this session: 4,216 wells in grid, lat 37.40–40.72, lon −119.92…−116.15, hf 0.6–10,234 mW/m² — geographically plausible for the Great Basin.</td>
+<td>Reprojection recorded in <code>src/gems44/data_io.py</code> with the CRS definition inline; the sanity range is in <code>evidence/external_mirrors.json</code>.</td>
+</tr>
+</table>
+
+</main>
+<footer><div class="wrap">GEMSDOE44 · irregularities — 9 flagged, 0 hidden</div></footer>
+</body>
+</html>

@@ -1,17 +1,17 @@
 {
- "alpha": 0.5,
- "built_utc": "20261006T110212Z",
+ "alpha": 1.0,
+ "built_utc": "20261006T113858Z",
  "cand_fraction": 0.25,
  "emission_diagnostics": {
   "dots": 44090,
-  "dots_8_adjacent_to_another": 21,
+  "dots_8_adjacent_to_another": 43,
   "dots_on_known_mask": 0,
-  "dots_within_300m_of_another_dot": 43302,
-  "frac_8_adjacent": 0.00048,
-  "frac_within_300m_of_another": 0.98213,
+  "dots_within_300m_of_another_dot": 40729,
+  "frac_8_adjacent": 0.00098,
+  "frac_within_300m_of_another": 0.92377,
   "frame_scores_circular_for_N_trained_field": {
-   "N": 0.395724,
-   "P": 0.142183
+   "N": 0.136571,
+   "P": 0.363924
   },
   "incumbent_global_frames_same_operator": {
    "N": 0.175536,
@@ -27,11 +27,12 @@
   },
   "uniqueness_vs_incumbent": {
    "incumbent_dots": 44090,
-   "jaccard": 0.0121,
-   "shared_dots": 1055
+   "jaccard": 0.0076,
+   "shared_dots": 665
   },
-  "within_300m_of_catalogue": 19983,
-  "within_300m_of_sgmc": 17552
+  "within_200m_of_catalogue": 0,
+  "within_300m_of_catalogue": 3889,
+  "within_300m_of_sgmc": 20140
  },
  "evidence_used": [
   "registry/preregistration.json (AM-44-02 field choice)",
@@ -53,7 +54,7 @@
  "min_sep_px": 3.0,
  "nan_twin": {
   "all_checks_pass": true,
-  "bytes": 374409,
+  "bytes": 367005,
   "checks": {
    "all_values_in_0_1": true,
    "crs_epsg32611": true,
@@ -68,14 +69,14 @@
   "max_finite": 1.0,
   "min_finite": 0.0,
   "n_positive_cells": 44090,
-  "path": "submissions/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-nan.tif",
-  "sha256": "fb56da35054b594cae01302cc1513d36f1556ac741d8d6d3920df7d519c37ead"
+  "path": "submissions/GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-nan.tif",
+  "sha256": "a30aaa0786b85439c2c35565cc3644a6144a0e6dcf2e874da8827ab4309b402f"
  },
- "note_for_portal": "GEMS44 n-strand-ssmc | field = supervised transfer of USGS SGMC strands absent from the catalogue (U) onto the 19 official bands; exact greedy max-coverage emission 44090 dots; 0 on the known mask; un",
+ "note_for_portal": "GEMS44 n-strand-ssmc | supervised transfer of USGS SGMC strands absent from the given catalogue (U) onto the 19 official bands; exact greedy max-coverage emission 44090 dots; <=200 m catalogue ring excluded; none on the known mask; unique f",
  "policy": "n-strand-ssmc",
  "primary": {
   "all_checks_pass": true,
-  "bytes": 320989,
+  "bytes": 313219,
   "checks": {
    "all_values_in_0_1": true,
    "crs_epsg32611": true,
@@ -91,28 +92,29 @@
   "max_finite": 1.0,
   "min_finite": 0.0,
   "n_positive_cells": 44090,
-  "path": "submissions/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif",
-  "sha256": "4971d3593c2990bb275b77e5663814d1540af8d6a4de7679dae0dbd7e9605988"
+  "path": "submissions/GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-zeros.tif",
+  "sha256": "bf3b3914b1730596583bf84483f8bcd67202836944f4044464bfaaeaf67ed913"
  },
  "published_to": [
-  "docs/downloads/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif (320989 B)",
-  "docs/downloads/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-nan.tif (374409 B)",
-  "docs/downloads/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.zip (210323 B)"
+  "docs/downloads/GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-zeros.tif (313219 B)",
+  "docs/downloads/GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-nan.tif (367005 B)",
+  "docs/downloads/GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-zeros.zip (190160 B)"
  ],
+ "ring_px_excluded": 2.0,
  "seed": 44,
- "slug": "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359",
+ "slug": "GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914",
  "target": "U",
  "train_report": {
   "loaded_from": "data/interim/belief_U.npy"
  },
- "unique_name_for_portal": "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359",
+ "unique_name_for_portal": "GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914",
  "zip": {
-  "bytes": 210323,
+  "bytes": 190160,
   "contents": [
-   "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif"
+   "GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-zeros.tif"
   ],
   "inner_matches_loose_file": true,
-  "inner_sha256": "4971d3593c2990bb275b77e5663814d1540af8d6a4de7679dae0dbd7e9605988",
-  "path": "submissions/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.zip"
+  "inner_sha256": "bf3b3914b1730596583bf84483f8bcd67202836944f4044464bfaaeaf67ed913",
+  "path": "submissions/GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-zeros.zip"
  }
 }

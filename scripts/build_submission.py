@@ -76,6 +76,11 @@ def main() -> int:
     ap.add_argument("--min-sep", type=float, default=3.0,
                     help="H7 minimum Euclidean separation between accepted dots, in pixels "
                          "(3 px = the metric's break-even distance at a score of 0.26)")
+    ap.add_argument("--ring-px", type=float, default=2.0,
+                    help="exclude this many pixels around the known catalogue from the emitter's "
+                         "allowed mask (AM-44-03/04: the <=200 m ring earns ~0.013 mean credit on the "
+                         "admissible frame against a 0.2-per-dot cost, and the family's best artifact "
+                         "and both sibling-session artifacts empty exactly this band)")
     ap.add_argument("--alpha", type=float, default=0.5,
                     help="geometric blend weight on the supervised field: belief = "
                          "sup**alpha * prox10**(1-alpha); alpha=1 -> supervised only, 0 -> catalogue "
@@ -137,6 +142,11 @@ def main() -> int:
 
     # ---- emission
     allowed = g.footprint & ~g.known
+    if args.ring_px > 0:
+        ring = (d_cat <= args.ring_px)
+        print(f"ring rule: excluding {int((allowed & ring).sum()):,} allowed cells within "
+              f"{args.ring_px:.0f} px of the known catalogue")
+        allowed = allowed & ~ring
     order = F.emit_order_np(belief, F.quantile_candidates(belief, allowed, args.cand_fraction), allowed, mass,
                             min_sep=args.min_sep)
     if order.size < mass:
@@ -165,6 +175,7 @@ def main() -> int:
         "min_sep_verified": min_separation_ok(dots, args.min_sep),
         "inside_footprint": int((dots & g.footprint).sum()),
         "within_300m_of_catalogue": int((dots & (d_cat <= 3)).sum()),
+        "within_200m_of_catalogue": int((dots & (d_cat <= 2)).sum()),
         "within_300m_of_sgmc": int((dots & (ndimage.distance_transform_edt(~sgmc) <= 3)).sum()),
     }
 
@@ -205,12 +216,13 @@ def main() -> int:
     v1 = S.write_twin(twin, dots, contract, outside="nan", name=f"GEMS44 {args.policy} {stamp}")
     zinfo = S.make_zip(primary, outdir / f"{slug}-zeros.zip")
 
-    note = (f"GEMS44 {args.policy} | field = supervised transfer of USGS SGMC strands absent from the "
+    note = (f"GEMS44 {args.policy} | supervised transfer of USGS SGMC strands absent from the given "
             f"catalogue ({args.target}) onto the 19 official bands; exact greedy max-coverage emission "
-            f"{n_dots} dots; 0 on the known mask; unique file")[:200]
+            f"{n_dots} dots; <=200 m catalogue ring excluded; none on the known mask; unique file")[:240]
 
     payload = {
         "slug": slug, "policy": args.policy, "target": args.target, "alpha": args.alpha,
+        "ring_px_excluded": args.ring_px,
         "min_sep_px": args.min_sep, "cand_fraction": args.cand_fraction,
         "built_utc": stamp, "seed": args.seed,
         "mass": int(n_dots), "mass_source": mass_source, "emission_diagnostics": diag,

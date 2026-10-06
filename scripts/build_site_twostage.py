@@ -91,6 +91,7 @@ def page(title: str, body: str, subtitle: str = "") -> str:
 <body><header class="top"><div class="wrap"><nav>{nav}</nav></div></header>
 <div class="wrap"><h1>{esc(title)}</h1>{f'<p class="src">{subtitle}</p>' if subtitle else ''}
 {body}
+<p class="src">A second, independent artifact from a parallel session on this repository (`GEMS44_n-strand-ssmc_…bf3b3914`) is preserved with its original page at <a href="parallel_session_artifact.html">parallel_session_artifact.html</a> and in <code>docs/downloads/</code>; it was not built by this session and no claim is made about it here.</p>
 <footer>GEMSDOE44 — DOE GEMS Prize (DrivenData #306). No score on this site is an organizer
 receipt. Every number is a local measurement and names the registry file it came from.</footer>
 </div></body></html>"""

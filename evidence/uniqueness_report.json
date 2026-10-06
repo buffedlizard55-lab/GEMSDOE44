@@ -1,0 +1,38 @@
+[
+ {
+  "file": "gemsdoe32-h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros.tif",
+  "live_score": "0.2778",
+  "n_theirs": 37654,
+  "overlap_px": 1007,
+  "overlap_frac_of_mine": 0.022377777777777778,
+  "random_expectation_px": 327.9093651648526,
+  "excess_vs_random": 679.0906348351474
+ },
+ {
+  "file": "gems28-h27-4-r1-solo-d2-8-20261003-8acb75e1f2cc-allfinite.tif",
+  "live_score": "0.2708",
+  "n_theirs": 40199,
+  "overlap_px": 1007,
+  "overlap_frac_of_mine": 0.022377777777777778,
+  "random_expectation_px": 350.0724642869791,
+  "excess_vs_random": 656.9275357130209
+ },
+ {
+  "file": "gems25-dotted-h19-5-d2-8-20261002-e56ea318af89-zeros.tif",
+  "live_score": "0.2600",
+  "n_theirs": 44090,
+  "overlap_px": 1007,
+  "overlap_frac_of_mine": 0.022377777777777778,
+  "random_expectation_px": 383.95718675621055,
+  "excess_vs_random": 623.0428132437894
+ },
+ {
+  "file": "gems27-topo-gap-closure-t-v2-on-d1-5-20261002-5512495c6bd1-allfinite.tif",
+  "live_score": "0.2449",
+  "n_theirs": 61328,
+  "overlap_px": 1420,
+  "overlap_frac_of_mine": 0.03155555555555556,
+  "random_expectation_px": 534.0740836784959,
+  "excess_vs_random": 885.9259163215041
+ }
+]

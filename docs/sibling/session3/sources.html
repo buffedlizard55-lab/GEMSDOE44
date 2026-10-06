@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sources (verified links) · GEMSDOE44</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <div class="brand">GEMSDOE<span>44</span></div>
+    <a href="index.html">Home</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="hypotheses.html">Hypotheses</a>
+    <a href="holdout.html">Holdout</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a class="on" href="sources.html">Sources</a>
+    <a href="irregularities.html">Irregularities</a>
+  </div>
+</header>
+<main class="wrap">
+
+<h1>Sources — official, with verification state recorded</h1>
+<p class="sub">Every input and every claim traces to a row below. "verified here" = fetched /
+hash-checked inside this session (2026-10-06). "listed" = cited by a sibling site; not reachable
+from this sandbox (egress-restricted) — see irregularities.</p>
+
+<h2>Competition (official)</h2>
+<table>
+<tr><th>id</th><th>source</th><th>what it is used for</th><th>status</th></tr>
+<tr><td>competition</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/">DOE GEMS Prize — overview</a></td><td>problem, prize structure (two rounds), datasets, external-data license rule</td><td><span class="pill ok">verified 2026-10-06 (fetched)</span></td></tr>
+<tr><td>problem</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">Problem description, metric, submission format</a></td><td>verbatim source of <code>metric.py</code> (DTI α=0.2 β=0.8, R=300 m; worked example TP=3.00 FP=1.89 FN=2.00 → 0.60 reproduced in <code>tests/test_metric.py</code>); format rules (EPSG:32611, 100 m, float32, [0,1], NaN outside bounds)</td><td><span class="pill ok">verified 2026-10-06 (fetched twice; worked example in tests)</span></td></tr>
+<tr><td>about</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/968/">About / additional resources</a></td><td>reference pointer</td><td>listed</td></tr>
+<tr><td>data</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/data/">Data download page</a></td><td>login-walled; <b>not accessed</b>. The three official rasters instead come from the group's sha256-pinned mirror of that exact tab (each pin names the dropbox mirror URL of the official file); re-verified byte-for-byte here</td><td><span class="pill claim">login-walled; mirror pins verified locally</span></td></tr>
+<tr><td>leaderboard</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">Public leaderboard</a></td><td>current top read live 2026-10-06: 0.3345 / 0.3262 / 0.3222 / 0.3218 / 0.3195 — see <a href="leaderboard.html">leaderboard page</a> (snapshot stored in <code>docs/data/</code> next session; read recorded in this session's log)</td><td><span class="pill ok">verified 2026-10-06 (fetched)</span></td></tr>
+<tr><td>rules_pdf</td><td><a href="https://docs.nlr.gov/docs/fy26osti/96647.pdf">GEMS rules PDF (NLR doc 96647)</a></td><td>submission procedure; mirrored by the group with sha256 <code>50d854b1e0239fe6…</code> (GEMSDOE28 docs/data/feed.json, body bytes recorded)</td><td>listed (mirror hash recorded by GEMSDOE28; PDF not fetched here)</td></tr>
+<tr><td>reference_solution</td><td><a href="https://github.com/drivendataorg/gems-prize-reference-solution">Official reference solution (U-Net, J. Lipor, Portland State)</a></td><td>cloned this session: U-Net + <code>TverskyLoss(alpha=0.2, beta=0.8)</code>, 5 Monte-Carlo splits — confirms the loss weights; contains no server-side DTI code (hence our convention flag on the distance lattice)</td><td><span class="pill ok">verified 2026-10-06 (cloned, read)</span></td></tr>
+<tr><td>forum</td><td><a href="https://community.drivendata.org/c/gems-prize-challenge/111">Competition forum</a></td><td>clarifications (not consulted this session)</td><td>listed</td></tr>
+</table>
+
+<h2>Scientific / geophysical (official)</h2>
+<table>
+<tr><th>id</th><th>source</th><th>used for</th><th>status</th></tr>
+<tr><td>geodawn</td><td><a href="https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and-">GeoDAWN airborne magnetic &amp; radiometric surveys</a> · <a href="https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7">ScienceBase item</a> (DOI 10.5066/P93LGLVQ)</td><td>origin of the 19-band feature stack; the <code>tc</code>-vs-radiometric-TC correlation (Spearman 0.9999) that GEMSDOE25 measured against this product is the basis of the band-6 semantics ruling</td><td>listed (recorded by GEMSDOE25/28 with hashes)</td></tr>
+<tr><td>ingenious</td><td><a href="https://gbcge.org/current-projects/ingenious/">INGENIOUS (GBCGE)</a> · <a href="https://gdr.openei.org/submissions/1391">GDR submission 1391</a></td><td>catalogue companion data (heat-flow study area &amp; wells, slip tendency); the CSVs mirrored in GEMSDOE28 docs/data are extracted from this dataset</td><td>listed (CSVs mirrored, upstream sha-pinned)</td></tr>
+<tr><td>heatflow</td><td><a href="https://gdr.openei.org/submissions/1391">USGS Great Basin heat-flow study area &amp; wells (via GDR 1391)</a></td><td>4,216 well points in grid (hf_meas mW/m², 184 ≥ 1500); Stage-1 channel + G44-H4</td><td><span class="pill ok">mirror verified 2026-10-06 (reprojection sanity-checked: lat 37.40–40.72)</span></td></tr>
+<tr><td>slip_tendency</td><td><a href="https://www.sciencebase.gov/catalog/item/6296974dd34ec53d276bb33d">Siler 2022 — slip/dilation tendency for Great Basin Quaternary faults</a> (DOI 10.5066/P9YL58W6)</td><td>regional stress context (SHmax az 218.5°, 31.4 MPa; Shmin az 128.5°, 5.06 MPa); sanity check on expected new-fault orientations (strike ≈ perpendicular to Shmin → ~N31°W/N138°E family + the NE trend set)</td><td><span class="pill ok">mirror verified 2026-10-06 (84,484 segment rows)</span></td></tr>
+<tr><td>qfaults</td><td><a href="https://web2.nbmg.unr.edu/arcgis/rest/services/Qfaults/Qfaults_INGENIOUS/MapServer/0">NBMG Qfaults-INGENIOUS v2 ArcGIS REST</a></td><td>345 gap-link features (per-feature source URL recorded in the geojson) → G44-H2/H3</td><td><span class="pill ok">mirror verified 2026-10-06 (345 features; upstream service listed, not reachable here)</span></td></tr>
+<tr><td>mcre</td><td><a href="https://www.sciencebase.gov/">Koehler et al. 2021, SRL 92(2A) 823–829 (USGS Pubs Warehouse 70217872)</a>; Dee et al. NBMG TR-190</td><td>G44-R2 (registered, not built): 2020 MCRE surface rupture — post-catalogue by construction</td><td>listed (record verified by GEMSDOE32; vector not fetched — egress)</td></tr>
+<tr><td>usgs_3dep</td><td><a href="https://www.usgs.gov/3d-elevation-program">USGS 3DEP</a> via the competition's official DEM link table</td><td>G44-R1 (registered, not built)</td><td>listed (link table mirrored in GEMSDOE repo, sha 8804dbff…)</td></tr>
+</table>
+
+<h2>Group mirrors (not official; used for study + format cross-checks)</h2>
+<table>
+<tr><th>id</th><th>source</th><th>used for</th><th>status</th></tr>
+<tr><td>gemsdoe32_site</td><td><a href="https://buffedlizard55-lab.github.io/GEMSDOE32/docs/index.html">GEMSDOE32 (h33-h33-2-b2, 0.2778)</a></td><td>the study target: why the dotted file scored highest; its audit receipts define the format bar we re-audit against; its hypothesis registry (H33/H60/H61) defines "already tried"</td><td><span class="pill ok">read 2026-10-06 (fetched); file mirrored &amp; hashed here for the uniqueness check</span></td></tr>
+<tr><td>gemsdoe25_site</td><td><a href="https://buffedlizard55-lab.github.io/GEMSDOE25/docs/index.html">GEMSDOE25</a></td><td>band_semantics.json (measured band↔GeoDAWN correlations); truth-model σ=1.85 px inference (owner-report-derived prior our mirror model sweeps around)</td><td><span class="pill ok">read 2026-10-06 (repo mirrored)</span></td></tr>
+<tr><td>gemsdoe28_site</td><td><a href="https://buffedlizard55-lab.github.io/GEMSDOE28/docs/index.html">GEMSDOE28</a></td><td>official-data mirrors: heat-flow CSV, slip-tendency CSV, topology links geojson, feed.json with body hashes</td><td><span class="pill ok">repo mirrored 2026-10-06</span></td></tr>
+<tr><td>bridge</td><td><a href="https://github.com/buffedlizard55-lab/GEMSDOE">GEMSDOE repo <code>data/bridge/</code></a></td><td>the official rasters (sha256 pins in <code>data/bridge/manifest.json</code>, each pin naming the official dropbox mirror): <code>training_features.tif</code> <code>4371c82e…</code>, <code>existing_faults.tif</code> <code>7ba308cc…</code>, <code>example_submission.tif</code> <code>2176d08e…</code> — all three re-verified byte-for-byte in <code>evidence/verify_rasters.json</code></td><td><span class="pill ok">verified 2026-10-06 (sha256 match, geometry match)</span></td></tr>
+<tr><td>sibling_sites</td><td>GEMSDOE1–43 sites (listed in the project brief)</td><td>score history (claims), "already tried" registry, format lessons (NaN-rejection mechanism)</td><td><span class="pill claim">owner-reported scores; treated as claims, never as verified</span></td></tr>
+</table>
+
+<h2>Evidence files (this repo)</h2>
+<p><code>evidence/verify_rasters.json</code> · <code>grid_stats.json</code> · <code>external_mirrors.json</code> ·
+<code>stage1_holdout.json</code> · <code>stage2_holdout.json</code> · <code>gate_q_selection.json</code> ·
+<code>budget_sweep.json</code> · <code>final_proxy_score.json</code> · <code>mirror_model.json</code> ·
+<code>uniqueness_report.json</code> · <code>dominance_check.json</code> ·
+<code>audit-*.json</code> · <code>pipeline_summary.json</code> — the site's dynamic cells are filled
+from <code>docs/data/pipeline_summary.json</code> (copied by <code>scripts/publish_evidence.py</code>).</p>
+
+</main>
+<footer><div class="wrap">GEMSDOE44 · sources</div></footer>
+</body>
+</html>

@@ -1,0 +1,71 @@
+[
+ {
+  "file": "training_features.tif",
+  "sha256_ok": true,
+  "sha256": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5",
+  "bands": 19,
+  "shape": [
+   3730,
+   3292
+  ],
+  "dtype": "float32",
+  "crs": "EPSG:32611",
+  "transform": [
+   100.0,
+   0.0,
+   243350.0,
+   0.0,
+   -100.0,
+   4508550.0,
+   0.0,
+   0.0,
+   1.0
+  ]
+ },
+ {
+  "file": "existing_faults.tif",
+  "sha256_ok": true,
+  "sha256": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+  "bands": 1,
+  "shape": [
+   3730,
+   3292
+  ],
+  "dtype": "int8",
+  "crs": "EPSG:32611",
+  "transform": [
+   100.0,
+   0.0,
+   243350.0,
+   0.0,
+   -100.0,
+   4508550.0,
+   0.0,
+   0.0,
+   1.0
+  ]
+ },
+ {
+  "file": "example_submission.tif",
+  "sha256_ok": true,
+  "sha256": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+  "bands": 1,
+  "shape": [
+   3730,
+   3292
+  ],
+  "dtype": "float32",
+  "crs": "EPSG:32611",
+  "transform": [
+   100.0,
+   0.0,
+   243350.0,
+   0.0,
+   -100.0,
+   4508550.0,
+   0.0,
+   0.0,
+   1.0
+  ]
+ }
+]

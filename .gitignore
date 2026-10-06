@@ -1,19 +1,27 @@
-# Large official rasters and derived data are NOT committed: they are fetched with
-# scripts/fetch_official_mirrors.sh and hash-verified against registry/data_manifest.json.
-# (The submission GeoTIFFs under submissions/ and docs/downloads/ ARE committed: they are small
-#  and the site must serve them as one-click downloads.)
-data/raw/*.tif
-data/raw/_part-*
-data/external/*.tif
-data/interim/
-artifacts/
-.pytest_cache/
+# data (official rasters are large; sha256-pinned, fetched via scripts/download_competition_data.sh)
+data/
+!data/.gitkeep
+
+# python
 __pycache__/
 *.pyc
+.pytest_cache/
 .venv/
-data/probes/
-data/interim/
-*.py[cod]
-*$py.class
+venv/
+
+# scratch
+tmp/
+*.log
+.nox/
+.mypy_cache/
+.ruff_cache/
+
+# keep: evidence/*.json (small, the site's data feed), docs/ (site + downloads)
+
+# from main (Session 1-2)
+*.npy
+data/raw/
+
+# from main (sessions 1-4)
 *.npy
 data/raw/

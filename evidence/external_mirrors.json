@@ -1,0 +1,15 @@
+{
+ "heatflow_wells_in_grid": 4216,
+ "heatflow_lat_range": [
+  37.399940274749085,
+  40.72298585818627
+ ],
+ "heatflow_hf_range_mWm2": [
+  0.6,
+  10234.4
+ ],
+ "hf_wells_ge_1500": 184,
+ "gap_links_total": 290,
+ "gap_links_relay_class": 290,
+ "gap_links_source": "NBMG Qfaults-INGENIOUS v2 vector mirror, official endpoint recorded per-feature in nbmg_source_layer_url (345 features)"
+}

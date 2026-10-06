@@ -1,0 +1,10 @@
+{
+ "q_scores_A4_mean_proxyDTI": {
+  "0.25": 0.025322773423199472,
+  "0.5": 0.022064567775388455,
+  "1.0": 0.022064567775388455,
+  "0.35": 0.023033545130091152
+ },
+ "chosen_q": 0.25,
+ "disclosure": "selection made on the same spatially-blocked holdout (mild optimism, disclosed per pre-registration)"
+}

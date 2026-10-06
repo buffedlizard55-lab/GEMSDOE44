@@ -43,7 +43,8 @@ from gems44.scripts_common import (  # noqa: E402
 )
 
 GLOBAL_MASSES = [30_000, 44_090, 61_328]
-CAND_FRACTION = 0.06
+CAND_FRACTION = 0.25  # shipped emitter setting (build_submission.py --cand-fraction);
+                      # 0.06 silently caps how many spaced dots the greedy can place
 TRAIN_POS, TRAIN_NEG = 8_000, 30_000
 SEED = 44
 MIN_SEP = 3.0  # H7: no dot within 3 px (300 m) of another; see field.emit_order_np
@@ -52,6 +53,16 @@ MIN_SEP = 3.0  # H7: no dot within 3 px (300 m) of another; see field.emit_order
 def emit(belief: np.ndarray, allowed: np.ndarray, max_dots: int) -> np.ndarray:
     cand = F.quantile_candidates(belief, allowed, CAND_FRACTION)
     return F.emit_order_np(belief, cand, allowed, max_dots, min_sep=MIN_SEP)
+
+
+def emitted_by_mass(order: np.ndarray, masses) -> dict:
+    """How many dots the greedy could actually place for each requested mass.
+
+    With min_sep > 0 the emitter can fall short of a requested mass (the candidate pool runs
+    out).  The shortfall is recorded so a mass column can never be read as if the requested
+    mass had been emitted.
+    """
+    return {str(m): int(min(m, order.size)) for m in masses}
 
 
 def score(order: np.ndarray, shape, mass: int, truth, valid, known) -> float:
@@ -188,6 +199,7 @@ def main() -> int:
             order = emit(np.where(test, b, 0.0).astype(np.float32), allowed, max_mass)
             row[fname] = {str(M): round(score(order, labels.shape, masses[M], frame["N"] & test,
                                               g.footprint, g.known), 6) for M in GLOBAL_MASSES}
+            row[fname + "__emitted"] = emitted_by_mass(order, [masses[M] for M in GLOBAL_MASSES])
             row[fname + "__frameP"] = {str(M): round(score(order, labels.shape, masses[M],
                                                             frame["P"] & test, g.footprint, g.known), 6)
                                        for M in GLOBAL_MASSES}

@@ -1,0 +1,23 @@
+{
+ "n_dots": 45000,
+ "fav_decile_hist": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  1955,
+  10159,
+  32886
+ ],
+ "fav_decile_top_share": 0.7308,
+ "fav_in_gate_share": 1.0,
+ "stage1_dominance_check": "PASS",
+ "stage2_pred_median_at_dots": 0.2493576854467392,
+ "stage2_pair_at_footprint_p90_share": 0.19124444444444444,
+ "stage2_relay_nonzero_share": 0.011955555555555556,
+ "stage2_backed_share": 0.20153333333333334,
+ "stage2_dominance_check": "FAIL",
+ "note": "stage-1 check: dots outside the gate are impossible by construction (gate is a hard constraint at emission); stage-2 check: >=50% of dots sit on H1 consensus at/above footprint p90 or on a gap-link relay stamp - if this fails, the fine placement model added nothing over the habitat"
+}
