@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Official Verified Sources — GEMSDOE44</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="container nav-container">
+      <div class="logo"><strong>GEMSDOE44</strong> <span class="badge badge-accent">DOE GEMS Prize</span></div>
+      <nav>
+        <a href="index.html">Overview & Downloads</a>
+        <a href="executive_summary.html">Executive Summary</a>
+        <a href="hypotheses.html">5 Hypotheses</a>
+        <a href="research.html">PhD Analysis of 0.2778</a>
+        <a href="sources.html" class="active">Verified Sources</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="irregularities.html">Irregularities</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card hero">
+      <h1 class="gradient-text">Official Verified Sources Register</h1>
+      <p class="subtitle">Auditable, line-by-line verified links from official government, academic, and competition repositories. Zero hallucinations.</p>
+    </section>
+
+    <section class="card">
+      <h2>Primary Verification Table</h2>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th>Resource Name</th>
+              <th>Official Verified URL</th>
+              <th>Description &amp; Citation</th>
+              <th>Verification (session 2, 2026-10-06)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Competition</td>
+              <td>DrivenData Challenge Hub</td>
+              <td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/" target="_blank" rel="noopener">drivendata.org/competitions/306/...</a></td>
+              <td>Official competition portal and submission management</td>
+              <td>Fetched 2026-10-06: problem description (2 chunks) and leaderboard pages live</td>
+            </tr>
+            <tr>
+              <td>Metric</td>
+              <td>DrivenData Problem Description &amp; Metric</td>
+              <td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/" target="_blank" rel="noopener">drivendata.org/.../page/967/</a></td>
+              <td>Full mathematical definition of DTI (&alpha;=0.2, &beta;=0.8, R=300m)</td>
+              <td>Fetched twice 2026-10-06; worked example TP=3.00/FP=1.89/FN=2.00&rarr;0.60 reproduced in run_checks.py</td>
+            </tr>
+            <tr>
+              <td>Rules</td>
+              <td>DOE GEMS Prize Official Rules PDF</td>
+              <td><a href="https://docs.nlr.gov/docs/fy26osti/96647.pdf" target="_blank" rel="noopener">docs.nlr.gov/docs/fy26osti/96647.pdf</a></td>
+              <td>Official DOE/NLR guidelines, format requirements &amp; prize structure</td>
+              <td>Fetched 2026-10-06 (&sect;Preface&ndash;&sect;3.2): single 100m GeoTIFF, 3 submissions/week, AI-use disclosure, two-round scoring</td>
+            </tr>
+            <tr>
+              <td>Reference Model</td>
+              <td>DrivenData Reference Solution</td>
+              <td><a href="https://github.com/drivendataorg/gems-prize-reference-solution" target="_blank" rel="noopener">github.com/drivendataorg/...</a></td>
+              <td>Official reference solution repository and baseline implementation</td>
+              <td>Fetched 2026-10-06: John Lipor (Portland State), U-Net notebook, commit aebe92f 2026-06-16</td>
+            </tr>
+            <tr>
+              <td>Geophysics</td>
+              <td>USGS GeoDAWN Airborne Survey</td>
+              <td><a href="https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7" target="_blank" rel="noopener">sciencebase.gov/.../657e1d85...</a></td>
+              <td>High-resolution aeromagnetic and radiometric geophysical data</td>
+              <td>Fetched 2026-10-06: Glen &amp; Earney 2024, DOI 10.5066/P93LGLVQ, 149,030 line-km, 51,857 km&sup2;</td>
+            </tr>
+            <tr>
+              <td>Geothermal Data</td>
+              <td>GDR INGENIOUS Regional Database</td>
+              <td><a href="https://gdr.openei.org/submissions/1391" target="_blank" rel="noopener">gdr.openei.org/submissions/1391</a></td>
+              <td>Geothermal Data Repository submission 1391 (DOI: 10.15121/1881483)</td>
+              <td>Fetched 2026-10-06: CC-BY-4.0; 2m probes, Qfaults v1/v2, geodetics, wells/springs confirmed downloadable</td>
+            </tr>
+            <tr>
+              <td>Fault Catalogue</td>
+              <td>USGS Quaternary Fault &amp; Fold Database</td>
+              <td><a href="https://www.usgs.gov/programs/earthquake-hazards/faults" target="_blank" rel="noopener">usgs.gov/programs/earthquake-hazards/faults</a></td>
+              <td>Quaternary Fault and Fold Database (DOI 10.5066/P9BCVRCK): KML + GIS downloads, public domain</td>
+              <td>Fetched 2026-10-06 (live); replaces dead usgs.github.io/faults link (404) &mdash; IR-44-10</td>
+            </tr>
+            <tr>
+              <td>Topography</td>
+              <td>USGS 3D Elevation Program (3DEP)</td>
+              <td><a href="https://www.usgs.gov/3d-elevation-program" target="_blank" rel="noopener">usgs.gov/3d-elevation-program</a></td>
+              <td>High-resolution 1m &amp; 10m LiDAR digital elevation models</td>
+              <td>Fetched 2026-10-06: 3DEP products free of charge, no use restrictions</td>
+            </tr>
+            <tr>
+              <td>Scientific Theory</td>
+              <td>Reid et al. (1990) Euler Contact Inversion</td>
+              <td><em>Geophysics</em>, Vol. 55, No. 1, pp. 80-91</td>
+              <td>Structural index SI=0 contact theory for potential field inversion</td>
+              <td>Citation only (Geophysics journal, not fetched this session)</td>
+            </tr>
+            <tr>
+              <td>Structural Geology</td>
+              <td>Faulds et al. (2011) Great Basin Geothermal Controls</td>
+              <td><em>GRC Transactions</em>, Vol. 35, pp. 799-804</td>
+              <td>Structural controls of geothermal systems in the Basin and Range</td>
+              <td>Citation only (GRC Transactions, not fetched this session)</td>
+            </tr>
+            <tr>
+              <td>Sibling audit</td>
+              <td>GEMSDOE32 H33-2-B2 receipt + method</td>
+              <td><a href="https://buffedlizard55-lab.github.io/GEMSDOE32/docs/index.html" target="_blank" rel="noopener">GEMSDOE32 site + audit.json</a></td>
+              <td>37,654-dot B=2 prune; UNSCORED, model projection 0.2747; board #1 read 0.3262 on 2026-10-04</td>
+              <td>Fetched 2026-10-06 (page + receipt JSON)</td>
+            </tr>
+            <tr>
+              <td>Sibling method</td>
+              <td>GEMSDOE40 H45 Euler arm + calibration</td>
+              <td><a href="https://buffedlizard55-lab.github.io/GEMSDOE40/docs/index.html" target="_blank" rel="noopener">GEMSDOE40 site</a></td>
+              <td>SI=0 Euler depth-clustering (43,038 dots); 4-score forward model G&asymp;5667, 0.0890/mass</td>
+              <td>Fetched 2026-10-06</td>
+            </tr>
+            <tr>
+              <td>Sibling method</td>
+              <td>GEMSDOE41 H42 basin-margin arm</td>
+              <td><a href="https://buffedlizard55-lab.github.io/GEMSDOE41/docs/index.html" target="_blank" rel="noopener">GEMSDOE41 site</a></td>
+              <td>Relief &times; 3DEP LiDAR scarp &times; magnetics, 400m greedy packing, holdout 0.251 vs 0.121</td>
+              <td>Fetched 2026-10-06</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <p>GEMSDOE44 &middot; DOE GEMS Prize Challenge &middot; Grounded in Measured Geophysics</p>
+      <p><a href="https://github.com/buffedlizard55-lab/GEMSDOE44" target="_blank" rel="noopener">GitHub Repository</a></p>
+    </div>
+  </footer>
+</body>
+</html>

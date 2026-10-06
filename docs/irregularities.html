@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Irregularities Register — GEMSDOE44</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="container nav-container">
+      <div class="logo"><strong>GEMSDOE44</strong> <span class="badge badge-accent">DOE GEMS Prize</span></div>
+      <nav>
+        <a href="index.html">Overview & Downloads</a>
+        <a href="executive_summary.html">Executive Summary</a>
+        <a href="hypotheses.html">5 Hypotheses</a>
+        <a href="research.html">PhD Analysis of 0.2778</a>
+        <a href="sources.html">Verified Sources</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="irregularities.html" class="active">Irregularities</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card hero">
+      <h1 class="gradient-text">Irregularities Register</h1>
+      <p class="subtitle">Every defect, stale claim, or unverifiable statement found during line-by-line review &mdash; published with severity, evidence, and resolution. Owning the outcome means printing our own bugs.</p>
+    </section>
+
+    <section class="card">
+      <h2>Open &amp; Resolved Findings (Session 2 audit, 2026-10-06 &mdash; 10 items)</h2>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Finding</th>
+              <th>Severity</th>
+              <th>Evidence</th>
+              <th>Status / Resolution</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>IR-44-01</strong></td>
+              <td>Charter scoreboard presents <code>h33-h33-2-b2: 0.2778</code> as a scored competition result; it is the premise of the session-1 analysis.</td>
+              <td>Major</td>
+              <td>GEMSDOE32 states &ldquo;NO ORGANISER SCORE EXISTS for this or any artifact in this repository&rdquo; and reports a <em>model projection</em> of 0.2747, not 0.2778. The value 0.2778 does appear on the live public board (#13 extradr19, read 2026-10-06).</td>
+              <td><span class="badge badge-accent">Corrected</span> Site now frames 0.2778 as a live board value with owner-reported (not independently verified) file attribution. See <a href="research.html">research</a>.</td>
+            </tr>
+            <tr>
+              <td><strong>IR-44-02</strong></td>
+              <td>Charter claims &ldquo;0.3195 is the highest score right now&rdquo; and sets it as the target.</td>
+              <td>Major</td>
+              <td>Live leaderboard read 2026-10-06: #1 alexoktaba <strong>0.3345</strong>, #2 nchuzhoy 0.3262, #5 DARD 0.3195.</td>
+              <td><span class="badge badge-accent">Corrected</span> Target updated to 0.3345 throughout; snapshot on <a href="leaderboard.html">leaderboard page</a>.</td>
+            </tr>
+            <tr>
+              <td><strong>IR-44-03</strong></td>
+              <td><code>generate_submission.py</code> cannot run in this checkout: it requires <code>data/raw/*</code> (anchor, H45, H42, footprint) which were never committed and are gitignored.</td>
+              <td>Major</td>
+              <td><code>ls data/</code> fails; <code>.gitignore</code> excludes <code>data/raw/</code>; single-commit history contains no data.</td>
+              <td><span class="badge badge-accent">Mitigated</span> Committed 40k TIF is format-verified (47-check runner) but provenance-unverified; new H44-6 file is generated <em>and</em> reproducible here. Generator kept as documented legacy.</td>
+            </tr>
+            <tr>
+              <td><strong>IR-44-04</strong></td>
+              <td>H44-1 holdout gains (+0.1587/+0.1211/+0.2253/+0.2143, 0.07036&rarr;0.25637) are displayed without any validation code, data, or log in the repo.</td>
+              <td>Major</td>
+              <td>No validation script exists; no competition data in checkout; numbers not reproducible here.</td>
+              <td><span class="badge badge-accent">Relabeled</span> Numbers retained as previous-session claims, explicitly marked unverifiable. No submission slot may be justified by them alone.</td>
+            </tr>
+            <tr>
+              <td><strong>IR-44-05</strong></td>
+              <td>&ldquo;Jaccard &lt;0.94 vs all prior GEMSDOE submissions&rdquo; was claimed with no comparison code or prior bytes available.</td>
+              <td>Moderate</td>
+              <td>Sandbox has no network for binary downloads; prior TIF bytes not in checkout.</td>
+              <td><span class="badge badge-accent">Narrowed</span> H44-6 reports measured Jaccard 0.8637 vs its parent anchor plus count-distinctness vs published prior counts. Cross-repo byte Jaccard remains unmeasured.</td>
+            </tr>
+            <tr>
+              <td><strong>IR-44-06</strong></td>
+              <td>Generator inputs <code>gemsdoe40_h45.tif</code> / <code>gemsdoe41_h42.tif</code> are referenced but absent; the Euler&times;LiDAR conjunction execution cannot be verified.</td>
+              <td>Moderate</td>
+              <td>Referents verified real: GEMSDOE40 H45 (43,038 dots, SI=0 Euler) and GEMSDOE41 H42 (40,000 px basin-margin&times;LiDAR) document methodology and receipts on their sites.</td>
+              <td>Open (design lineage verified; execution provenance unverifiable). H44-6 makes no conjunction claim.</td>
+            </tr>
+            <tr>
+              <td><strong>IR-44-07</strong></td>
+              <td>Previous-session portal note for the 40k file measured <strong>206 chars</strong>, over the 200-char field convention (sibling sites budget &le;200).</td>
+              <td>Moderate</td>
+              <td><code>scripts/run_checks.py</code> FAIL <code>note200_00Z-507289a8</code> on first run.</td>
+              <td><span class="badge badge-accent">Fixed</span> Note shortened to 144 chars; audit receipt updated. TIF bytes untouched (sha256 unchanged).</td>
+            </tr>
+            <tr>
+              <td><strong>IR-44-08</strong></td>
+              <td><code>tests/test_submission_and_metric.py</code> requires pytest + numpy + rasterio, none installable in the offline sandbox, so &ldquo;Confirmed tests in pytest&rdquo; could not run here.</td>
+              <td>Moderate</td>
+              <td><code>pip install</code> blocked (PEP 668, no network); <code>import rasterio</code> fails.</td>
+              <td><span class="badge badge-accent">Fixed</span> Added <code>scripts/run_checks.py</code> (stdlib only, 50 checks, all passing) as the runnable-here gate; pytest file kept for equipped machines.</td>
+            </tr>
+            <tr>
+              <td><strong>IR-44-09</strong></td>
+              <td>&ldquo;Byte comparison revealed exactly 2,545 pruned ring pixels&rdquo; cannot be reproduced here (no H27-4 / H33-2-B2 bytes in checkout).</td>
+              <td>Minor</td>
+              <td>Claim is <em>consistent</em> with GEMSDOE40&rsquo;s independent report (2,545 px, 141&ndash;200&nbsp;m, 0 added) but not independently reproduced.</td>
+              <td><span class="badge badge-accent">Labeled</span> Research page now cites the sibling measurement as the source instead of implying local reproduction.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>How to Report a New Finding</h2>
+      <p>Open an issue or pull request against <a href="https://github.com/buffedlizard55-lab/GEMSDOE44" target="_blank" rel="noopener">the repository</a> with the claim, the contradicting evidence (file + line, or fetched URL + date), and a proposed severity. Unverified claims are relabeled within one session &mdash; never silently dropped.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <p>GEMSDOE44 &middot; DOE GEMS Prize Challenge &middot; Grounded in Measured Geophysics</p>
+      <p><a href="https://github.com/buffedlizard55-lab/GEMSDOE44" target="_blank" rel="noopener">GitHub Repository</a></p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Official Verified Sources Register
+
+All scientific methodologies, data sources, and algorithmic formulations in GEMSDOE44 are derived from official, verified, and publicly accessible sources. Session 2 (2026-10-06) fetched and verified every row marked below; the two journal citations are citation-only.
+
+| Category | Source Name | Official Verified URL | Description / Citation | Verification (2026-10-06) |
+|---|---|---|---|---|
+| **Competition** | DrivenData DOE GEMS Challenge Hub | [drivendata.org/competitions/306/competition-doe-gems/](https://www.drivendata.org/competitions/306/competition-doe-gems/) | Official competition portal | Fetched: problem pages + leaderboard live |
+| **Metric & Task** | DrivenData Problem Description & Metric | [drivendata.org/competitions/306/competition-doe-gems/page/967/](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/) | Defines DTI formula ($\alpha=0.2, \beta=0.8, R=300\,\text{m}$) | Fetched twice (2 chunks); worked example TP=3.00/FP=1.89/FN=2.00→0.60 reproduced in `run_checks.py` |
+| **Leaderboard** | DrivenData Public Leaderboard | [drivendata.org/.../leaderboard/](https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/) | Live standings | Fetched: #1 alexoktaba 0.3345, #5 DARD 0.3195, #13 0.2778, #16 0.2708, #20 0.2600 |
+| **Official Rules** | DOE GEMS Prize Official Rules | [docs.nlr.gov/docs/fy26osti/96647.pdf](https://docs.nlr.gov/docs/fy26osti/96647.pdf) | Technical specifications and scoring guidelines | Fetched (§Preface–§3.2): single 100m GeoTIFF, 3 submissions/week, AI-use disclosure, two-round scoring |
+| **Reference Code** | DrivenData Reference Solution | [github.com/drivendataorg/gems-prize-reference-solution](https://github.com/drivendataorg/gems-prize-reference-solution) | Official baseline U-Net implementation | Fetched: John Lipor (Portland State), notebook, commit aebe92f 2026-06-16 |
+| **Geophysics** | USGS GeoDAWN Airborne Survey | [sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7](https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7) | GeoDAWN high-resolution aeromagnetic & radiometric survey | Fetched: Glen & Earney 2024, DOI 10.5066/P93LGLVQ, 149,030 line-km |
+| **Geothermal Data** | GDR INGENIOUS Regional Database | [gdr.openei.org/submissions/1391](https://gdr.openei.org/submissions/1391) | Geothermal Data Repository, DOI: 10.15121/1881483 | Fetched: CC-BY-4.0; 2m probes, Qfaults v1/v2, geodetics, wells/springs confirmed |
+| **Fault Database** | USGS Quaternary Fault and Fold Database | [usgs.gov/programs/earthquake-hazards/faults](https://www.usgs.gov/programs/earthquake-hazards/faults) | DOI 10.5066/P9BCVRCK; KML + GIS downloads, public domain | Fetched live; replaces dead usgs.github.io/faults (404, IR-44-10) |
+| **Elevation** | USGS 3D Elevation Program (3DEP) | [usgs.gov/3d-elevation-program](https://www.usgs.gov/3d-elevation-program) | High-resolution LiDAR digital elevation models | Fetched: products free of charge, no use restrictions |
+| **Euler Contact Theory** | Reid et al. (1990) Euler Inversion | Geophysics, 55(1), 80-91 | Structural index 0 contact model for fault delineation | Citation only (not fetched) |
+| **Structural Geology** | Faulds et al. (2011) Structural Controls | GRC Transactions, Vol. 35 | Structural controls of geothermal systems in the Great Basin | Citation only (not fetched) |
+| **Sibling audit** | GEMSDOE32 H33-2-B2 receipt + method | [GEMSDOE32 site + audit.json](https://buffedlizard55-lab.github.io/GEMSDOE32/docs/index.html) | 37,654-dot B=2 prune; UNSCORED, projection 0.2747 | Fetched page + receipt JSON |
+| **Sibling method** | GEMSDOE40 H45 Euler arm + calibration | [GEMSDOE40 site](https://buffedlizard55-lab.github.io/GEMSDOE40/docs/index.html) | SI=0 Euler depth-clustering (43,038 dots); forward model G≈5667 | Fetched |
+| **Sibling method** | GEMSDOE41 H42 basin-margin arm | [GEMSDOE41 site](https://buffedlizard55-lab.github.io/GEMSDOE41/docs/index.html) | Relief × LiDAR scarp × magnetics, 400m packing, holdout 0.251 vs 0.121 | Fetched |

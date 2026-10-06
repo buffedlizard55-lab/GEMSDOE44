@@ -256,3 +256,27 @@ project reduces to that one operator agreeing with the organizer's scorer.
 
 Every link above, its fetch status, and what it establishes are in
 [`registry/sources.json`](registry/sources.json).
+
+---
+
+## 8. Sibling sessions in this repository
+
+Other Arena sessions worked on the same competition in this same repository and merged their work
+into `main` (PR #1 and PR #2). **Nothing of theirs was deleted by the merge of this branch**: their
+scripts, tests, registries, artifacts and pages are all still in the tree, and the pages whose paths
+collided with this site's generator were preserved verbatim under
+[`docs/sibling/`](docs/sibling/):
+
+| what | where |
+| --- | --- |
+| their README | [`docs/sibling/README_main.md`](docs/sibling/README_main.md) |
+| their executive summary / hypotheses / leaderboard pages | [`docs/sibling/`](docs/sibling/) |
+| their evidence pages (untouched paths) | [`docs/executive_summary.html`](docs/executive_summary.html), [`docs/irregularities.html`](docs/irregularities.html), [`docs/research.html`](docs/research.html), [`docs/sources.html`](docs/sources.html) |
+| their research notes | [`docs/research/`](docs/research/) |
+| their artifacts | `docs/downloads/gemsdoe44-h44-*` (this session's submission files sit beside them, different names) |
+| their pipeline | `generate_submission.py`, `scripts/{prepare_data,run_checks,generate_h44_6_prune,analyze_spacing_stdlib,audit_tif_stdlib}.py`, `tests/test_submission_and_metric.py` |
+
+Where their analysis and this repository's evidence interact, this repository states the measured
+result rather than the assertion: see [`registry/ring_mechanism.json`](registry/ring_mechanism.json)
+for the first-hand byte-level test of the 0.2600 → 0.2778 pruning claim, and
+`docs/limitations.html` for what remains unverified.

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhD Analysis of 0.2778 — GEMSDOE44</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="container nav-container">
+      <div class="logo"><strong>GEMSDOE44</strong> <span class="badge badge-accent">DOE GEMS Prize</span></div>
+      <nav>
+        <a href="index.html">Overview & Downloads</a>
+        <a href="executive_summary.html">Executive Summary</a>
+        <a href="hypotheses.html">5 Hypotheses</a>
+        <a href="research.html" class="active">PhD Analysis of 0.2778</a>
+        <a href="sources.html">Verified Sources</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="irregularities.html">Irregularities</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card hero">
+      <h1 class="gradient-text">PhD-Level Scientific Deconstruction</h1>
+      <p class="subtitle">Why did the 0.2778-lineage files lead the GEMSDOE series, and what does reaching the live #1 bar of 0.3345 require?</p>
+      <div class="highlight-box" style="margin-top: 1rem; text-align: left;">
+        <strong>Session-2 correction (2026-10-06):</strong> 0.2778 is a verified live public-board value (#13 extradr19), but no organizer receipt links it to any specific GEMSDOE file &mdash; the file&rarr;score attribution is owner-reported (see <a href="irregularities.html" style="color: #60a5fa;">IR-44-01</a>). The &ldquo;byte comparison&rdquo; below is GEMSDOE40&rsquo;s independent measurement (IR-44-09), not a local reproduction. Target updated from the stale 0.3195 to the live #1 value 0.3345 (IR-44-02).
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>1. The Metric Identity: Why Emission Is a Knapsack Problem</h2>
+      <p>The competition DTI metric is defined by:</p>
+      <div class="code-box" style="margin: 1rem 0;">
+        DTI = TP_w / [ TP_w + 0.2 * FP_w + 0.8 * FN_w ]
+      </div>
+      <p>Because false negatives satisfy the exact identity <code>FN_w = |G| - TP_w</code>, the denominator simplifies to:</p>
+      <div class="code-box" style="margin: 1rem 0;">
+        Denominator = 0.2 * (TP_w + FP_w) + 0.8 * |G| = 0.2 * N_dots + 0.8 * |G|
+      </div>
+      <p>Every emitted pixel unconditionally adds <strong>0.2</strong> to the denominator. To increase DTI, the pixel's expected kernel credit <code>k(d)</code> must exceed the marginal credit bar:</p>
+      <div class="code-box" style="margin: 1rem 0;">
+        Marginal Credit Bar: k(d) > 0.2 * DTI
+      </div>
+      <p>At <code>DTI = 0.2778</code>, the bar is <code>0.2 * 0.2778 = 0.05556</code>. This requires any emitted pixel to land within <strong>283 meters</strong> (2.83 pixels) of a hidden fault to be beneficial.</p>
+    </section>
+
+    <section class="card">
+      <h2>2. The Ground Truth Mystery: Deconstructing the 0.2778 Winner</h2>
+      <p>By comparing the byte rasters of the 0.2708 benchmark (`H27-4`) and the 0.2778 record (`H33-2-B2`), our audit discovered:</p>
+      <ul style="margin-left: 1.5rem; line-height: 1.8;">
+        <li>Dots in 0.2708 base: <strong>40,199</strong></li>
+        <li>Dots in 0.2778 winner: <strong>37,654</strong></li>
+        <li>Net pruned: <strong>2,545 dots</strong> (and <strong>0 dots added</strong>)</li>
+        <li>Every single pruned dot lay exactly in the <strong>100m–200m buffer ring</strong> ($B=2$) around the known catalogue!</li>
+      </ul>
+      <div class="highlight-box" style="margin-top: 1rem;">
+        <strong>The Geological Reason:</strong> Unmapped new faults rarely run within 200m parallel to mapped master faults. Dots in that ring produced near-zero True Positive credit, while racking up 509 units of false-positive penalty in the denominator. Pruning them gave an immediate jump from 0.2708 to 0.2778!
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>3. The Blueprint to Pass the 0.2778 Lineage and Reach 0.3345</h2>
+      <p>Reaching the live #1 bar (0.3345) requires &asymp;0.105 credit per dot at 40k mass &mdash; ~18% better placement than the 0.089 baseline, per the forward model that reproduces all four owner-reported scores within 2% (GEMSDOE40: DTI = T/(0.2M + 0.8G), G &asymp; 5,667). The GEMSDOE44 plan has two shipped candidates:</p>
+      <ol style="margin-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Clean anchor + corroborated refill (40,000 dots, primary download):</strong> retain the 37,654-dot 0.2778-lineage anchor (strictly &ge;200m off-catalogue) and add 2,346 Euler SI=0 &times; LiDAR basin-margin corroborated dots at &ge;280m spacing. Format-verified here; generation inputs not committed (IR-44-03).</li>
+        <li><strong>Kernel-matched redundancy prune (34,546 dots, H44-6):</strong> greedy deletion of every dot with a neighbour inside the metric&rsquo;s own 300&nbsp;m kernel (5,454 removed), leaving minimum separation exactly &ge;3.0&nbsp;px. Fully reproducible in this checkout; measured Jaccard 0.8637 vs its parent.</li>
+        <li><strong>Honest scoring posture:</strong> both files are UNSCORED candidates. No outcome is projected; a weekly slot (three per week, rules &sect;3.2) is the experiment that decides.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <p>GEMSDOE44 &middot; DOE GEMS Prize Challenge &middot; Grounded in Measured Geophysics</p>
+      <p><a href="https://github.com/buffedlizard55-lab/GEMSDOE44" target="_blank" rel="noopener">GitHub Repository</a></p>
+    </div>
+  </footer>
+</body>
+</html>

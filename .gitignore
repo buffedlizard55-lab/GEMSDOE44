@@ -13,3 +13,7 @@ __pycache__/
 .venv/
 data/probes/
 data/interim/
+*.py[cod]
+*$py.class
+*.npy
+data/raw/
