@@ -39,5 +39,6 @@
     "zero_on_catalogue_leakage": true,
     "validator_range_0_1_guaranteed": true
   },
-  "note": "GEMSDOE44 H44-MULTIPHYSICS-40K | 37654 dots from 0.2778 anchor + 2346 Euler SI=0 & basin-margin LiDAR corroborated dots at >=280m spacing; 40000 total dots, strictly off-catalogue [0, 1] safe | sha c36d8fea"
+  "note": "GEMSDOE44 H44-40K | 37654-dot 0.2778-lineage anchor + 2346 Euler SI=0/LiDAR dots at >=280m; 40000 dots, off-catalogue, [0,1] safe | sha c36d8fea",
+  "session2_note_fix": "2026-10-06 (IR-44-07): portal note shortened from 206 to 144 chars to fit the 200-char convention; TIF bytes untouched, sha256 unchanged."
 }

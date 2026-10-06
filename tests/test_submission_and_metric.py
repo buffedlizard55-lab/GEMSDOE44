@@ -1,3 +1,10 @@
+"""pytest suite for equipped machines (requires pytest+numpy+rasterio).
+
+Session-2 note (2026-10-06): this file cannot run in the offline stdlib-only
+sandbox. The equivalent gate runnable anywhere is `python3 scripts/run_checks.py`
+(50 checks, all passing), which re-verifies the metric math and every shipped TIF
+byte-for-byte. Run that here; run this suite where the scipy stack exists.
+"""
 import pytest
 import numpy as np
 import rasterio

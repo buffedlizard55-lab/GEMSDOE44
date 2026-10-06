@@ -1,4 +1,6 @@
-# Deep PhD-Level Scientific Analysis: Deconstructing the Highest Scored Submission (0.2778) and Path to >0.3195
+> **SESSION-2 CORRECTION (2026-10-06):** 0.2778 is a verified live public-board value (#13, read 2026-10-06) but its attribution to the H33-2-B2 *file* is owner-reported, not organizer-verified (GEMSDOE32: "NO ORGANISER SCORE EXISTS", projection 0.2747) — see IR-44-01. The leaderboard target moved: #1 is now **0.3345**, not 0.3195 (IR-44-02). The byte-comparison findings below are consistent with GEMSDOE40's independent report but were not reproduced in this checkout (IR-44-09). Full log: `session2_verification_20261006.md`.
+>
+> # Deep PhD-Level Scientific Analysis: Deconstructing the Highest Scored Submission (0.2778) and Path to >0.3195
 
 ## 1. Executive Scientific Overview
 The highest verified score achieved in the series is **0.2778** (`h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros.tif`), recorded on GEMSDOE32.

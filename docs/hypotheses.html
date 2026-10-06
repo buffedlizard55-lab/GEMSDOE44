@@ -16,6 +16,8 @@
         <a href="hypotheses.html" class="active">5 Hypotheses</a>
         <a href="research.html">PhD Analysis of 0.2778</a>
         <a href="sources.html">Verified Sources</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="irregularities.html">Irregularities</a>
       </nav>
     </div>
   </header>
@@ -86,6 +88,15 @@
               <td>Prioritizes deep crustal permeable fluid conduits over shallow superficial bedrock noise.</td>
               <td>+0.005 to +0.010 DTI</td>
               <td>Preregistered</td>
+            </tr>
+            <tr style="background-color: rgba(96, 165, 250, 0.08);">
+              <td><strong>Shipped (non-geological)</strong></td>
+              <td><strong>H44-6: D3.0 Kernel-Matched Redundancy Prune</strong></td>
+              <td>No new physics: greedy deletion of all dots with a neighbour inside the 300&nbsp;m metric kernel (metric takes a MAX per truth pixel, so the second dot earns ~0 and pays 0.2).</td>
+              <td>40k anchor file itself (no external layers).</td>
+              <td>Preserves the anchor&rsquo;s off-catalogue geometry; removes only mutually redundant mass.</td>
+              <td>Not projected (decision-theoretic; UNSCORED)</td>
+              <td><span class="badge badge-accent">Shipped 2026-10-06</span></td>
             </tr>
           </tbody>
         </table>

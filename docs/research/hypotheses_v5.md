@@ -1,4 +1,6 @@
-# Five Geological & Geophysical Hypotheses for Hidden Geothermal Fault Discovery
+> **SESSION-2 ADDENDUM (2026-10-06):** Target updated to live #1 **0.3345** (IR-44-02). H44-1's reported holdout gains are unverifiable in this checkout — no code/data (IR-44-04). A sixth, decision-theoretic candidate **H44-6** (D3.0 redundancy prune, 34,546 dots, fully reproducible, UNSCORED) was built and shipped this session; see `session2_verification_20261006.md`.
+>
+> # Five Geological & Geophysical Hypotheses for Hidden Geothermal Fault Discovery
 
 To systematically surpass 0.2778 toward the 0.3195+ leaderboard target, we preregister five candidate hypotheses targeting physical signatures of active geothermal faulting absent from the USGS/INGENIOUS catalogue.
 

@@ -485,7 +485,7 @@ This repository contains the complete, autonomous scientific discovery and submi
 - **Submission Name:** `GEMSDOE44-H44-MULTIPHYSICS-40K`
 - **Portal Note (optional):**
   ```text
-  GEMSDOE44 H44-MULTIPHYSICS-40K | 37654 dots from 0.2778 anchor + 2346 Euler SI=0 & basin-margin LiDAR corroborated dots at >=280m spacing; 40000 total dots, strictly off-catalogue [0, 1] safe | sha c36d8fea
+  GEMSDOE44 H44-40K | 37654-dot 0.2778-lineage anchor + 2346 Euler SI=0/LiDAR dots at >=280m; 40000 dots, off-catalogue, [0,1] safe | sha c36d8fea
   ```
 - **Range `[0, 1]` Resolution:** Zero NaN, zero Inf, zero negative nodata sentinels. Every cell of the 12,279,160 raster is finite in `[0.0, 1.0]` with `nodata=None`, completely eliminating the portal rejection error `"Predicted values must be in range [0, 1]"`.
 - **Unique vs All Prior Repos:** Jaccard similarity against all prior GEMSDOE submissions is strictly `<0.94` (distinct from GEMSDOE32, GEMSDOE40, GEMSDOE41, and earlier sites).
@@ -496,3 +496,36 @@ This repository contains the complete, autonomous scientific discovery and submi
 1. **Pass 1 (Implementation):** Deconstructed 0.2778 baseline, developed multiphysics Euler SI=0 & basin-margin LiDAR conjunction model, synthesized 40,000-dot raster, and established GitHub Pages docs site.
 2. **Pass 2 (Auditing & Edge Cases):** Verified 12-point submission checklist (dimensions 3730x3292, CRS EPSG:32611, single-band float32, no sentinel leakage, exact affine transform). Confirmed tests in `pytest`.
 3. **Pass 3 (Quality & Verification):** Fully integrated official sources table, PhD analysis of 0.2778 and knapsack dynamics, five preregistered hypotheses, and end-to-end data preflight scripts.
+
+---
+
+## Session-2 Verification & Build Log (2026-10-06, AI-assisted — see disclosure below)
+
+Session 1 shipped a 40k-dot primary and a full docs site. Session 2 re-verified **every claim line-by-line** in an offline, stdlib-only sandbox (no network in shell, no numpy/rasterio/GDAL), fixed what failed, and generated a **second, fully reproducible unique submission**.
+
+### New deliverable: H44-6 kernel-matched redundancy prune (34,546 dots, UNSCORED)
+- **Files:** `docs/downloads/gemsdoe44-h44-6-d30-prune-34546-20261006T180000Z-22e47be6-{zeros.tif,nan.tif,zeros.zip,audit.json}`
+- **SHA-256 (zeros.tif):** `bc16bea3e53004c2d8d2b474f3189f4924e6cb297a69a2ac9413d9f3a74cab64` · 136,270 bytes
+- **Submission name:** `GEMSDOE44-H44-6-D30-PRUNE-34546`
+- **Portal note (145 chars):** `GEMSDOE44 H44-6-D30 | 300m kernel-matched redundancy prune of 40k anchor: 34546 dots, NN>=3.0px, in-footprint [0,1] safe; UNSCORED | sha bc16bea3`
+- **Rule:** greedy maximal independent set at 3.0 px on the 40k anchor (most-isolated-first); deletes the 5,454 dots inside the metric's own 300 m kernel. Deterministic — re-running `python3 scripts/generate_h44_6_prune.py` reproduces identical bytes.
+- **Uniqueness:** 34,546-dot count in no known prior receipt; measured Jaccard 0.8637 vs parent anchor (<0.94 bar). No score claimed or projected.
+
+### What session 2 verified (13 pages fetched 2026-10-06; bytes re-read from disk)
+- 40k primary is **format-valid**: 12,279,160/12,279,160 finite in [0,1], exactly 40,000 ones, EPSG:32611 / 100 m / exact grid, no nodata tag, all dots inside the 5,167,373-cell footprint, spacing ≥2.8 px file-wide (min NN 2.8284 px). Zip inner bytes match.
+- Official metric page (both chunks), live leaderboard, rules PDF §Preface–§3.2, reference solution, GeoDAWN (DOI 10.5066/P93LGLVQ), GDR 1391 (DOI 10.15121/1881483, CC-BY-4.0), 3DEP (free, unrestricted), USGS faults page, GEMSDOE32/40/41 method+receipt pages — see `docs/evidence/sources.md` and `docs/research/session2_verification_20261006.md`.
+
+### Corrections published (10-item register: `docs/irregularities.html`)
+- 0.2778 is a **live board value (#13)**, but its attribution to the H33-2-B2 *file* is owner-reported — GEMSDOE32 states NO ORGANISER SCORE EXISTS (projection 0.2747). Target moved to live **#1 0.3345** (was stale 0.3195).
+- Session-1 portal note was 206 chars → shortened to 144 (TIF bytes untouched); dead `usgs.github.io/faults` link (404) replaced; holdout numbers relabeled unverifiable; `generate_submission.py` documented as non-reproducible here (inputs never committed).
+
+### Run the gate (works anywhere, stdlib only)
+- `python3 scripts/run_checks.py` — 50 checks, all passing (metric worked example, credit bars, per-file audits, receipts, zips, spacing, subset/Jaccard, count-uniqueness).
+- `python3 scripts/generate_h44_6_prune.py` — regenerates H44-6 deterministically.
+- `python3 scripts/audit_tif_stdlib.py <tif...>` — byte-level GeoTIFF audit without GDAL.
+
+### Remaining blocker (unchanged) + next session
+- **Data placement**: `training_features.tif` / `labels.tif` / `sample_submission.tif` still needed in `data/` on an equipped machine before any training or holdout validation. Queued physics hypotheses with verified-free data: H44-2 step-over relays, H44-3 Curie demagnetization (GDR 1391 2m probes).
+
+### Generative-AI disclosure (per official rules §3.2)
+Session-2 analysis, code, and prose were produced with AI assistance (Arena.ai Agent Mode) under human direction; all factual claims were verified against fetched official sources or measured bytes as documented above, and all defects found were published in the irregularities register rather than concealed.
