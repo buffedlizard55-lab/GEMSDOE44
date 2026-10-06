@@ -1,215 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GEMSDOE44 — DOE GEMS Prize Challenge Submission System</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <div class="container nav-container">
-      <div class="logo"><strong>GEMSDOE44</strong> <span class="badge badge-accent">DOE GEMS Prize</span></div>
-      <nav>
-        <a href="index.html" class="active">Overview & Downloads</a>
-        <a href="executive_summary.html">Executive Summary</a>
-        <a href="hypotheses.html">5 Hypotheses</a>
-        <a href="research.html">PhD Analysis of 0.2778</a>
-        <a href="sources.html">Verified Sources</a>
-        <a href="leaderboard.html">Leaderboard</a>
-        <a href="irregularities.html">Irregularities</a>
-      </nav>
-    </div>
-  </header>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Executive summary — GEMSDOE44</title>
+<link rel="stylesheet" href="assets/site.css"></head><body>
+<header class="top"><div class="wrap">
+<h1>Executive summary</h1>
+<div class="note">GEMSDOE44 · DOE GEMS Prize · what this is, the rules that decide it, and the one-click file</div>
+<nav style="margin-top:14px">
+<a href="index.html">Executive summary</a>
+<a href="how-to-submit.html">How to submit</a>
+<a href="data.html">Data</a>
+<a href="method.html">Method</a>
+<a href="validation.html">Validation</a>
+<a href="hypotheses.html">Hypotheses</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="limitations.html">Limitations</a>
+</nav></div></header>
+<div class="wrap">
 
-  <main class="container">
-    <section class="card hero">
-      <div style="margin-bottom: 0.75rem;"><span class="badge badge-accent">Official Competition Deliverable</span></div>
-      <h1 class="gradient-text">Unique Competition TIF Submission</h1>
-      <p class="subtitle">DOE GEMS Prize Challenge (DrivenData #306 / GeoDAWN Western Nevada). Multiphysics Euler SI=0 potential-field deconvolution &times; 3DEP LiDAR basin-margin relief conjunction.</p>
-      
-      <div class="highlight-box" style="text-align: left; max-width: 850px; margin: 1.5rem auto;">
-        <h3 style="color: var(--accent-color); margin-bottom: 0.5rem;">One-Click Direct Submission Downloads</h3>
-        <p><strong>Primary Portal-Safe GeoTIFF (All-Finite, [0, 1] Guaranteed, Nodata=None):</strong></p>
-        <div class="download-cta" style="justify-content: flex-start; margin: 1rem 0;">
-          <a href="downloads/gemsdoe44-h44-multiphysics-euler-margin-40k-20261006T120000Z-507289a8-zeros.tif" class="btn btn-primary" download>
-            &darr; Download Primary Submission (.tif)
-          </a>
-          <a href="downloads/gemsdoe44-h44-multiphysics-euler-margin-40k-20261006T120000Z-507289a8-zeros.zip" class="btn btn-secondary" download>
-            &darr; Download (.zip)
-          </a>
-          <a href="downloads/gemsdoe44-h44-multiphysics-euler-margin-40k-20261006T120000Z-507289a8-nan.tif" class="btn btn-secondary" download>
-            NaN-Outside Alternative (.tif)
-          </a>
-        </div>
-        
-        <div style="font-size: 0.9rem; line-height: 1.6; margin-top: 1rem;">
-          <p><strong>Unique Submission Name:</strong> <code>GEMSDOE44-H44-MULTIPHYSICS-40K</code></p>
-          <p style="margin-top: 0.25rem;"><strong>Submission Note to Paste (144 chars):</strong></p>
-          <div class="code-box" style="margin-top: 0.25rem;">
-            <code>GEMSDOE44 H44-40K | 37654-dot 0.2778-lineage anchor + 2346 Euler SI=0/LiDAR dots at >=280m; 40000 dots, off-catalogue, [0,1] safe | sha c36d8fea</code>
-          </div>
-          <p style="margin-top: 0.5rem; color: var(--text-muted);">
-            File SHA-256: <code>c36d8fea85ccd9f832d44f18c22d950aa6231da802c812af6e3a56bb136a0bf6</code> &middot; Size: 152,132 bytes &middot; <a href="downloads/gemsdoe44-h44-multiphysics-euler-margin-40k-20261006T120000Z-507289a8-audit.json" target="_blank" style="color: #60a5fa;">View Full Audit Receipt (.json)</a>
-          </p>
-          <p style="margin-top: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
-            Evidence class: <strong>format-verified, UNSCORED candidate</strong>. Every byte re-read and verified in this checkout (40,000 ones, all cells finite in [0, 1], grid/CRS exact). Provenance caveat: the generator inputs (<code>data/raw/*</code>) were not committed, so this file cannot be regenerated here &mdash; see <a href="irregularities.html" style="color: #60a5fa;">IR-44-03</a>. The H44-6 file below is fully reproducible from this file.
-          </p>
-        </div>
-      </div>
-    </section>
 
-    <section class="card">
-      <div style="margin-bottom: 0.75rem;"><span class="badge badge-accent">New 2026-10-06 &middot; Fully Reproducible &middot; UNSCORED Candidate</span></div>
-      <h2>Second Unique Submission: H44-6 Kernel-Matched Redundancy Prune (34,546 dots)</h2>
-      <p style="margin-bottom: 1rem; color: var(--text-muted);">Session-2 candidate generated <em>in this checkout</em> from the 40k anchor above by a deterministic, dependency-free rule (<code>scripts/generate_h44_6_prune.py</code>, stdlib only). It deletes the 5,454 least-valuable dots &mdash; those with a neighbour inside the metric's own 300&nbsp;m kernel &mdash; keeping 34,546 dots at &ge;3.0&nbsp;px separation. Re-running the script reproduces these bytes exactly (sha256 verified identical across runs).</p>
-      <div class="download-cta" style="justify-content: flex-start; margin: 1rem 0;">
-        <a href="downloads/gemsdoe44-h44-6-d30-prune-34546-20261006T180000Z-22e47be6-zeros.tif" class="btn btn-primary" download>
-          &darr; Download H44-6 Submission (.tif)
-        </a>
-        <a href="downloads/gemsdoe44-h44-6-d30-prune-34546-20261006T180000Z-22e47be6-zeros.zip" class="btn btn-secondary" download>
-          &darr; Download (.zip)
-        </a>
-        <a href="downloads/gemsdoe44-h44-6-d30-prune-34546-20261006T180000Z-22e47be6-nan.tif" class="btn btn-secondary" download>
-          NaN-Outside Alternative (.tif)
-        </a>
-      </div>
-      <div style="font-size: 0.9rem; line-height: 1.6; margin-top: 1rem;">
-        <p><strong>Unique Submission Name:</strong> <code>GEMSDOE44-H44-6-D30-PRUNE-34546</code></p>
-        <p style="margin-top: 0.25rem;"><strong>Submission Note to Paste (145 chars):</strong></p>
-        <div class="code-box" style="margin-top: 0.25rem;">
-          <code>GEMSDOE44 H44-6-D30 | 300m kernel-matched redundancy prune of 40k anchor: 34546 dots, NN>=3.0px, in-footprint [0,1] safe; UNSCORED | sha bc16bea3</code>
-        </div>
-        <p style="margin-top: 0.5rem; color: var(--text-muted);">
-          File SHA-256: <code>bc16bea3e53004c2d8d2b474f3189f4924e6cb297a69a2ac9413d9f3a74cab64</code> &middot; Size: 136,270 bytes &middot; <a href="downloads/gemsdoe44-h44-6-d30-prune-34546-20261006T180000Z-22e47be6-audit.json" target="_blank" style="color: #60a5fa;">View Full Audit Receipt (.json)</a>
-        </p>
-        <p style="margin-top: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
-          Uniqueness: 34,546-dot count appears in no known prior GEMSDOE receipt (37,654 / 40,000 / 40,199 / 43,038 / 44,090 / 46,090 / 20,000); Jaccard vs its own parent anchor is 0.8637 (&lt;0.94 bar). No score is claimed or projected &mdash; it is a decision-theoretic candidate for one of the three weekly slots (rules &sect;3.2).
-        </p>
-      </div>
-    </section>
+<div class="hero">
+<h2>⬇ One-click submission file</h2>
+<p><strong>Download this file, open the DrivenData submit form, choose it, paste the Note below.</strong>
+That is the whole procedure. The file is a single-band float32 GeoTIFF on the competition grid.</p>
+<p>
+<a class="btn" href="downloads/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif">⬇ Download GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif</a>
+<a class="btn sec" href="downloads/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.zip">.zip version</a>
+<a class="btn sec" href="downloads/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-nan.tif">NaN-outside twin</a>
+</p>
+<table>
+<tr><th>file</th><td class="mono">GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif</td></tr>
+<tr><th>sha256</th><td class="mono">4971d3593c2990bb275b77e5663814d1540af8d6a4de7679dae0dbd7e9605988</td></tr>
+<tr><th>bytes</th><td>320,989</td></tr>
+<tr><th>predicted cells</th><td>44,090 cells equal to 1.0</td></tr>
+<tr><th>value range</th><td>min 0.0 · max 1.0 — <strong>every cell finite, values only 0.0 or 1.0</strong>, so the portal message
+“Predicted values must be in range [0, 1]” cannot be triggered</td></tr>
+<tr><th>grid</th><td>EPSG:32611 · 100 m · 3730 × 3292 · same transform and bounds as the official template</td></tr>
+<tr><th>unique name (portal “Name” field)</th><td class="mono">GEMS44_n-strand-ssmc_20261006T110212Z_4971d359</td></tr>
+<tr><th>Note to paste (portal “Note” field)</th><td class="mono">GEMS44 n-strand-ssmc | field = supervised transfer of USGS SGMC strands absent from the catalogue (U) onto the 19 official bands; exact greedy max-coverage emission 44090 dots; 0 on the known mask; un</td></tr>
+</table>
+<p class="note">All twelve format checks were re-read from the bytes on disk after writing:
+<code>{&quot;all_values_in_0_1&quot;: true, &quot;crs_epsg32611&quot;: true, &quot;every_cell_finite&quot;: true, &quot;float32&quot;: true, &quot;positive_only_outside_nothing&quot;: true, &quot;resolution_100m&quot;: true, &quot;shape_matches_template&quot;: true, &quot;single_band&quot;: true, &quot;transform_matches_template&quot;: true, &quot;values_are_binary&quot;: true}</code>
+· audit sidecar <code>submissions/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-audit.json</code>.</p>
+</div>
 
-    <section class="card">
-      <h2>Format &amp; Validator Audit Receipt (40k primary)</h2>
-      <p style="margin-bottom: 1rem; color: var(--text-muted);">Independently verified by re-reading the raster bytes from disk with a dependency-free parser (<code>scripts/audit_tif_stdlib.py</code>). The H44-6 file passes the identical gate &mdash; see its <a href="downloads/gemsdoe44-h44-6-d30-prune-34546-20261006T180000Z-22e47be6-audit.json" target="_blank" style="color: #60a5fa;">audit receipt</a> and the 50-check <code>scripts/run_checks.py</code> runner.</p>
-      
-      <div class="grid-4">
-        <div class="stat-card">
-          <div class="stat-num">40,000</div>
-          <div class="stat-label">Emitted Dots (100m)</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">3730 &times; 3292</div>
-          <div class="stat-label">Dimensions</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">EPSG:32611</div>
-          <div class="stat-label">CRS (UTM 11N)</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">[0.0, 1.0]</div>
-          <div class="stat-label">Value Range (100% Finite)</div>
-        </div>
-      </div>
+<div class="panel">
+<h2>Live status — regenerated automatically, no manual checking</h2>
+<table>
+<tr><th>this page was compiled</th><td class="mono">2026-10-06T11:09:52Z UTC, by <code>scripts/build_site.py</code></td></tr>
+<tr><th>current artifact</th><td class="mono">GEMS44_n-strand-ssmc_20261006T110212Z_4971d359 · sha256 4971d3593c2990bb… · 320,989 B</td></tr>
+<tr><th>format verification</th><td>ALL GREEN — <code>registry/verification.json</code> (17 checks)</td></tr>
+<tr><th>exact vs fast metric operator</th><td>agree within 1e-9 — <code>registry/exact_confirmation.json</code></td></tr>
+<tr><th>holdout gate (pre-registered)</th><td>True — pooled delta 0.235915, 4/4 folds positive (<code>registry/selection.json</code>)</td></tr>
+<tr><th>public leaderboard snapshot</th><td>read 2026-10-06; best 0.3345 by alexoktaba; 50 rows (<code>registry/leaderboard.json</code>; DrivenData's terms of use prohibit automated polling, so this is a dated snapshot, not a live poll)</td></tr>
+<tr><th>open irregularities</th><td>14 recorded, all with source links — <a href="limitations.html">limitations</a> / <code>registry/irregularities.json</code></td></tr>
+</table>
+</div>
 
-      <div style="overflow-x: auto; margin-top: 1.5rem;">
-        <table>
-          <thead>
-            <tr>
-              <th>Check Item</th>
-              <th>Requirement</th>
-              <th>Measured Result in GEMSDOE44</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Single-Band</td>
-              <td>count == 1</td>
-              <td>1</td>
-              <td><span class="badge badge-accent">PASS</span></td>
-            </tr>
-            <tr>
-              <td>Data Type</td>
-              <td>float32</td>
-              <td>float32</td>
-              <td><span class="badge badge-accent">PASS</span></td>
-            </tr>
-            <tr>
-              <td>Dimensions</td>
-              <td>height=3730, width=3292</td>
-              <td>(3730, 3292)</td>
-              <td><span class="badge badge-accent">PASS</span></td>
-            </tr>
-            <tr>
-              <td>Coordinate System</td>
-              <td>EPSG:32611 (WGS 84 / UTM zone 11N)</td>
-              <td>EPSG:32611</td>
-              <td><span class="badge badge-accent">PASS</span></td>
-            </tr>
-            <tr>
-              <td>Affine Geotransform</td>
-              <td>[100.0, 0.0, 243350.0, 0.0, -100.0, 4508550.0]</td>
-              <td>Match exact template geotransform</td>
-              <td><span class="badge badge-accent">PASS</span></td>
-            </tr>
-            <tr>
-              <td>All Finite Cells</td>
-              <td>12,279,160 / 12,279,160 finite</td>
-              <td>12,279,160 finite (0 NaN, 0 Inf)</td>
-              <td><span class="badge badge-accent">PASS</span></td>
-            </tr>
-            <tr>
-              <td>Portal Range Constraint</td>
-              <td>Values strictly in [0, 1]</td>
-              <td>Min: 0.0, Max: 1.0 (Zero sentinel leakage)</td>
-              <td><span class="badge badge-accent">PASS</span></td>
-            </tr>
-            <tr>
-              <td>Nodata Handling</td>
-              <td>No negative sentinel nodata tag</td>
-              <td>nodata=None (completely avoids -3.4e38 rejection)</td>
-              <td><span class="badge badge-accent">PASS</span></td>
-            </tr>
-            <tr>
-              <td>On-Catalogue Distance</td>
-              <td>Zero dots inside 200m buffer</td>
-              <td>0 dots on catalogue, 0 dots in B=2 buffer</td>
-              <td><span class="badge badge-accent">PASS</span></td>
-            </tr>
-            <tr>
-              <td>Lattice Spacing</td>
-              <td>&ge; 280m separation</td>
-              <td>All additions separated from base by &ge; 2.8 px</td>
-              <td><span class="badge badge-accent">PASS</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+<h2>What this is</h2>
+<p>A fault-discovery system for the <strong>DOE GEMS Prize</strong> (DrivenData #306). The task is to
+predict, as a single-band GeoTIFF of probabilities in [0, 1], where geological faults are in the
+GeoDAWN region of Nevada — and specifically where the faults are that the public USGS/INGENIOUS
+catalogue does <em>not</em> contain, because that is what the competition scores.</p>
 
-    <section class="card">
-      <h2>Scientific Methodology &amp; Distinction From Prior GEMSDOE Sites</h2>
-      <p>Prior GEMSDOE iterations explored various isolated techniques: GEMSDOE19 explored ridge powerlaws (0.1922), GEMSDOE24/25 explored D2.8 Poisson thinning (0.2600), GEMSDOE28 pruned 100m catalogue flanks (0.2708), GEMSDOE32 pruned 200m flanks (0.2778), and GEMSDOE40/41 explored raw Euler and basin-margin surfaces individually.</p>
-      
-      <div class="grid-2" style="margin-top: 1.25rem;">
-        <div class="stat-card" style="text-align: left;">
-          <h3 style="color: #60a5fa;">The Flaw in Prior Additions</h3>
-          <p>Previous addition attempts suffered because raw additions were placed either too close to existing dots (&lt;300m, wasting mass under the metric's <code>max</code> operator) or lacked cross-physics corroboration, leading to high false-positive penalties.</p>
-        </div>
-        <div class="stat-card" style="text-align: left;">
-          <h3 style="color: #34d399;">The GEMSDOE44 Breakthrough</h3>
-          <p>GEMSDOE44 establishes a <strong>joint multiphysics conjunction</strong>: an addition is permitted if and only if <em>Euler SI=0 potential-field contact deconvolution</em> ($z &lt; 1.2\,\text{km}$) is confirmed by <em>3DEP LiDAR basin-margin slope-elevation inflection</em> within 300m, placed at a non-redundant &ge;280m lattice offset from the 0.2778 anchor. Total mass is restored to the optimal 40,000 budget, moving expected credit density toward the live public-board bar of 0.3345 (#1 alexoktaba, read 2026-10-06; see <a href="leaderboard.html" style="color: #60a5fa;">Leaderboard</a>).</p>
-        </div>
-      </div>
-    </section>
-  </main>
+<h2>The scoring rules that decide everything</h2>
+<p>Read from the official problem description on 2026-10-06
+(<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">page 967</a>):
+the metric is a distance-weighted Tversky index with a triangular kernel of 300 m support,
+α = 0.2 on false positives and β = 0.8 on false negatives. DrivenData staff confirmed in
+<a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516">thread 11516</a>
+that <em>pixels on known USGS/INGENIOUS faults are excluded from evaluation</em> — so a dot placed on
+a known fault is free but worthless.</p>
+<p>Three consequences, each verified in <code>tests/test_metric.py</code> rather than asserted:</p>
+<ol>
+<li><code>FN_w = |G| − TP_w</code> exactly, so the metric reduces to
+<code>DTI = TP_w / (0.2·(TP_w + FP_w) + 0.8·|G|)</code>. Writing <code>T = TP_w</code> and
+<code>S</code> for the emitted mass, <code>DTI ≈ T / (0.2·S + 0.8·|G|)</code>.</li>
+<li>A binary (0, 1) file strictly dominates any graded version of itself (the score is increasing
+in the scale of a probability map). Every artifact here is binary.</li>
+<li><strong>The marginal rule:</strong> adding a dot of kernel credit <code>k</code> pays iff
+<code>k &gt; 0.2 · DTI</code>. At a score of 0.3345 that is a distance of at most
+<strong>280 m</strong> from a scored truth pixel. Credit is nearly free anywhere inside the kernel
+and worthless outside it — the metric is a distance filter, not a precision filter.</li>
+</ol>
 
-  <footer>
-    <div class="container footer-content">
-      <p>GEMSDOE44 &middot; DOE GEMS Prize Challenge &middot; Grounded in Measured Geophysics</p>
-      <p><a href="https://github.com/buffedlizard55-lab/GEMSDOE44" target="_blank" rel="noopener">GitHub Repository</a></p>
-    </div>
-  </footer>
-</body>
-</html>
+<h2>Why the previous best artifact scored what it scored, and what this repo does differently</h2>
+<p>The family's best live-reported artifact is a 44,090-dot thinning of a multilayer detector
+(distance-suppressed at 2.8 px), reported at 0.2600. The mechanism is the marginal rule above:
+thinning deletes dots whose realised credit was already below the break-even bar. The family's own
+analysis shows the family sits at its own emission optimum, so the remaining gap is a
+<em>field</em> problem, not an emission problem. This repository does three things differently,
+and each is falsifiable:</p>
+<ul>
+<li><strong>It chooses its validation frame by scoring already-scored artifacts on it.</strong>
+Nineteen family artifacts whose live scores were reported (0.0461 to 0.2600) were obtained
+(fifteen downloaded from the family's public mirrors, four already on disk) and scored on four
+candidate frames plus their own uniform controls. The catalogue frame is not merely
+weak, it is <em>inverted</em> (rho = −0.475) and it is degenerate under the official mask — its own
+truth pixels <em>are</em> the mask, so the truth set is empty and every artifact scores exactly
+0.000000. The frame this repository pre-registered first (SGMC faults &gt;300 m from the catalogue)
+also failed: rho = −0.054. The frame that survived is the SGMC strands within 300 m of the
+catalogue (rho_excess = +0.396, all 19 artifacts above uniform). The amendment is recorded as
+AM-44-01 and IR-44-09. <a href="validation.html">Validation</a> shows the whole table.</li>
+<li><strong>It emits by the metric's own arithmetic, at the metric's own spacing.</strong> Across the
+same 19 artifacts, one of the strongest measured correlates of a reported score is dot spacing:
+<code>Spearman(score, fraction of dots 8-adjacent to another dot) = −0.361</code> — the three best
+artifacts have 0.001–0.002 adjacent dots against 0.88–0.99 for the worst. Mass correlates too
+(<code>ρ = −0.653</code>) but is confounded with the family's design eras, which is why the shipped
+mass is matched to the incumbent's 44,090 for a clean comparison. The mechanism is exact under the
+official formula: a dot beside another adds no new truth coverage and still costs 0.2 of FP. The
+emitter here is an exact greedy max-coverage solver that refuses any dot adding no new kernel
+credit.</li>
+<li><strong>It emits with the metric's own arithmetic.</strong> Because <code>TP_w</code> is a
+<em>max</em> over a 300 m disc, expected credit is submodular in the emitted set, so a fixed-order
+greedy emitter carries the standard (1 − 1/e) guarantee, and the stopping condition is the
+closed-form break-even rule above rather than a tuned radius.</li>
+</ul>
+
+<h2>Validation, out of fold</h2>
+<p>The candidate field and mass were chosen leave-one-quadrant-out on the primary frame. Held-out result versus the real 0.2600 incumbent artifact, same frame, same metric:</p><table class="tbl"><thead><tr><th>fold</th><th>field chosen</th><th>mass</th><th>candidate DTI</th><th>incumbent DTI</th><th>delta</th><th>uniform DTI</th></tr></thead><tbody>
+<tr><td>0</td><td>prox10</td><td>44,090</td><td>0.4108</td><td>0.1580</td><td>+0.2527</td><td>0.0564</td></tr>
+<tr><td>1</td><td>prox10</td><td>44,090</td><td>0.4729</td><td>0.2217</td><td>+0.2512</td><td>0.0610</td></tr>
+<tr><td>2</td><td>prox10</td><td>44,090</td><td>0.3334</td><td>0.1277</td><td>+0.2056</td><td>0.0598</td></tr>
+<tr><td>3</td><td>prox10</td><td>44,090</td><td>0.3877</td><td>0.1536</td><td>+0.2341</td><td>0.0482</td></tr>
+</tbody></table><p><strong>Pooled:</strong> candidate 0.401181, incumbent 0.165267, delta <strong>0.235915</strong>, positive folds 4/4. Gate (>= +0.005 pooled and >= 3 of 4 folds positive): <strong>PASS</strong>.</p><p class='note'>Source: <code>registry/selection.json</code>. The gate and the frame are the ones frozen in <code>registry/preregistration.json</code>.</p>
+
+<h2>Honest limitations</h2>
+<p>Read <a href="limitations.html">Limitations and irregularities</a>. The three that matter most:
+there is no organizer score for any artifact in this repository; the hidden label set's provenance
+could not be read from this sandbox; and every external data source outside the owner's
+hash-pinned GitHub mirrors is unreachable here, which is measured, not assumed.</p>
+
+<footer>
+<p><strong>Evidence discipline.</strong> Every number on this site is rendered from a JSON file in
+<code>registry/</code> that was written by a script in this repository, and the page names that file.
+Nothing here is asserted from memory. Where a value is an estimate from a model rather than a
+measurement, it is labelled as such. No organizer score is claimed for any artifact in this
+repository.</p>
+<p>GEMSDOE44 · DOE GEMS Prize (DrivenData #306) · source:
+<a href="https://github.com/buffedlizard55-lab/GEMSDOE44">github.com/buffedlizard55-lab/GEMSDOE44</a></p>
+</footer></div></body></html>

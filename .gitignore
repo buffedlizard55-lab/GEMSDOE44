@@ -1,6 +1,19 @@
+# Large official rasters and derived data are NOT committed: they are fetched with
+# scripts/fetch_official_mirrors.sh and hash-verified against registry/data_manifest.json.
+# (The submission GeoTIFFs under submissions/ and docs/downloads/ ARE committed: they are small
+#  and the site must serve them as one-click downloads.)
+data/raw/*.tif
+data/raw/_part-*
+data/external/*.tif
+data/interim/
+artifacts/
+.pytest_cache/
 __pycache__/
+*.pyc
+.venv/
+data/probes/
+data/interim/
 *.py[cod]
 *$py.class
-.pytest_cache/
 *.npy
 data/raw/

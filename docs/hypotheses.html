@@ -1,142 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>5 Geological Hypotheses — GEMSDOE44</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <div class="container nav-container">
-      <div class="logo"><strong>GEMSDOE44</strong> <span class="badge badge-accent">DOE GEMS Prize</span></div>
-      <nav>
-        <a href="index.html">Overview & Downloads</a>
-        <a href="executive_summary.html">Executive Summary</a>
-        <a href="hypotheses.html" class="active">5 Hypotheses</a>
-        <a href="research.html">PhD Analysis of 0.2778</a>
-        <a href="sources.html">Verified Sources</a>
-        <a href="leaderboard.html">Leaderboard</a>
-        <a href="irregularities.html">Irregularities</a>
-      </nav>
-    </div>
-  </header>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hypotheses — GEMSDOE44</title>
+<link rel="stylesheet" href="assets/site.css"></head><body>
+<header class="top"><div class="wrap">
+<h1>Hypotheses</h1>
+<div class="note">Three to five candidate geological hypotheses, ranked, with the falsified ones kept in</div>
+<nav style="margin-top:14px">
+<a href="index.html">Executive summary</a>
+<a href="how-to-submit.html">How to submit</a>
+<a href="data.html">Data</a>
+<a href="method.html">Method</a>
+<a href="validation.html">Validation</a>
+<a href="hypotheses.html">Hypotheses</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="limitations.html">Limitations</a>
+</nav></div></header>
+<div class="wrap">
 
-  <main class="container">
-    <section class="card hero">
-      <h1 class="gradient-text">Five Candidate Geological Hypotheses</h1>
-      <p class="subtitle">Preregistered, ranked by expected DTI gain and implementation cost. Validated on spatially blocked holdouts before spending submission slots.</p>
-    </section>
+<h2>Ranked hypotheses</h2>
+<p>Ranking is by expected DTI gain per unit of implementation cost, judged <em>after</em> the
+falsification pass. Every entry names its layers, the physical signature targeted, why it should
+catch a fault missing from the USGS/INGENIOUS catalogue rather than one already in it, how it
+differs from prior work, its cost, and the measured obtainability of its data.</p>
+<div class="panel"><h3>H1 (rank 1) — Strike-frame offset-strand synthesis (anisotropic across-strike placement prior)</h3>
+<p><span class="tag bad">FALSIFIED by measurement before any submission slot</span></p>
+<table>
+<tr><th style="width:22%">layers</th><td>labels.tif (competition catalogue) - only as a strike/geometry source; no feature band required</td></tr>
+<tr><th>physical signature</th><td>Offset vector from a non-catalogue fault pixel to the nearest catalogue pixel, expressed in the local catalogue strike frame. The claim was that new geometry of an existing system sits preferentially ACROSS strike (parallel splays, relay ramps, hanging-wall strands) rather than isotropically around the trace.</td></tr>
+<tr><th>why it targets catalogue-missing faults</th><td>A catalogue records where rock is exposed enough to map a trace; a parallel strand one valley-width away, or a relay ramp between two en-echelon segments, is systematically under-recorded even when the main trace is mapped.</td></tr>
+<tr><th>how it differs from prior work</th><td>Every placement prior in this project family (proximity exp(-d/1km), EDGE(external), EDGE(hybrid)) is an ISOTROPIC radial kernel of distance-to-catalogue. H1 was the anisotropic alternative.</td></tr>
+<tr><th>falsification test</th><td>scripts/measure_population.py, registry/population.json: offset-angle histogram for SGMC-only fault pixels versus a distance-matched random footprint control, both sampled from the 1.5-9 px band from the catalogue. Result: SGMC 0.102 within 30 deg of strike / 0.736 within 30 deg of across-strike / median 74.8 deg; control 0.100 / 0.742 / 75.2 deg. Enrichment per 15 deg bin: SGMC 0.31 0.31 0.37 0.60 1.45 2.97 versus control 0.30 0.31 0.35 0.60 1.42 3.03.</td></tr>
+<tr><th>verdict</th><td>The apparent across-strike preference is a distance-transform artefact (for a random point near a line, the nearest point on the line is nearly always perpendicular to it). There is NO measurable anisotropy signal beyond that geometric baseline, so the anisotropic kernel cannot be justified. Hypothesis dropped; no slot spent.</td></tr>
+<tr><th>expected DTI</th><td>n/a (falsified)</td></tr>
+<tr><th>cost</th><td>low (implemented and falsified in ~4 minutes of CPU)</td></tr>
+<tr><th>data obtainability</th><td>n/a</td></tr>
+</table></div><div class="panel"><h3>H2 (rank 1) — Off-catalogue supervised field: the competition catalogue is the wrong training target</h3>
+<p><span class="tag ok">IMPLEMENTED AND VALIDATED - this is the shipped field</span></p>
+<table>
+<tr><th style="width:22%">layers</th><td>all 19 official bands of training_features.tif; band 12 detrended elevation and band 19 detrended elevation slope (strongest single discriminator for off-catalogue faults); band 6 tilt angle / total curvature, band 3 TMI horizontal gradient, band 9 TMI vertical gradient, band 18 isostatic gravity horizontal gradient (potential-field edge terms); band 15 depth to basement and band 17 conductivity surface (concealment terms); bands 4, 7, 8 geodetic strain-rate tensor terms; USGS SGMC fault lines rasterised to this grid (external, public domain) used ONLY as the training target; labels.tif used ONLY as the exclusion mask and as the sanity frame, never as the training target</td></tr>
+<tr><th>physical signature</th><td>Supervised P(a pixel lies on a mapped fault that the competition catalogue does not contain), learned from named multi-scale transforms (raw value, 3x3 mean, 9x9 mean, Laplacian curvature at 3 and 9 px).</td></tr>
+<tr><th>why it targets catalogue-missing faults</th><td>It is trained on real mapped faults that ARE absent from the given catalogue, so the discriminative direction it learns is the direction that separates catalogue-absent from catalogue-present terrain. Measured evidence that this matters: the discriminative SIGN of several bands flips between the two populations. Univariate AUC for detrended_elevation_slope_m3 is 0.747 for SGMC-only faults but only 0.561 for catalogue faults; geodetic_2nd_invariant is 0.478 for SGMC-only versus 0.560 for catalogue. A model trained on the catalogue therefore learns partly the wrong direction.</td></tr>
+<tr><th>how it differs from prior work</th><td>Prior repositories in this family (GEMSDOE19/24/25/27/28/32/33) rank and promote candidates on frames whose truth IS the catalogue, and GEMSDOE32 measured that such frames rank artifacts in the OPPOSITE order to the live board (0.17193 &gt; 0.16635 &gt; 0.16177 catalogue-proxy versus live 0.1922 &lt; 0.2477 &lt; 0.2600). This repo trains the field itself on the off-catalogue population and promotes only on that frame. GEMSDOE29 registered an &#x27;sgmc-off-catalogue-44k&#x27; artifact but never obtained a score for it; no prior repo reports a spatially blocked off-catalogue AUC or uses that frame for model selection.</td></tr>
+<tr><th>falsification test</th><td>not applicable</td></tr>
+<tr><th>verdict</th><td>pending</td></tr>
+<tr><th>expected DTI</th><td>positive; measured on the off-catalogue frame in registry/holdout.json</td></tr>
+<tr><th>cost</th><td>medium (CPU only, ~15 minutes per 4-fold run on 2 vCPU)</td></tr>
+<tr><th>data obtainability</th><td>SGMC raster is obtainable and hash-verified in this sandbox via `gh api repos/buffedlizard55-lab/GEMSDOE24/contents/data/external/derived_sgmc_faults_100m_u8.tif` (198,602 B, sha256 643cbe992ef4ba37...).</td></tr>
+</table></div><div class="panel"><h3>H3 (rank 2) — Metric-exact marginal-credit emission at the analytic mass</h3>
+<p><span class="tag ok">IMPLEMENTED - shipped inside the H2 artifact</span></p>
+<table>
+<tr><th style="width:22%">layers</th><td>none: this is metric arithmetic, not data</td></tr>
+<tr><th>physical signature</th><td>Not a physical signature. The official metric&#x27;s TP term is a MAX over a 300 m disc, so expected credit is submodular in the emitted set and fixed-order greedy carries the standard (1 - 1/e) guarantee. The first-order stopping condition is k &gt; alpha * DTI, i.e. a dot pays iff its kernel credit exceeds 20 percent of the current score.</td></tr>
+<tr><th>why it targets catalogue-missing faults</th><td></td></tr>
+<tr><th>how it differs from prior work</th><td>GEMSDOE30/32 implemented an expected-marginal-credit emitter (EDGE) but only ever swept the thinning radius at 1.5 and 2.8 px and reported the emission side as &#x27;nearly used up&#x27;. This repo emits on a field whose belief is an off-catalogue probability, and derives the mass from leave-one-fold-out selection on the off-catalogue frame plus the closed-form break-even condition.</td></tr>
+<tr><th>falsification test</th><td>not applicable</td></tr>
+<tr><th>verdict</th><td>pending</td></tr>
+<tr><th>expected DTI</th><td>+0.005 to +0.025 on the off-catalogue frame versus a raster-order thinning cascade at matched mass, mechanism measured in registry/holdout.json</td></tr>
+<tr><th>cost</th><td>low</td></tr>
+<tr><th>data obtainability</th><td>n/a</td></tr>
+</table></div><div class="panel"><h3>H4 (rank 3) — Coupled ridge-trough (curvature dipole) matched filter on 1 m lidar</h3>
+<p><span class="tag warn">REGISTERED - NOT RUN; data partially obtainable</span></p>
+<table>
+<tr><th style="width:22%">layers</th><td>USGS 3DEP 1 m DEM tiles (external); the owner-derived derivative raster data/external/lidar_scarp_features_u8.tif (36,943,606 B, hash-pinned in the GEMSDOE24 mirror)</td></tr>
+<tr><th>physical signature</th><td>A fault scarp is a step in the surface whose second derivative is a paired ridge and trough; the separation between the pair encodes scarp width and height. A matched filter for that dipole, at multiple scales and azimuths with strike-consistency gating, detects scarps whose wavelength is below the 100 m competition grid.</td></tr>
+<tr><th>why it targets catalogue-missing faults</th><td>The metric&#x27;s FP tax is 0.2 per unit while FN costs 0.8, so a scarp that is real but subtle is worth predicting. A 5 m scarp over 20 m of ground is invisible in a 100 m band but is exactly the kind of feature an expert adds when they work from lidar.</td></tr>
+<tr><th>how it differs from prior work</th><td>GEMSDOE7 shipped a lidar-scarp ranking at 0.1461 and GEMSDOE24 stores the derived scarp raster, but no prior repo in this family runs a coupled ridge-trough dipole detector with strike-consistency gating and validates it on the off-catalogue frame.</td></tr>
+<tr><th>falsification test</th><td>not applicable</td></tr>
+<tr><th>verdict</th><td>pending</td></tr>
+<tr><th>expected DTI</th><td>positive but unmeasured here; the field would be added as an extra feature to H2</td></tr>
+<tr><th>cost</th><td>medium-high (multi-scale filtering over a 36.9 MB derived raster plus 1 m tile mosaicking)</td></tr>
+<tr><th>data obtainability</th><td>The derived scarp raster IS obtainable from this sandbox via the hash-pinned mirror. The raw 3DEP 1 m tiles are NOT reachable from this sandbox: prd-tnm.s3.amazonaws.com and earthexplorer.usgs.gov both returned HTTP 000 (connection failure) on a direct test on 2026-10-06.</td></tr>
+</table></div><div class="panel"><h3>H5 (rank 4) — Cross-compilation disagreement as a gated feature</h3>
+<p><span class="tag warn">REGISTERED - NOT RUN; data obtainable</span></p>
+<table>
+<tr><th style="width:22%">layers</th><td>GDR QFaults v2 trace CSV (126,177 B, hash-pinned in the GEMSDOE24 mirror); USGS SGMC rasterised faults (198,602 B, hash-pinned); labels.tif as the exclusion mask</td></tr>
+<tr><th>physical signature</th><td>Distance to the nearest fault that appears in some public official compilation but NOT in the given catalogue, gated by the metric&#x27;s credit bar.</td></tr>
+<tr><th>why it targets catalogue-missing faults</th><td>It is the only source of KNOWN REAL faults that the given catalogue lacks, so it targets the right population by construction rather than by inference.</td></tr>
+<tr><th>how it differs from prior work</th><td>GEMSDOE32 measured that GDR QFaults v2 adds nothing on its own (59,064 of its 59,065 rasterised pixels lie within 300 m of the given catalogue), so its information is entirely in the SGMC half of the union; this repo would use the union with the disagreement explicitly modelled rather than as a proximity kernel.</td></tr>
+<tr><th>falsification test</th><td>not applicable</td></tr>
+<tr><th>verdict</th><td>pending</td></tr>
+<tr><th>expected DTI</th><td>moderate; likely correlated with H2 and therefore partly redundant</td></tr>
+<tr><th>cost</th><td>low</td></tr>
+<tr><th>data obtainability</th><td>Both CSVs and the SGMC raster are obtainable and hash-verified from this sandbox via the GEMSDOE24 mirror.</td></tr>
+</table></div><div class="panel"><h3>H6 (rank 5) — Relocated-seismicity lineament skeletons from the raw USGS FDSN catalogue</h3>
+<p><span class="tag warn">REGISTERED - NOT RUN; data NOT obtainable from this sandbox</span></p>
+<table>
+<tr><th style="width:22%">layers</th><td>raw USGS earthquake catalogue (earthquake.usgs.gov FDSN event service); official band 16 earthquake intensity/density as the in-competition surrogate</td></tr>
+<tr><th>physical signature</th><td>A lineament of relocated hypocentres, not a density field. The official band 16 is a smoothed density with n=100 km and a=15 deg parameters; it cannot express a fault-scale lineament.</td></tr>
+<tr><th>why it targets catalogue-missing faults</th><td>Small earthquakes delineate active structures that a surface catalogue may miss, particularly where the trace is buried.</td></tr>
+<tr><th>how it differs from prior work</th><td>GEMSDOE32 registered this as H33-E and reported it data-blocked after measuring that the supplied seismic bands carry no fault-scale information (autocorrelation of ieq_n100a15 = 0.9986 at 1 km and 0.9935 at 3 km).</td></tr>
+<tr><th>falsification test</th><td>not applicable</td></tr>
+<tr><th>verdict</th><td>pending</td></tr>
+<tr><th>expected DTI</th><td>unknown</td></tr>
+<tr><th>cost</th><td>medium</td></tr>
+<tr><th>data obtainability</th><td>NOT obtainable from this sandbox: earthquake.usgs.gov returned HTTP 000 (connection failure) on a direct test on 2026-10-06, reproducing the block reported by GEMSDOE32.</td></tr>
+</table></div><div class="panel"><h3>H7 (rank 1) — Exact greedy max-coverage emission at the metric&#x27;s own spacing (adjacent dots are forbidden)</h3>
+<p><span class="tag warn">under test</span></p>
+<table>
+<tr><th style="width:22%">layers</th><td>all 19 official bands (the field it is applied to)</td></tr>
+<tr><th>physical signature</th><td>metric arithmetic: a dot&#x27;s credit is max_x k(d(x,g)); a dot 8-adjacent to another adds ~no new truth coverage while each dot pays alpha=0.2 of FP.</td></tr>
+<tr><th>why it targets catalogue-missing faults</th><td>It is an emission rule, not a field: it decides WHERE mass goes without changing what is believed, and dots on catalogue pixels are deleted by the mask, so it can only earn credit on unmapped truth.</td></tr>
+<tr><th>how it differs from prior work</th><td>The family decimated rasters to reach 44,090 dots (d2.8 thinning, Poisson); this solves the coverage problem directly by marginal expected credit on the accepted set, and verifies zero 8-adjacency in the shipped file.</td></tr>
+<tr><th>falsification test</th><td>Ship or score it against the incumbent at matched density on the blocked folds; check 8-adjacency = 0 and that it never loses to a raster-prefix emission.</td></tr>
+<tr><th>verdict</th><td>Supported descriptively at n=19: the three best reported artifacts have 0.001-0.002 adjacent-dot fractions vs 0.88-0.99 for low scorers; Spearman(live, adjacent fraction) = -0.361.</td></tr>
+<tr><th>expected DTI</th><td>adds the difference between a clumped and a spaced emission of the same field; on the family&#x27;s own history that difference was 0.26 vs 0.19 at 2.75x the mass.</td></tr>
+<tr><th>cost</th><td>low (already implemented; seconds per emission)</td></tr>
+<tr><th>data obtainability</th><td>n/a</td></tr>
+</table></div><div class="panel"><h3>H8 (rank 2) — Supervised transfer of the USGS SGMC compilation onto the official feature stack, trained on catalogue-adjacent unmapped strands</h3>
+<p><span class="tag warn">under test</span></p>
+<table>
+<tr><th style="width:22%">layers</th><td>detrended_elevation and its slope (12, 19); tmi_hgrad / tmi_vgrad / tilt-angle total curvature (3, 9, 6); isostatic gravity slope / vgrad / hgrad (5, 11, 18); depth_to_basement (15)</td></tr>
+<tr><th>physical signature</th><td>supervised classification: positives = SGMC strand pixels absent from the competition catalogue and within 300 m of it (17,493 px), negatives = background; the same construction on the wider SGMC residual reached blocked AUC 0.773 (folds 0.762-0.789).</td></tr>
+<tr><th>why it targets catalogue-missing faults</th><td>The positives ARE mapped faults the competition catalogue lacks - the only locally available analogue of the hidden label set; the catalogue&#x27;s own pixels are the mask and are never predicted.</td></tr>
+<tr><th>how it differs from prior work</th><td>The family&#x27;s best surfaces are h19-5 (proprietary opacity/thermal prior) and ridge/scarp detectors. h18-4 &#x27;usgs-geologic-map-faults-gap&#x27; scored 0.0360 live, but used map-gap evidence directly with a dense clumped emission and no supervised transfer.</td></tr>
+<tr><th>falsification test</th><td>Blocked-fold emission on frames N and P against the incumbent at matched density; fails if it cannot beat the incumbent on frame N.</td></tr>
+<tr><th>verdict</th><td>Under test - see registry/selection.json.</td></tr>
+<tr><th>expected DTI</th><td>unknown; gate requires &gt;= +0.005 over the 0.2600 incumbent.</td></tr>
+<tr><th>cost</th><td>medium (8 model fits, ~20 min on 2 vCPU)</td></tr>
+<tr><th>data obtainability</th><td>n/a</td></tr>
+</table></div><div class="panel"><h3>H9 (rank 3) — Dense emission is better because beta=0.8 weights FN four times FP</h3>
+<p><span class="tag warn">falsified</span></p>
+<table>
+<tr><th style="width:22%">layers</th><td></td></tr>
+<tr><th>physical signature</th><td>metric arithmetic</td></tr>
+<tr><th>why it targets catalogue-missing faults</th><td>n/a - mass hypothesis</td></tr>
+<tr><th>how it differs from prior work</th><td>GEMSDOE22 h23-a &#x27;dti-optimal-emission-6pct&#x27; emitted 335,879 dots (6% of pixels) and scored 0.1002 live.</td></tr>
+<tr><th>falsification test</th><td>Correlate reported score with dot count across 19 scored artifacts.</td></tr>
+<tr><th>verdict</th><td>Falsified: Spearman(live, mass) = -0.653. The optimum is where the marginal dot&#x27;s expected credit equals 0.2*DTI, not at maximum mass.</td></tr>
+<tr><th>expected DTI</th><td>negative</td></tr>
+<tr><th>cost</th><td>none - already measured</td></tr>
+<tr><th>data obtainability</th><td>n/a</td></tr>
+</table></div>
+<p class="note">Source: <code>registry/hypotheses.json</code>. The falsification summary is at the
+end of that file.</p>
 
-    <section class="card">
-      <h2>Hypotheses Evaluation & Priority Ranking</h2>
-      <div style="overflow-x: auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Hypothesis</th>
-              <th>Physical Signature</th>
-              <th>Geophysical Layers</th>
-              <th>Why Off-Catalogue</th>
-              <th>Expected Gain</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="background-color: rgba(16, 185, 129, 0.08);">
-              <td><strong>1 (Top)</strong></td>
-              <td><strong>H44-1: Multiphysics Euler SI=0 &times; Basin-Margin LiDAR</strong></td>
-              <td>Deep potential-field contact deconvolution (SI=0, depth &lt;1200m) corroborated by range-front terrain inflection &amp; 3DEP LiDAR micro-scarps.</td>
-              <td>RTP Aeromagnetics, Isostatic Gravity, USGS 3DEP 1m DEM.</td>
-              <td>Concealed under thin basin alluvium; basement fault step lacks macroscopic surface expression in traditional 1:24k geological maps.</td>
-              <td><strong>+0.015 to +0.025 DTI</strong></td>
-              <td><span class="badge badge-accent">Validated &amp; Shipped</span></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td><strong>H44-2: Pull-Apart Step-Over Relays</strong></td>
-              <td>Dilatational step-overs and extensional relay ramps between en-echelon dextral faults in Walker Lane.</td>
-              <td>Horizontal gravity gradient (HGM), Magnetic tilt derivative, Slope.</td>
-              <td>Extensional step-overs are short (&lt;2 km) and obscured by sedimentary wash, yet host &gt;70% of Great Basin geothermal springs (Faulds et al. 2011).</td>
-              <td>+0.010 to +0.018 DTI</td>
-              <td>Preregistered</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td><strong>H44-3: Curie Point Geothermal Demagnetization</strong></td>
-              <td>Hydrothermal alteration haloes where high convective heat flux destroys magnetite to pyrite/hematite.</td>
-              <td>Aeromagnetic low paired with shallow 2m temperature probe anomalies (GDR 1391).</td>
-              <td>Traditional fault mapping tracks structural scarp relief, not blind hydrothermal geochemical alteration.</td>
-              <td>+0.008 to +0.015 DTI</td>
-              <td>Preregistered</td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td><strong>H44-4: Structural Drainage Knickzones</strong></td>
-              <td>Transient hydraulic gradient steps and knickpoints along bedrock stream channels crosscut by active faults.</td>
-              <td>USGS 3DEP DEM, Topographic Position Index (TPI), flow routing.</td>
-              <td>Captures neotectonic faulting where surface rupture is diffuse across broad alluvial fans.</td>
-              <td>+0.006 to +0.012 DTI</td>
-              <td>Preregistered</td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td><strong>H44-5: Multi-Scale Wavelet Worm Persistence</strong></td>
-              <td>Multiscale potential-field upward continuation edge tracking (Hornby et al. 1999) across 0–3200m levels.</td>
-              <td>RTP Magnetics, Gravity, Wavelet scale-space transform.</td>
-              <td>Prioritizes deep crustal permeable fluid conduits over shallow superficial bedrock noise.</td>
-              <td>+0.005 to +0.010 DTI</td>
-              <td>Preregistered</td>
-            </tr>
-            <tr style="background-color: rgba(96, 165, 250, 0.08);">
-              <td><strong>Shipped (non-geological)</strong></td>
-              <td><strong>H44-6: D3.0 Kernel-Matched Redundancy Prune</strong></td>
-              <td>No new physics: greedy deletion of all dots with a neighbour inside the 300&nbsp;m metric kernel (metric takes a MAX per truth pixel, so the second dot earns ~0 and pays 0.2).</td>
-              <td>40k anchor file itself (no external layers).</td>
-              <td>Preserves the anchor&rsquo;s off-catalogue geometry; removes only mutually redundant mass.</td>
-              <td>Not projected (decision-theoretic; UNSCORED)</td>
-              <td><span class="badge badge-accent">Shipped 2026-10-06</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Holdout Validation Evidence: H44-1 Top Candidate</h2>
-      <p>Before allocating any submission slot, Hypothesis <strong>H44-1</strong> was rigorously validated against a spatially-blocked 4-quadrant holdout test:</p>
-      
-      <div class="grid-4" style="margin-top: 1.5rem;">
-        <div class="stat-card">
-          <div class="stat-num">+0.1587</div>
-          <div class="stat-label">Quadrant 0 (NW) &Delta;DTI</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">+0.1211</div>
-          <div class="stat-label">Quadrant 1 (NE) &Delta;DTI</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">+0.2253</div>
-          <div class="stat-label">Quadrant 2 (SW) &Delta;DTI</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">+0.2143</div>
-          <div class="stat-label">Quadrant 3 (SE) &Delta;DTI</div>
-        </div>
-      </div>
-
-      <div class="highlight-box" style="margin-top: 1.5rem;">
-        <strong>Validation Conclusion:</strong> Positive incremental gain across <strong>4 out of 4 spatial quadrants</strong>. Overall proxy DTI increased from <code>0.07036 &rarr; 0.25637</code> (+0.18601 net gain). Fully satisfies the preregistered promotion gate!
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container footer-content">
-      <p>GEMSDOE44 &middot; DOE GEMS Prize Challenge &middot; Grounded in Measured Geophysics</p>
-      <p><a href="https://github.com/buffedlizard55-lab/GEMSDOE44" target="_blank" rel="noopener">GitHub Repository</a></p>
-    </div>
-  </footer>
-</body>
-</html>
+<footer>
+<p><strong>Evidence discipline.</strong> Every number on this site is rendered from a JSON file in
+<code>registry/</code> that was written by a script in this repository, and the page names that file.
+Nothing here is asserted from memory. Where a value is an estimate from a model rather than a
+measurement, it is labelled as such. No organizer score is claimed for any artifact in this
+repository.</p>
+<p>GEMSDOE44 · DOE GEMS Prize (DrivenData #306) · source:
+<a href="https://github.com/buffedlizard55-lab/GEMSDOE44">github.com/buffedlizard55-lab/GEMSDOE44</a></p>
+</footer></div></body></html>

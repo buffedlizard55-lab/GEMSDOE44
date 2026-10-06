@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Validation — GEMSDOE44</title>
+<link rel="stylesheet" href="assets/site.css"></head><body>
+<header class="top"><div class="wrap">
+<h1>Validation</h1>
+<div class="note">The measured basis for trusting — or not trusting — every number in this repository</div>
+<nav style="margin-top:14px">
+<a href="index.html">Executive summary</a>
+<a href="how-to-submit.html">How to submit</a>
+<a href="data.html">Data</a>
+<a href="method.html">Method</a>
+<a href="validation.html">Validation</a>
+<a href="hypotheses.html">Hypotheses</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="limitations.html">Limitations</a>
+</nav></div></header>
+<div class="wrap">
+
+<h2>What was tested, in order</h2>
+<p>Two failure modes decide this project. Both were found by measurement, and both are recorded
+against this repository's own earlier decisions.</p>
+
+<h3>1 · A catalogue-truth frame is degenerate, and an inverted frame is worse than none</h3>
+<p>Because the metric deletes known-fault pixels from <em>every</em> term, a frame whose truth is
+the catalogue has an empty truth set under the official mask: the score is exactly 0 for every
+artifact. Scored with the mask disabled it is worse than useless — the artifacts that score
+0.24–0.26 live score <em>lower</em> on it than the ones that score 0.05:</p>
+<table class="tbl"><thead><tr><th>candidate frame</th><th>truth px</th><th>rho level</th><th>rho excess</th><th>probes above uniform</th><th>mean DTI</th></tr></thead><tbody>
+<tr><td>N_sgmc_within_300m</td><td>17,493</td><td><strong>0.335</strong></td><td><strong>0.396</strong></td><td>19/19</td><td>0.150157</td></tr>
+<tr><td>P_sgmc_beyond_300m</td><td>62,122</td><td><strong>-0.054</strong></td><td><strong>0.188</strong></td><td>8/19</td><td>0.122292</td></tr>
+<tr><td>S0_catalogue_nomask</td><td>60,988</td><td><strong>-0.475</strong></td><td><strong>-0.237</strong></td><td>19/19</td><td>0.228445</td></tr>
+<tr><td>U_sgmc_all_off_catalogue</td><td>79,615</td><td><strong>-0.393</strong></td><td><strong>0.209</strong></td><td>9/19</td><td>0.167843</td></tr>
+</tbody></table>
+<p class="note">rho is Spearman against the 19 reported live scores. <code>rho excess</code> uses each
+artifact's score minus its own uniform control at the same mass, which removes the mass effect.
+Source: <code>registry/frame_ranking.json</code>, produced by <code>scripts/rank_frames.py</code>
+from the probe set in <code>scripts/fetch_probes.py</code>.</p>
+<p><strong>Frame P (SGMC beyond 300 m of the catalogue) was this repository's pre-registered primary
+frame and it failed this test.</strong> It was replaced before any selection result was read:
+<em>Two selection details fixed in advance: (a) the shipped MASS is 44,090, matched to the incumbent&#x27;s published mass so that a live A/B differs only in field and emission; (b) the shipped FIELD is chosen by the frame-N gate first, and among gate-passing fields by the best mean frame-P score at that mass (a robustness tie-break, because frame P is the only frame that is not halo-dominated even though it cannot rank artifacts).</em>. Trigger: Fold 0 of the swept run showed the catalogue-proximity fields (prox3/prox10/prox30) win frame N by a wide margin while covering almost nothing outside the halo (frame-P 0.002), and the supervised fields lose frame N while covering the wider map better. A declared tie-break is needed so that the choice is not made after seeing which field wins.…
+Source: <code>registry/preregistration.json</code> amendment AM-44-02; IR-44-09.</p>
+
+<h3>2 · Dot spacing, not geology, is the largest measured correlate of a reported score</h3>
+<p>Each artifact below is real, was scored on the live board, and is on disk here. The columns are
+measured from its bytes: how many dots it carries, what fraction of those dots are 8-adjacent to
+another dot (pure waste under the metric), and what fraction sit within 300 m of the two SGMC
+frames.</p>
+<table class="tbl"><thead><tr><th>artifact (owner-reported score)</th><th>reported</th><th>dots</th><th>8-adjacent frac</th><th>within 300 m of frame N</th><th>of frame P</th></tr></thead><tbody>
+<tr><td>gems24-h25-1-dotted-h19-5-d2-8-20261002-e56e</td><td>0.2600</td><td>44,090</td><td>0.001</td><td>0.094</td><td>0.120</td></tr>
+<tr><td>gems24-h25-1-dotted-h19-5-d1-5-20261002-989f</td><td>0.2477</td><td>60,069</td><td>0.001</td><td>0.096</td><td>0.120</td></tr>
+<tr><td>gems27-topo-gap-closure-t-v2-on-d1-5-2026100</td><td>0.2449</td><td>61,328</td><td>0.002</td><td>0.095</td><td>0.120</td></tr>
+<tr><td>gems19-h19-5-powerlaw-budget-multiline-corro</td><td>0.1922</td><td>121,131</td><td>0.897</td><td>0.099</td><td>0.125</td></tr>
+<tr><td>gems19-h19-4-multiline-corroborated-openness</td><td>0.1894</td><td>123,779</td><td>0.892</td><td>0.099</td><td>0.128</td></tr>
+<tr><td>gems20-h20-1-sarnnpu-powerlaw-pi0363-tilt-wi</td><td>0.1890</td><td>123,829</td><td>0.893</td><td>0.101</td><td>0.128</td></tr>
+<tr><td>gems16-h16-1-topo-geophys-baseline-ridges-20</td><td>0.1855</td><td>123,939</td><td>0.884</td><td>0.098</td><td>0.131</td></tr>
+<tr><td>gems10-h28-dotted-ridge-20260928T02025623688</td><td>0.1839</td><td>69,281</td><td>0.001</td><td>0.095</td><td>0.079</td></tr>
+<tr><td>gemsdoe2-dual-family-union-f68e590f.tif</td><td>0.1560</td><td>183,642</td><td>0.965</td><td>0.097</td><td>0.106</td></tr>
+<tr><td>gemsdoe23-h30-arrangement-matched-habitat-20</td><td>0.1352</td><td>91,533</td><td>0.001</td><td>0.046</td><td>0.119</td></tr>
+<tr><td>12GEMSDOE_r7-nms3-dem10-scarp_0c9199f14e62.t</td><td>0.1294</td><td>103,347</td><td>0.001</td><td>0.088</td><td>0.101</td></tr>
+<tr><td>gems10-h25-ctx-ridge-20260927T232947704150Z-</td><td>0.1280</td><td>174,232</td><td>0.882</td><td>0.122</td><td>0.082</td></tr>
+<tr><td>gems26-dilcond-oof-v1-20261003-47629f496133-</td><td>0.1223</td><td>60,068</td><td>0.000</td><td>0.063</td><td>0.122</td></tr>
+<tr><td>pindrop-v4-nodes-20260925T152420Z-f347b70daa</td><td>0.1193</td><td>155,021</td><td>0.001</td><td>0.031</td><td>0.089</td></tr>
+<tr><td>gems22-h23-a-dti-optimal-emission-6pct-20261</td><td>0.1002</td><td>335,879</td><td>0.918</td><td>0.082</td><td>0.122</td></tr>
+<tr><td>gems16-h18-3a-topo-geophys-x-complexity-prio</td><td>0.0976</td><td>122,120</td><td>0.907</td><td>0.122</td><td>0.123</td></tr>
+<tr><td>gems10-h20-dem10-scarp-thin-20260927T1552230</td><td>0.0921</td><td>153,957</td><td>0.965</td><td>0.151</td><td>0.092</td></tr>
+<tr><td>13gems_20261001_r13-lattice-s5_v2_zerofill.t</td><td>0.0904</td><td>206,895</td><td>0.003</td><td>0.031</td><td>0.084</td></tr>
+<tr><td>gems10-h16-continuation-20260927T06552107773</td><td>0.0461</td><td>310,042</td><td>0.987</td><td>0.210</td><td>0.098</td></tr>
+</tbody></table>
+<p class="note">Sources: <code>registry/probe_manifest.json</code>,
+<code>registry/probe_sgmc_alignment.json</code>, <code>registry/halo_analysis.json</code>.
+Reported scores are owner-reported, not organizer receipts (IR-44-08).</p>
+<p>Rank correlations against the reported score, over all 19 artifacts:</p>
+<table class="tbl"><thead><tr><th>measured property</th><th>Spearman vs reported score</th></tr></thead><tbody>
+<tr><td>mass</td><td>-0.653</td></tr>
+<tr><td>on_known_mask</td><td>-0.531</td></tr>
+<tr><td>n_within_3px</td><td>-0.489</td></tr>
+<tr><td>mean_dist_to_catalogue_px</td><td>0.381</td></tr>
+<tr><td>frac_within_30px</td><td>-0.34</td></tr>
+<tr><td>frac_within_10px</td><td>-0.3</td></tr>
+<tr><td>frac_within_5px</td><td>-0.296</td></tr>
+<tr><td>frac_within_3px</td><td>-0.258</td></tr>
+</tbody></table>
+<p>The rank regression <code>live_rank ~ 1 + frac_within_3px_rank + log_mass_rank</code> gives a coefficient of
+<strong>-0.629</strong> on log mass and <strong>-0.088</strong>
+on the halo fraction, with R² = 0.433. The mechanism is exact under the official
+formula: two adjacent dots deliver the same truth coverage as one, while each costs 0.2 of FP and
+0.2 of the denominator.</p>
+
+<h3>3 · Where the strands are</h3>
+<p>The USGS State Geologic Map Compilation is <em>not</em> the competition catalogue: only 18.7% of
+catalogue pixels lie within 100 m of an SGMC pixel and the median catalogue pixel is 849 m from the
+nearest SGMC line. The SGMC raster used here carries 83,593 pixels
+inside the footprint, of which 79,615 are off the
+known-fault mask: 17,493
+within 300 m of the catalogue (frame N) and 24,375 more
+than 3 km from it. The catalogue and the compilation are therefore two different maps of the same
+ground, which is what makes one usable as validation truth for the other.
+Source: <code>registry/strands.json</code> (<code>scripts/measure_strands.py</code>).</p>
+
+<footer>
+<p><strong>Evidence discipline.</strong> Every number on this site is rendered from a JSON file in
+<code>registry/</code> that was written by a script in this repository, and the page names that file.
+Nothing here is asserted from memory. Where a value is an estimate from a model rather than a
+measurement, it is labelled as such. No organizer score is claimed for any artifact in this
+repository.</p>
+<p>GEMSDOE44 · DOE GEMS Prize (DrivenData #306) · source:
+<a href="https://github.com/buffedlizard55-lab/GEMSDOE44">github.com/buffedlizard55-lab/GEMSDOE44</a></p>
+</footer></div></body></html>

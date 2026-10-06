@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data — GEMSDOE44</title>
+<link rel="stylesheet" href="assets/site.css"></head><body>
+<header class="top"><div class="wrap">
+<h1>Data</h1>
+<div class="note">Every official file, its hash, the grid contract, and the links to check by hand</div>
+<nav style="margin-top:14px">
+<a href="index.html">Executive summary</a>
+<a href="how-to-submit.html">How to submit</a>
+<a href="data.html">Data</a>
+<a href="method.html">Method</a>
+<a href="validation.html">Validation</a>
+<a href="hypotheses.html">Hypotheses</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="limitations.html">Limitations</a>
+</nav></div></header>
+<div class="wrap">
+
+<h2>Competition data — auditable table</h2>
+<p>Four official files, each fetched from a public, hash-pinned mirror and verified against its
+sha256 before use. No file was used before its digest matched.</p>
+<table class="tbl"><thead><tr><th>file</th><th>role in this repository</th><th>bytes</th><th>sha256 (truncated)</th><th>provenance</th></tr></thead><tbody>
+<tr><td>labels</td><td>known-fault catalogue and the exclusion mask; int8 with nodata -1; 60,988 positive pixels…</td><td>425,830</td><td><span class='mono'>7ba308ccdc4418b31a178f4f…</span></td><td>owner-supplied mirror of a DrivenData competition file (data tab is login-walled); integri…</td></tr>
+<tr><td>sample_submission</td><td>grid, dtype and outside-footprint template ONLY. Not used as a null prediction: its 60,988 cells equal to 1 co…</td><td>1,599,597</td><td><span class='mono'>2176d08e485aa2cd2860ce8d…</span></td><td>owner-supplied mirror; integrity-pinned, not organizer-authenticated…</td></tr>
+<tr><td>training_features</td><td>the 19 official feature bands; float32; nodata -3.4028234663852886e+38…</td><td>418,912,844</td><td><span class='mono'>4371c82e3b8339b807bdffcf…</span></td><td>owner-supplied mirror, split into five parts, concatenated and hash-verified here; integri…</td></tr>
+<tr><td>sgmc_faults</td><td>USGS State Geologic Map Compilation fault lines rasterised to this grid (83,593 px, of which 62,122 px are mor…</td><td>198,602</td><td><span class='mono'>643cbe992ef4ba37588fb469…</span></td><td>derived by the owner&#x27;s CI from the public-domain USGS SGMC product; USGS data carry n…</td></tr>
+<tr><td>incumbent_d28</td><td>CONTROL ONLY. The live-scored artifact reported at 0.2600 (44,090 positive pixels, strictly binary {0,1}, NaN …</td><td>1,603,424</td><td><span class='mono'>91eae1ca42ec845eaa8c2ba3…</span></td><td>owner-published artifact, owner-reported score; no organizer receipt exists (IR-44-08)…</td></tr>
+</tbody></table>
+<p class="note">Source: <code>registry/data_manifest.json</code>, whose sha256 values were computed
+from the bytes actually used here. The competition rasters are owner-supplied mirrors of
+login-walled DrivenData files: the pins prove <em>reproducibility</em>, not organizer
+authentication. Registered as irregularity IR-44-02 in <a href="limitations.html">Limitations</a>.
+Reproduce with <code>bash scripts/fetch_official_mirrors.sh</code>, which fails closed on any
+digest mismatch.</p>
+
+<h2>Grid contract, read from the official bytes</h2>
+<table class="tbl"><thead><tr><th>quantity</th><th>value</th></tr></thead><tbody>
+<tr><td>CRS</td><td>EPSG:32611</td></tr>
+<tr><td>resolution</td><td>100 m</td></tr>
+<tr><td>shape</td><td>3730 rows × 3292 cols</td></tr>
+<tr><td>transform</td><td><span class='mono'>[100.0, 0.0, 243350.0, 0.0, -100.0, 4508550.0]</span></td></tr>
+<tr><td>footprint</td><td>5,167,373 px</td></tr>
+<tr><td>known-fault mask</td><td>60,988 px</td></tr>
+<tr><td>scored domain</td><td>5,106,385 px</td></tr>
+</tbody></table>
+
+<h2>The 19 official feature bands</h2>
+<table class="tbl"><thead><tr><th>#</th><th>band</th><th>category</th></tr></thead><tbody>
+<tr><td>1</td><td>Magnetic anomaly - deviation from expected Earth&#x27;s magnetic field</td><td>magnetic_data</td></tr>
+<tr><td>2</td><td>Reduced to pole magnetic data - magnetic anomaly corrected for latitude effects</td><td>magnetic_data</td></tr>
+<tr><td>3</td><td>Total magnetic intensity horizontal gradient - rate of change in horizontal direction</td><td>magnetic_data</td></tr>
+<tr><td>4</td><td>Geodetic second invariant - measure of strain rate tensor magnitude</td><td>geodetic_strain</td></tr>
+<tr><td>5</td><td>Isostatic gravity anomaly slope - gradient of gravity after isostatic correction</td><td>gravity_data</td></tr>
+<tr><td>6</td><td>Tilt angle or total curvature - magnetic field derivative for edge detection</td><td>magnetic_data</td></tr>
+<tr><td>7</td><td>Geodetic shear rate - rate of angular deformation from GPS/InSAR</td><td>geodetic_strain</td></tr>
+<tr><td>8</td><td>Geodetic dilatation rate - rate of volumetric strain (expansion/contraction)</td><td>geodetic_strain</td></tr>
+<tr><td>9</td><td>Total magnetic intensity vertical gradient - rate of change in vertical direction</td><td>magnetic_data</td></tr>
+<tr><td>10</td><td>Distance to earthquake (n=100km radius, a=15° azimuth parameters)</td><td>seismic</td></tr>
+<tr><td>11</td><td>Isostatic gravity anomaly vertical gradient - vertical rate of change</td><td>gravity_data</td></tr>
+<tr><td>12</td><td>Detrended elevation - topography with regional trends removed</td><td>topographic</td></tr>
+<tr><td>13</td><td>Isostatic gravity anomaly - gravity after compensating for topographic mass</td><td>gravity_data</td></tr>
+<tr><td>14</td><td>Total magnetic intensity - total strength of magnetic field</td><td>magnetic_data</td></tr>
+<tr><td>15</td><td>Depth to basement surface - thickness of sedimentary cover</td><td>subsurface</td></tr>
+<tr><td>16</td><td>Earthquake intensity or density (n=100km radius, a=15° parameters)</td><td>seismic</td></tr>
+<tr><td>17</td><td>Conductivity surface - electrical conductivity of subsurface</td><td>subsurface</td></tr>
+<tr><td>18</td><td>Isostatic gravity anomaly horizontal gradient - horizontal rate of change</td><td>gravity_data</td></tr>
+<tr><td>19</td><td>Detrended elevation slope - gradient of elevation after detrending</td><td>topographic</td></tr>
+</tbody></table>
+<p class="note">Band descriptions are the ones stored in <code>training_features.tif</code> itself
+(band tag <code>description</code>), read on 2026-10-06.</p>
+
+<h2>Fault population measured from the official catalogue</h2>
+<table class="tbl"><thead><tr><th>quantity</th><th>value</th></tr></thead><tbody>
+<tr><td>connected fault segments (≥ 12 px)</td><td>1,662</td></tr>
+<tr><td>median segment length (2σ, km)</td><td>1.234</td></tr>
+<tr><td>90th percentile segment length (km)</td><td>2.840300000000001</td></tr>
+<tr><td>modal trace azimuth (length-weighted)</td><td>105.0°</td></tr>
+<tr><td>USGS SGMC fault pixels absent from the catalogue</td><td>79,615 px</td></tr>
+</tbody></table>
+<p class="note">Source: <code>registry/population.json</code>, produced by
+<code>scripts/measure_population.py</code> from the hash-verified bytes.</p>
+
+<h2>Official sources for manual review</h2>
+<table class="tbl"><thead><tr><th>what</th><th>link</th><th>status</th></tr></thead><tbody>
+<tr><td>problem-description</td><td><a href='https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/'>https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/</a></td><td>[FETCHED] 2026-10-06</td></tr>
+<tr><td>leaderboard</td><td><a href='https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/'>https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/</a></td><td>[FETCHED] 2026-10-06</td></tr>
+<tr><td>competition-home</td><td><a href='https://www.drivendata.org/competitions/306/competition-doe-gems/'>https://www.drivendata.org/competitions/306/competition-doe-gems/</a></td><td>[FETCHED] 2026-10-06</td></tr>
+<tr><td>gems-never</td><td><a href='https://www.drivendata.org/competitions/306/competition-doe-gems/page/968/'>https://www.drivendata.org/competitions/306/competition-doe-gems/page/968/</a></td><td>[NOT FETCHED]</td></tr>
+<tr><td>rules-pdf</td><td><a href='https://docs.nlr.gov/docs/fy26osti/96647.pdf'>https://docs.nlr.gov/docs/fy26osti/96647.pdf</a></td><td>[NOT FETCHABLE from this sandbox] docs.nlr.gov is outside the sandbox network allowlist.</td></tr>
+<tr><td>reference-solution</td><td><a href='https://github.com/drivendataorg/gems-prize-reference-solution'>https://github.com/drivendataorg/gems-prize-reference-solution</a></td><td>[CLONED] 2026-10-06</td></tr>
+<tr><td>thread-11516-masking</td><td><a href='https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516'>https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516</a></td><td>[FETCHED] 2026-10-06</td></tr>
+<tr><td>thread-11527-new-fault-provenance</td><td><a href='https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527'>https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527</a></td><td>[FETCHED] 2026-10-06</td></tr>
+<tr><td>thread-11536-where-do-you-draw-the-line</td><td><a href='https://community.drivendata.org/t/where-do-you-draw-the-line/11536'>https://community.drivendata.org/t/where-do-you-draw-the-line/11536</a></td><td>[NOT READ]</td></tr>
+<tr><td>thread-11550-leaderboard-aggregation</td><td><a href='https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550'>https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550</a></td><td>[NOT READ]</td></tr>
+</tbody></table>
+
+<footer>
+<p><strong>Evidence discipline.</strong> Every number on this site is rendered from a JSON file in
+<code>registry/</code> that was written by a script in this repository, and the page names that file.
+Nothing here is asserted from memory. Where a value is an estimate from a model rather than a
+measurement, it is labelled as such. No organizer score is claimed for any artifact in this
+repository.</p>
+<p>GEMSDOE44 · DOE GEMS Prize (DrivenData #306) · source:
+<a href="https://github.com/buffedlizard55-lab/GEMSDOE44">github.com/buffedlizard55-lab/GEMSDOE44</a></p>
+</footer></div></body></html>

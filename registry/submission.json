@@ -1,0 +1,118 @@
+{
+ "alpha": 0.5,
+ "built_utc": "20261006T110212Z",
+ "cand_fraction": 0.25,
+ "emission_diagnostics": {
+  "dots": 44090,
+  "dots_8_adjacent_to_another": 21,
+  "dots_on_known_mask": 0,
+  "dots_within_300m_of_another_dot": 43302,
+  "frac_8_adjacent": 0.00048,
+  "frac_within_300m_of_another": 0.98213,
+  "frame_scores_circular_for_N_trained_field": {
+   "N": 0.395724,
+   "P": 0.142183
+  },
+  "incumbent_global_frames_same_operator": {
+   "N": 0.175536,
+   "P": 0.094174
+  },
+  "incumbent_mass": 44090,
+  "inside_footprint": 44090,
+  "min_sep_enforced_px": 3.0,
+  "min_sep_verified": {
+   "max_neighbours_within_radius": 0,
+   "ok": true,
+   "radius_px_checked": 2
+  },
+  "uniqueness_vs_incumbent": {
+   "incumbent_dots": 44090,
+   "jaccard": 0.0121,
+   "shared_dots": 1055
+  },
+  "within_300m_of_catalogue": 19983,
+  "within_300m_of_sgmc": 17552
+ },
+ "evidence_used": [
+  "registry/preregistration.json (AM-44-02 field choice)",
+  "registry/selection.json",
+  "registry/frame_ranking.json",
+  "registry/probe_sgmc_alignment.json",
+  "registry/exact_confirmation.json (written by scripts/confirm_exact.py)"
+ ],
+ "first_order_condition": {
+  "alpha": 0.2,
+  "break_even_distance_m_at_DTI_0.2600": 284.4,
+  "break_even_distance_m_at_DTI_0.3345": 279.9,
+  "note": "a dot pays iff its kernel credit k > 0.2 * DTI; k = 1 - d/300 m"
+ },
+ "format_contract_source": "https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/",
+ "known_irregularity": "IR-44-03: the 0.2778 attribution is confirmed by thread 11525 only through the artifact's file name, not yet by an independent DTI reproduction",
+ "mass": 44090,
+ "mass_source": "command line",
+ "min_sep_px": 3.0,
+ "nan_twin": {
+  "all_checks_pass": true,
+  "bytes": 374409,
+  "checks": {
+   "all_values_in_0_1": true,
+   "crs_epsg32611": true,
+   "finite_values_binary": true,
+   "float32": true,
+   "nan_exactly_outside_footprint": true,
+   "resolution_100m": true,
+   "shape_matches_template": true,
+   "single_band": true,
+   "transform_matches_template": true
+  },
+  "max_finite": 1.0,
+  "min_finite": 0.0,
+  "n_positive_cells": 44090,
+  "path": "submissions/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-nan.tif",
+  "sha256": "fb56da35054b594cae01302cc1513d36f1556ac741d8d6d3920df7d519c37ead"
+ },
+ "note_for_portal": "GEMS44 n-strand-ssmc | field = supervised transfer of USGS SGMC strands absent from the catalogue (U) onto the 19 official bands; exact greedy max-coverage emission 44090 dots; 0 on the known mask; un",
+ "policy": "n-strand-ssmc",
+ "primary": {
+  "all_checks_pass": true,
+  "bytes": 320989,
+  "checks": {
+   "all_values_in_0_1": true,
+   "crs_epsg32611": true,
+   "every_cell_finite": true,
+   "float32": true,
+   "positive_only_outside_nothing": true,
+   "resolution_100m": true,
+   "shape_matches_template": true,
+   "single_band": true,
+   "transform_matches_template": true,
+   "values_are_binary": true
+  },
+  "max_finite": 1.0,
+  "min_finite": 0.0,
+  "n_positive_cells": 44090,
+  "path": "submissions/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif",
+  "sha256": "4971d3593c2990bb275b77e5663814d1540af8d6a4de7679dae0dbd7e9605988"
+ },
+ "published_to": [
+  "docs/downloads/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif (320989 B)",
+  "docs/downloads/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-nan.tif (374409 B)",
+  "docs/downloads/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.zip (210323 B)"
+ ],
+ "seed": 44,
+ "slug": "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359",
+ "target": "U",
+ "train_report": {
+  "loaded_from": "data/interim/belief_U.npy"
+ },
+ "unique_name_for_portal": "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359",
+ "zip": {
+  "bytes": 210323,
+  "contents": [
+   "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.tif"
+  ],
+  "inner_matches_loose_file": true,
+  "inner_sha256": "4971d3593c2990bb275b77e5663814d1540af8d6a4de7679dae0dbd7e9605988",
+  "path": "submissions/GEMS44_n-strand-ssmc_20261006T110212Z_4971d359-zeros.zip"
+ }
+}

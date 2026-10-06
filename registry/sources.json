@@ -1,0 +1,95 @@
+{
+  "schema": "gems44-sources-v1",
+  "read_utc": "2026-10-06",
+  "note": "Every URL below was opened or fetched on the date shown. Nothing in this file is asserted from memory. Items marked [FETCHED] were downloaded into this repo's data/ and verified against a sha256 pin.",
+  "competition": [
+    {
+      "id": "problem-description",
+      "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/",
+      "status": "[FETCHED] 2026-10-06",
+      "what_it_establishes": "Task, competition structure (Initial Prize Round private set of expert-labelled new faults; Final Prize Round expanded label set), the exact metric equations, the triangular kernel with R = 300 m, alpha = 0.2, beta = 0.8, and the submission format contract."
+    },
+    {
+      "id": "leaderboard",
+      "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/",
+      "status": "[FETCHED] 2026-10-06",
+      "what_it_establishes": "Live public board. Rank 1 = alexoktaba 0.3345 (23 submissions); rank 2 nchuzhoy 0.3262; rank 3 kinghorton42 0.3222; rank 4 Batik Shirt Brothers 0.3218; rank 5 DARD 0.3195; rank 13 extradr19 0.2778; rank 20 SDCF9 0.2600."
+    },
+    {
+      "id": "competition-home",
+      "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/",
+      "status": "[FETCHED] 2026-10-06",
+      "what_it_establishes": "Total prize pool 300,000 USD; 2 months remaining at read time; 214 joined; hosted by DOE."
+    },
+    {
+      "id": "gems-never",
+      "url": "https://www.drivendata.org/competitions/306/competition-doe-gems/page/968/",
+      "status": "[NOT FETCHED]",
+      "what_it_would_establish": "Additional resources page (about tab). Listed here for completeness of the brief's reference list; not used by any claim in this repo."
+    },
+    {
+      "id": "rules-pdf",
+      "url": "https://docs.nlr.gov/docs/fy26osti/96647.pdf",
+      "status": "[NOT FETCHABLE from this sandbox] docs.nlr.gov is outside the sandbox network allowlist.",
+      "what_it_establishes": "Official rules. Cited by the brief; not used by any quantitative claim in this repo."
+    },
+    {
+      "id": "reference-solution",
+      "url": "https://github.com/drivendataorg/gems-prize-reference-solution",
+      "status": "[CLONED] 2026-10-06",
+      "what_it_establishes": "The organizer's own baseline. Author Professor John Lipor (Portland State University). U-Net (resnet18, imagenet weights), 5 Monte Carlo splits, patch 128, 5 epochs, AdamW lr 1e-4, TverskyLoss(alpha=0.2, beta=0.8). IMPORTANT: the notebook writes y_final RAW (not thresholded) and its own comment says 'it may be advantageous to threshold this map for better scoring'; the visualization uses > 0.1. The notebook's feature path is data/numeric_features.tif, while the data page names the file training_features.tif (name drift noted by the family; both handled here)."
+    }
+  ],
+  "organizer_statements": [
+    {
+      "id": "thread-11516-masking",
+      "url": "https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516",
+      "status": "[FETCHED] 2026-10-06",
+      "quote": "Pixels corresponding to known USGS/INGENIOUS faults are masked / excluded from evaluation, so they do not count towards penalty terms. ... Re-evaluation will also mask/exclude the existing USGS/INGENIOUS faults. ... for scoring purposes it should not matter whether these known faults are included with predictions or not.",
+      "posted_by": "chrisk-dd (DrivenData Staff), 2026-09-16",
+      "consequence_used_here": "This is the exact statement that makes a dot on a known fault FREE BUT WORTHLESS: it is removed from the penalty terms and, under the only reading that makes the staff's closing sentence literally true, also from the credit term. gems44.metric implements that reading and tests it (tests/test_metric.py::test_known_mask_is_neutral)."
+    },
+    {
+      "id": "thread-11527-new-fault-provenance",
+      "url": "https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527",
+      "status": "[FETCHED] 2026-10-06",
+      "what_it_establishes": "Participants asked which data the NLR/USGS experts used, whether the new faults are surface or buried, and whether coverage was uniform. A DrivenData staff reply exists in the thread; the thread page render returned the participant posts and did not expose the staff reply text to the fetch tool. Therefore this repo does NOT claim to know the provenance of the hidden faults.",
+      "irregularity": "IR-44-01: the organizers' answer to the provenance question could not be read by the fetch tool from this sandbox. Any downstream claim about the hidden fault population must remain a labelled model, not a fact."
+    },
+    {
+      "id": "thread-11536-where-do-you-draw-the-line",
+      "url": "https://community.drivendata.org/t/where-do-you-draw-the-line/11536",
+      "status": "[NOT READ]",
+      "what_it_would_establish": "Cited by GEMSDOE32 as containing a clarification that a new fault may be new geometry of an existing system. This repo did NOT verify that thread and therefore makes NO claim based on it. H1, which would have relied on that idea, was falsified empirically instead."
+    },
+    {
+      "id": "thread-11550-leaderboard-aggregation",
+      "url": "https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550",
+      "status": "[NOT READ]",
+      "what_it_would_establish": "Whether the public board pools pixels or averages per-chunk scores. This affects how a local pooled-frame number maps onto the board; flagged as an open question in docs/limitations.html."
+    }
+  ],
+  "official_data": [
+    {"id": "labels", "mirror": "buffedlizard55-lab/GEMSDOE24 @07345ea0604953d7efb858d9cfbc21e20c7aca0b data/bridge/labels.tif", "bytes": 425830, "sha256": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093", "status": "[FETCHED, HASH MATCHED]"},
+    {"id": "sample_submission", "mirror": "buffedlizard55-lab/GEMSDOE24 @07345ea0 data/bridge/sample_submission.tif", "bytes": 1599597, "sha256": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc", "status": "[FETCHED, HASH MATCHED]"},
+    {"id": "training_features", "mirror": "buffedlizard55-lab/GEMSDOE @c0c06ac82178f26b94fce3397036ef8f12a2f3a0 data/bridge/gems-geodawn-numerical-features.tif.part-000..004", "bytes": 418912844, "sha256": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5", "status": "[FETCHED, HASH MATCHED]"},
+    {"id": "sgmc_faults", "mirror": "buffedlizard55-lab/GEMSDOE24 @07345ea0 data/external/derived_sgmc_faults_100m_u8.tif", "bytes": 198602, "sha256": "643cbe992ef4ba37...", "status": "[FETCHED, HASH MATCHED]"}
+  ],
+  "provenance_caveat": "The four files above are owner-supplied mirrors of login-walled DrivenData competition files, pinned by sha256. Pins prove REPRODUCIBILITY, not organizer authentication. The irregularity is registered as IR-44-02.",
+  "sandbox_reachability_test": {
+    "read_utc": "2026-10-06",
+    "method": "curl -sS -o /dev/null -w '%{http_code}' -m 12 against each host",
+    "reachable": ["https://pypi.org/simple/ 200", "https://github.com 200", "https://api.github.com 200", "https://registry.npmjs.org 200"],
+    "not_reachable": [
+      "https://raw.githubusercontent.com 000",
+      "https://objects.githubusercontent.com 000",
+      "https://buffedlizard55-lab.github.io 000",
+      "https://gdr.openei.org 000",
+      "https://www.openei.org 000",
+      "https://earthexplorer.usgs.gov 000",
+      "https://prd-tnm.s3.amazonaws.com 000",
+      "https://storage.googleapis.com 000"
+    ],
+    "consequence": "This sandbox CAN fetch raw files from the owner's public GitHub repositories through the GitHub contents API (verified by hash), and CANNOT fetch data from USGS, GDR/OpenEI, or any GitHub Pages site. Every external-data claim in registry/hypotheses.json is graded against this measured list."
+  }
+}
