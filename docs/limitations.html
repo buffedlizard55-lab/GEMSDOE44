@@ -1,114 +1,62 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
+<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Limitations — GEMSDOE44</title>
-<link rel="stylesheet" href="assets/site.css"></head><body>
-<header class="top"><div class="wrap">
-<h1>Limitations</h1>
-<div class="note">What stands in the way, what is flagged, and what is next</div>
-<nav style="margin-top:14px">
-<a href="index.html">Executive summary</a>
-<a href="how-to-submit.html">How to submit</a>
-<a href="data.html">Data</a>
-<a href="method.html">Method</a>
-<a href="validation.html">Validation</a>
-<a href="hypotheses.html">Hypotheses</a>
-<a href="leaderboard.html">Leaderboard</a>
-<a href="limitations.html">Limitations</a>
-</nav></div></header>
-<div class="wrap">
+<title>Limitations, flags and next steps · GEMSDOE44</title><link rel="stylesheet" href="assets/twostage.css"></head>
+<body><header class="top"><div class="wrap"><nav><a href="index.html">Executive summary</a> <a href="twostage.html">Two-stage method</a> <a href="validation.html">Validation</a> <a href="forensics.html">Why 0.2778</a> <a href="hypotheses.html">Hypotheses</a> <a href="data.html">Data</a> <a href="how-to-submit.html">How to submit</a> <a href="leaderboard.html">Leaderboard</a> <a href="limitations.html">Limitations & flags</a></nav></div></header>
+<div class="wrap"><h1>Limitations, flags and next steps</h1><p class="src">Sources: registry/sources.json · registry/twostage/submission.json</p>
 
-<h2>Limitations that stand in the way</h2>
+<h2>What stands in the way</h2>
 <ol>
-<li><strong>No organizer score exists for any artifact in this repository.</strong> Every number
-produced here is a local measurement on a proxy frame. The only way to obtain a real number is to
-upload an artifact and read the board.</li>
-<li><strong>The hidden label set's provenance is unknown.</strong> The organizers were asked in
-community thread 11527 which data the experts used; the reply text could not be read from this
-sandbox, so no claim is made about it.</li>
-<li><strong>This sandbox cannot reach any external data host except GitHub and PyPI.</strong>
-Measured on 2026-10-06: <code>earthexplorer.usgs.gov</code>, <code>prd-tnm.s3.amazonaws.com</code>,
-<code>gdr.openei.org</code>, <code>storage.googleapis.com</code>, <code>raw.githubusercontent.com</code>
-and every <code>*.github.io</code> host returned HTTP 000. Consequences: hypotheses H4 and H6 are
-data-blocked here, and the one-click site cannot be checked from inside the sandbox.</li>
-<li><strong>The primary validation frame is an analogue, not the target.</strong> USGS SGMC faults
-absent from the given catalogue are real mapped faults the catalogue lacks, but they are a
-pre-Quaternary-inclusive compilation and the hidden set need not share their statistics. The frame
-is used because it is the only local frame that cannot be won by copying the catalogue.</li>
-<li><strong>Both frames this repository has used were chosen from data that had already been looked
-at, and one of them is now falsified outright.</strong> Frame N (pre-registered primary since
-AM-44-01) ranks the family's live-verified 0.2600 artifact <em>above</em> the better 0.2778 artifact
-— straightforwardly backwards — so it cannot be used to select anything (IR-44-15). The shipped
-artifact is instead selected on frame P by the rule fixed in AM-44-03/04: rank that pair correctly
-<em>and</em> show positive excess over uniform across the 19 live-scored artifacts
-(rho_excess = 0.188).
-That is still a rank statistic on 19 owner-reported scores, not a measurement of the hidden set.</li>
-<li><strong>The hole in frame N's definition is understood, and it is the frame, not the artifacts.</strong>
-62% of frame N's truth sits within 200 m of the catalogue (7,552 px at 0–100 m, 5,786 px at
-100–200 m of 21,471 before the mask), so any catalogue-hugging artifact is rewarded by construction.
-The ring evidence runs the other way on every other source available here, including the family's own
-live A/B. IR-44-15.</li>
-<li><strong>No geological field here is validated against the hidden set.</strong> The field shipped
-is a supervised transfer of the USGS SGMC compilation — all strands the catalogue lacks, not only the
-ones near it — emitted with the ≤200 m ring excluded. Its blocked validation is the 4-fold sweep on
-the admissible frame: mean held-out frame-P DTI 0.1453 against the incumbent artifact's 0.0924 at the
-same mass, positive in 4 of 4 folds. The full-grid number shown next to the download (0.3639) is
-in-sample and circular and is labelled as such everywhere. If the hidden faults do not resemble the
-SGMC compilation the transfer is worth nothing (IR-44-12), which is unmeasurable from here.</li>
-<li><strong>Quadrant blocking is coarse.</strong> Half-map quadrants remove large-scale leakage but
-not regional structure that persists within a quadrant. Finer blocking would be stricter and is the
-next methodological upgrade.</li>
-<li><strong>Leaderboard aggregation is unresolved.</strong> Whether the public board pools pixels
-across chunks or averages per-chunk scores is the subject of an unanswered forum thread; a pooled
-local frame is not guaranteed to map linearly onto the board.</li>
+<li><b>No organizer score exists for any file in this repository.</b> Every number here is a local
+measurement on a proxy frame. Uploading converts a proxy into a fact; nothing else does.</li>
+<li><b>The hidden label set's provenance is unknown.</b> It is described as expert-labelled new
+faults; the organizers' thread on how they were identified could not be fetched from this sandbox.</li>
+<li><b>Only GitHub and PyPI are reachable.</b> Measured 2026-10-06 by <code>curl</code>:
+github.com 200, api.github.com 200, codeload.github.com 301, files.pythonhosted.org 404; everything
+else HTTP 000 — including raw.githubusercontent.com, drivendata.org, community.drivendata.org,
+earthquake.usgs.gov, earthexplorer.usgs.gov, prd-tnm.s3.amazonaws.com, s3.amazonaws.com,
+storage.googleapis.com, sciencebase.gov, data.usgs.gov, gdr.openei.org, nrel.gov, zenodo.org,
+huggingface.co, opentopography.org. Consequences: no new external raster or catalogue can be
+fetched here, so hypotheses H46-4 and H46-5 are blocked (and H46-5 was still tested with the tile
+footprints that are documented locally — it was rejected on measurement).</li>
+<li><b>The instrument rests on six reported scores.</b> The mass-corrected frame-P statistic
+reproduces the family's live ordering 6/6, but n = 6 and the scores are owner-reported, not
+receipts. That is the strongest local evidence available and it is still small.</li>
+<li><b>The frames disagree, and the disagreement is not resolved.</b> Frame N (the catalogue halo,
+on which the previous session promoted) is inverted by the lineage test; frame P is the calibrated
+instrument. The shipped file keeps a Stage-A corridor-density layer precisely because it hedges that
+disagreement — but a hedge is not a resolution.</li>
+<li><b>Quadrant blocking is coarse.</b> It removes large-scale leakage but not structure that
+persists within a quadrant; finer blocking (k-fold tiles with buffers) is the next upgrade.</li>
+<li><b>The 0.2778 attribution is unresolved</b> (IR-44-03 / IR-44-10), and the projection arithmetic
+that produced 0.2747 assumes a hidden truth size (|G| ≈ 7,905 px) inferred from the family's own
+numbers, not measured.</li>
 </ol>
-
-<h2>Irregularities, flagged for review</h2>
-<table class="tbl"><thead><tr><th>id</th><th>what</th><th>why it matters</th><th>status</th></tr></thead><tbody>
-<tr><td><strong>IR-44-01</strong></td><td>The organizers&#x27; answer to &#x27;How were the new test faults identified?&#x27; (community thread 11527) could not be read by the fetch tool from this sandbox. The thread page returned the participant posts and the staff reply was not exposed in the rendered text.</td><td>The provenance, fault type (surface vs buried) and spatial coverage of the hidden label set determine which physical signature should work. Guessing it is exactly the kind of assumption this project forbids.</td><td><span class='tag warn'>open - a human with a browser can resolve it in one minute by opening the thread</span></td></tr>
-<tr><td><strong>IR-44-02</strong></td><td>All four official competition rasters used here are owner-supplied mirrors of login-walled DrivenData files, fetched from public GitHub repositories by the same account that owns this repository. They are pinned by sha256 and the pins matched exactly, but they are not organizer-authenticated.</td><td>A pin proves the bytes are reproducible; it does not prove the bytes are the organizer&#x27;s. If a mirror had been transcribed or re-exported, every measurement in this repository would be on the wrong grid or the wrong labels.</td><td><span class='tag warn'>accepted with a stated control</span></td></tr>
-<tr><td><strong>IR-44-03</strong></td><td>The brief states that GEMSDOE32 scored 0.2778. The live leaderboard shows 0.2778 at rank 13 for the participant extradr19, while GEMSDOE32&#x27;s own README labels its named artifact UNSCORED with a projected 0.2747.</td><td>Reporting a third party&#x27;s score as our artifact&#x27;s score would corrupt every calibration and promotion decision downstream.</td><td><span class='tag warn'>flagged, not resolved</span></td></tr>
-<tr><td><strong>IR-44-04</strong></td><td>sample_submission.tif is described on the data page as a submission that predicts total fault absence, but its 60,988 positive cells are exactly the labelled catalogue fault pixels (values {0, 1, NaN}; the 1s coincide with labels.tif == 1).</td><td>It is therefore not a &#x27;no faults&#x27; template; it is the catalogue raster re-typed as float32. Anyone reading it as a null submission would draw wrong conclusions about what an empty prediction scores (an empty file scores exactly 0).</td><td><span class='tag warn'>characterised</span></td></tr>
-<tr><td><strong>IR-44-05</strong></td><td>The reference solution writes its prediction map RAW (not thresholded) and its own comment says &#x27;it may be advantageous to threshold this map for better scoring&#x27;; the visualization in the same notebook uses a &gt; 0.1 threshold.</td><td>The organizer&#x27;s baseline therefore ships a graded file. The metric is monotone in the scale of a probability map (proved and unit-tested here), so any graded file is strictly dominated by its own thresholded support. A participant who copies the baseline&#x27;s output convention gives away score.</td><td><span class='tag warn'>characterised</span></td></tr>
-<tr><td><strong>IR-44-06</strong></td><td>A supervised field with a spatially blocked pixel AUC of 0.773 (folds 0.762-0.789) produced a held-out metric score of 0.0766 at 44,090 dots, while uniform-random dots at the same mass scored 0.1341 on the same frame.</td><td>This is a contradiction between the two ways of measuring the same field, and it invalidates AUC-based field selection for this competition. Until it is explained the project cannot rely on any ranking metric other than the official one.</td><td><span class='tag warn'>measured, explained as a frame effect, but only on one fold</span></td></tr>
-<tr><td><strong>IR-44-07</strong></td><td>The competition brief supplied to this project states that the highest score is 0.3195, while the live board read on 2026-10-06 shows 0.3345 at rank 1 and DARD&#x27;s 0.3195 at rank 5.</td><td>A target set from a stale read is already unreachable by the time it is used. Three days of board movement is worth about +0.015 at the top.</td><td><span class='tag warn'>characterised</span></td></tr>
-<tr><td><strong>IR-44-08</strong></td><td>The competition brief asks for a review of &#x27;why and how&#x27; a specific artifact scored 0.2778, but no organizer receipt exists in any material available here for any artifact belonging to this project family.</td><td>Every score in this family&#x27;s record is owner-reported or inferred by numeric coincidence.</td><td><span class='tag warn'>open - resolvable only by uploading an artifact and reading the board</span></td></tr>
-<tr><td><strong>IR-44-09</strong></td><td>The pre-registered primary validation frame (frame P: SGMC faults &gt;300 m from the catalogue, 62,122 px) failed its own validity test: across 19 family artifacts with reported live scores it reproduces the live order with rho_level = -0.054 / rho_excess = +0.188 (scripts/rank_frames.py).</td><td>A promotion frame that cannot rank already-scored artifacts has no claim to rank a new one; using it would have shipped an artifact chosen by an inverted proxy.</td><td><span class='tag warn'>open</span></td></tr>
-<tr><td><strong>IR-44-10</strong></td><td>A catalogue-truth frame is degenerate under the official masking rule: the catalogue IS the known mask, so removing known pixels from the truth leaves an EMPTY truth set and every artifact scores exactly 0.000000 (observed on all 19 probes).</td><td>Any prior-family result quoted from a catalogue-derived frame inherits this degeneracy; it explains why the earlier three-artifact catalogue proxy inverted the live board.</td><td><span class='tag warn'>closed-by-design</span></td></tr>
-<tr><td><strong>IR-44-11</strong></td><td>Mass is confounded with quality across the 19 scored artifacts: Spearman(reported score, dot count) = -0.653 (registry/halo_analysis.json). Mass is not destiny either: gems26-dilcond-oof-v1 scores 0.1223 with 60,068 dots while three artifacts of 120k-124k dots score 0.185-0.192 and one of 122,120 dots scores 0.0976.</td><td>Choosing mass by taste is the largest single lever on this metric, and the family&#x27;s own history is a mass-reduction history.</td><td><span class='tag warn'>open</span></td></tr>
-<tr><td><strong>IR-44-12</strong></td><td>Circularity: a belief field built DIRECTLY from the SGMC raster (e.g. exp(-d_sgmc)) cannot be validated on any SGMC-truth frame, because truth and field share one source raster. Only feature-based fields (official 19 bands) can be validated on frame N, and only through spatially blocked folds.</td><td>Without this rule a field built from the SGMC raster would score ~1.0 on an SGMC frame and the validation would be meaningless.</td><td><span class='tag warn'>open</span></td></tr>
-<tr><td><strong>IR-44-13</strong></td><td>Dot spacing explains more of the reported score than any geological statistic measured here: Spearman(live, fraction of dots 8-adjacent to another dot) = -0.361; the three best reported artifacts have essentially zero adjacent dots (0.001-0.002) while low scorers have 0.88-0.99.</td><td>It is the only design rule in this repository whose mechanism is exact under the official formula and whose effect is visible across 19 independent artifacts.</td><td><span class='tag warn'>open</span></td></tr>
-<tr><td><strong>IR-44-14</strong></td><td>The site generator scripts/build_site.py committed in the first commit of this session did not compile (nested f-string in the executive-summary body raised SyntaxError at import), so no page of the one-click site had ever been rendered. A second never-executed bug surfaced as soon as it did run: the data page iterated registry/sources.json&#x27;s official_data entries as key/value pairs when they are dicts.</td><td>The site is the user-facing delivery mechanism: without it the artifact cannot be downloaded in one click, which is a hard requirement of this brief.</td><td><span class='tag warn'>fixed-this-session</span></td></tr>
-<tr><td><strong>IR-44-15</strong></td><td>The frame this repository pre-registered as primary (N = USGS SGMC strands within 300 m of the given catalogue) is falsified by a DIRECT A/B between two artifacts whose live scores differ. Files: gem32-probe-S1-ANCHOR-identical-to-live-02600.tif (44,090 dots, live 0.2600) and gemsdoe32-h33-h33-2-b2-...-e5eb6e7e-zeros.tif (37,654 dots, owner-reported 0.2778, and a strict subset of the anchor). Scored with the exact official operator: frame N gives anchor 0.175536 and the better artifact 0.054060 — the wrong order, by a wide margin. Frame P (SGMC beyond 300 m) gives anchor 0.094174 and the better artifact 0.095386 — right order, small margin.</td><td>Frame N is defined as truth within 300 m of the catalogue, and 62% of its truth sits within 200 m (7,552 px at 0-100 m and 5,786 px at 100-200 m of 21,471 total, before the known-mask exclusion). Any artifact that puts dots in the 0-200 m ring is therefore rewarded by construction, which is exactly what the family&#x27;s own best artifact chose NOT to do. A frame that ranks the best known artifact below a worse one cannot be used to select a submission.</td><td><span class='tag warn'>open — acted on this session (AM-44-03), not fully resolved</span></td></tr>
-<tr><td><strong>IR-44-16</strong></td><td>A sibling session&#x27;s analysis (docs/research/phd_analysis_02778.md) asserts that 0.2708 -&gt; 0.2778 came from deleting 2,545 dots, all in the 100-200 m ring, from a 40,199-dot base (H27-4). The 0.2708 artifact is not present in this sandbox, so that exact step cannot be reproduced here. What IS reproducible first-hand, from bytes: the owner-reported 0.2778 artifact is a strict subset of the 44,090-dot live 0.2600 anchor (shared 37,654, added 0, removed 6,436), and 100% of the removed dots lie within 200 m of the catalogue (bands 0-100 m and 100-200 m are emptied to exactly 0.000).</td><td>Two different bases are being described; whichever is the true provenance of the 0.2778 file, the mechanism (delete the inner ring) and its statistical signature are confirmed on the larger pair.</td><td><span class='tag warn'>partially reproduced</span></td></tr>
-<tr><td><strong>IR-44-17</strong></td><td>The family lists 40+ GEMSDOE repositories, but only 12 distinct scored artifacts are obtainable in this sandbox (19 probe files, several of which are twins of one artifact). &#x27;Unlike anything in the 40+ sites&#x27; is therefore proven only against the obtainable set, plus the 0.2600 incumbent.</td><td>Uniqueness is a submittable requirement: a copied dot set would be disqualifying or at least unscored, so the boundary of the comparison must be stated, not glossed.</td><td><span class='tag warn'>open — a documented boundary on every uniqueness claim</span></td></tr>
+<h2>Flagged irregularities</h2>
+<table class="tbl"><thead><tr><th>id</th><th>flag</th><th>consequence</th></tr></thead><tbody>
+<tr><td>IR-44-02</td><td>the four competition rasters are sha256-pinned mirrors of login-walled DrivenData files</td><td>reproducible, not organizer-authenticated</td></tr>
+<tr><td>IR-44-03</td><td>0.2778 is attributed in the brief to a family file; the family labels that file UNSCORED (projected 0.2747) and 0.2778 belongs to a third-party leaderboard row</td><td>no claim is made that the file scored 0.2778</td></tr>
+<tr><td>IR-44-08</td><td>every live score used in the calibration is owner-reported</td><td>used as an ORDER, never as a receipt</td></tr>
+<tr><td>IR-44-09</td><td>the previous session promoted its field on frame N after a protocol amendment</td><td>superseded here by the lineage calibration; both the old gate and the new instrument are published</td></tr>
+<tr><td>IR-46-01</td><td>this session's first field (24 features, trained on frame P, blocked AUC 0.77) lost to the incumbent 4/4 at matched mass (mean ΔDTI −0.0299)</td><td>recorded as a negative result; the shipped field is the later 51-feature version</td></tr>
+<tr><td>IR-46-02</td><td>scripts/twostage_sweep.py's docstring states a frame-N promotion gate; no variant passes it, and the instrument that decides is frame P</td><td>the sweep is reported under both frames; the amendment and its timestamp order are stated on the validation page</td></tr>
+<tr><td>IR-46-03</td><td>the mass (42,000 dots) is chosen inside the family's empirically successful band rather than at the model-maximising 60,000</td><td>the mass ladder and the marginal-rule table are published so the choice can be re-made</td></tr>
 </tbody></table>
+<h2>Next steps, in priority order</h2>
+<ol>
+<li><b>Upload the file</b> and read the board — the only way to convert these proxies into facts.</li>
+<li><b>Finer spatial blocking</b> (tiles with buffers instead of quadrants) on both frames.</li>
+<li><b>The depth-labelled microseismicity direction (H46-4)</b>, if a machine with USGS ComCat access
+is available; the fetcher and protocol are ready.</li>
+<li><b>Cross-compilation disagreement as a gated feature</b>: SGMC vs the newest GDR QFaults
+compilation, using only the pixels where the two disagree.</li>
+<li><b>A second instrument</b>: the live A/B pairs that produced 0.2600 → 0.2708 are the only
+calibration data that exist; spending one weekly slot on a deliberate, pre-registered probe (identical
+file except one mechanism) is how that dataset grows.</li>
+</ol>
+<p class="src">Network probe recorded by <code>scripts/probe_network.sh</code>; sources and quotes in
+<code>registry/sources.json</code>.</p>
 
-<h2>What is still to be done</h2>
-<table>
-<tr><th>item</th><th>why</th><th>cost</th></tr>
-<tr><td>Upload the artifact and read the board</td><td>converts every proxy number in this
-repository into a real one; the only measurement that matters</td><td>one submission slot</td></tr>
-<tr><td>Finer spatial blocking (5×5 or 10×10 tiles with a buffer)</td><td>removes the residual
-regional leakage that coarse quadrant blocking leaves</td><td>medium</td></tr>
-<tr><td>H4: coupled ridge–trough matched filter on the derived 1 m lidar scarp raster</td>
-<td>adds a physical signature with sub-100 m resolution; the raster is already obtainable from the
-mirror</td><td>medium</td></tr>
-<tr><td>H5: cross-compilation disagreement as a gated feature</td><td>the only source of known-real
-faults the catalogue lacks, beyond SGMC</td><td>low</td></tr>
-<tr><td>Two-round objective</td><td>the Final Prize Round is worth five times the Initial Round and
-pays for expert-verified novel faults; the emission bar is then
-<code>0.2·DTI/(1+ρ)</code>, not <code>0.2·DTI</code></td><td>low (arithmetic)</td></tr>
-<tr><td>Independent scrutineer pass on <code>metric.py</code></td><td>the whole project reduces to
-this one operator agreeing with the organizer's scorer</td><td>low</td></tr>
-</table>
-
-<footer>
-<p><strong>Evidence discipline.</strong> Every number on this site is rendered from a JSON file in
-<code>registry/</code> that was written by a script in this repository, and the page names that file.
-Nothing here is asserted from memory. Where a value is an estimate from a model rather than a
-measurement, it is labelled as such. No organizer score is claimed for any artifact in this
-repository.</p>
-<p>GEMSDOE44 · DOE GEMS Prize (DrivenData #306) · source:
-<a href="https://github.com/buffedlizard55-lab/GEMSDOE44">github.com/buffedlizard55-lab/GEMSDOE44</a></p>
-</footer></div></body></html>
+<p class="src">A second, independent artifact from a parallel session on this repository (`GEMS44_n-strand-ssmc_…bf3b3914`) is preserved with its original page at <a href="parallel_session_artifact.html">parallel_session_artifact.html</a> and in <code>docs/downloads/</code>; it was not built by this session and no claim is made about it here.</p>
+<footer>GEMSDOE44 — DOE GEMS Prize (DrivenData #306). No score on this site is an organizer
+receipt. Every number is a local measurement and names the registry file it came from.</footer>
+</div></body></html>

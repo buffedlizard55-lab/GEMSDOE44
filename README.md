@@ -20,6 +20,26 @@
 > only. Every artifact published here must be built by this repository's own pipeline and must
 > differ in content from every artifact listed in the GEMSDOE family.
 >
+> **Session amendment (2026-10-06, session 2 — carried forward from here on).** The problem is to
+> be split into **two explicitly separate, separately validated stages**, never collapsed into one
+> number:
+> * **Stage 1 — coarse favouritability.** Strain, heat flow and geochemistry (the official
+>   geodetic, conductivity / depth-to-basement and seismicity bands). It decides **only which broad
+>   zones are worth searching at all**, and it is validated as a *zone* statement (blocked-cell AUC,
+>   base-rate lift, recall of catalogue-absent faults inside the approved area), never with a
+>   pixel metric.
+> * **Stage 2 — independent fine placement.** A placement model trained and holdout-scored on its
+>   own, using only the precision/recall structure the official DTI actually rewards, placing dots
+>   **only inside zones Stage 1 approved**.
+>
+> Both stages' holdout performance must be reported **separately** in the write-up, and the final
+> output must be checked against a Stage-1-only emission and a Stage-2-ungated emission at the same
+> mass, so it cannot be one stage's footprint wearing a two-stage label. If the coarse stage turns
+> out to be nearly uninformative on its own, say so and publish the number (this session: the
+> physical-only gate's blocked-cell AUC is 0.529 with a base-rate lift of 1.08×, and that finding is
+> printed in `registry/twostage/submission.json :: stage_a_honesty`).
+>
+>
 > **Method discipline, every session.**
 > 1. Generate **3–5 candidate geological hypotheses not yet tried**, each naming: the specific
 >    layer(s) involved; the physical signature targeted (edge-detection transform, curvature,
@@ -356,3 +376,104 @@ Where their analysis and this repository's evidence interact, this repository st
 result rather than the assertion: see [`registry/ring_mechanism.json`](registry/ring_mechanism.json)
 for the first-hand byte-level test of the 0.2600 → 0.2778 pruning claim, and
 `docs/limitations.html` for what remains unverified.
+
+---
+
+## 9. Session 2 (2026-10-06) — the calibrated instrument and the two-stage artifact
+
+This section is additive: everything above it (including the artifact record in §1) is the state of
+`main` as merged from the parallel session, and nothing there is replaced. This session adds a
+second, independent artifact, the instrument that chose it, and the forensics behind the 0.2778
+question. Full write-up: [`docs/research/why_the_family_top_file_scored_highest.md`](docs/research/why_the_family_top_file_scored_highest.md);
+machine-readable evidence: [`registry/twostage/`](registry/twostage/).
+
+### 9.1 The submission this session ships
+
+| field | value |
+| --- | --- |
+| file | `GEMS44_h46-twostageAB_20261006T160000Z_b0cfe956-zeros.tif` (315,429 B) |
+| sha256 | `3c04892d0deca00ccbadf77c801130180f05a03a9c0d575e4d8b91127286d06f` |
+| zip | `GEMS44_h46-twostageAB_20261006T160000Z_b0cfe956-zeros.zip` (198,695 B, inner member byte-identical) |
+| NaN-outside twin | `…-nan.tif` (official template convention) |
+| predicted cells | 42,000, every value exactly 1.0; **0 on the masked catalogue, 0 within 200 m of it** |
+| portal Name / Note | `GEMS44-H46-TWOSTAGE-AB` / "GEMS44 H46 two-stage A x B \| Stage A coarse physical-zone gate, Stage B curvature/relief placement, exact greedy max-coverage emission, 42,000 dots, 0 within 200 m of the catalogue, 0 on the masked catalogue; holdout 4/4 folds vs the incumbent; UNSCORED" |
+| format verification | 10/10 checks re-read from the bytes — `registry/twostage/submission.json :: format.primary.checks` |
+| blocked holdout | frame P: **4/4 folds** beat the incumbent at every mass; shipped recipe 0.2267 credit/dot vs the incumbent's 0.1263 |
+| uniqueness | max Jaccard against any of the 114 locally available prior artifacts **0.0199** |
+| site entry point | <https://buffedlizard55-lab.github.io/GEMSDOE44/docs/index.html> (download is the first element) |
+
+### 9.2 The instrument question — settled, with 21 artifacts
+
+Every candidate statistic was computed for all 21 locally available artifacts carrying an
+owner-reported live score (IR-44-08: used as an order, never as a receipt), with this repository's
+exact metric:
+
+| instrument | all 21 | the 13 at live ≥ 0.18 | the 6-point pruning ladder |
+| --- | ---: | ---: | ---: |
+| **frame-P credit per dot** (mass-corrected) | **+0.549** (p = 0.0099) | **+0.945** (p < 0.0001) | **+1.000** |
+| frame-P DTI at own mass | +0.017 | −0.308 | −0.543 |
+| frame-P excess over uniform | +0.509 | +0.599 | +1.000 |
+| frame-N DTI (**the previous promotion frame**) | **−0.500** | **−0.731** | −0.771 |
+| frame-N excess (**the previous promotion statistic**) | −0.168 (p = 0.47) | −0.357 (p = 0.23) | −0.371 |
+| catalogue DTI with the mask off (contaminated) | −0.803 | −0.907 | — |
+
+Frame P = the 62,122 px of USGS SGMC faults > 300 m from the competition catalogue. The metric's
+algebra explains why the mass correction matters: every binary dot raises the denominator by exactly
+α = 0.2 regardless of where it lands, so a dot pays iff its own realised credit exceeds 0.2·DTI —
+0.052 at a score of 0.26. **The instrument-inflation warning is published with it**: a field fitted
+directly on the SGMC off-catalogue population (`gemsdoe29-sgmc-off-catalogue-44k`) scores 0.79
+credit/dot on frame P and 0.0512 live, so the frame-P statistic may only be used **out-of-fold**.
+Hence the blocked quadrant sweep, and hence the shipped recipe was chosen from the sweep's 0.2267,
+not from the shipped file's in-sample 0.4414.
+
+### 9.3 Two stages, separately validated — including the number that undercuts the story
+
+* **Stage A (coarse favouritability, a ZONE statement).** Physical bands (strain, conductivity
+  surface, depth to basement, seismicity, gravity, magnetics) plus catalogue fault-corridor density
+  at 2 km and 10 km → a gate over 70% of the footprint. Reported twice on purpose: blocked-cell AUC
+  **0.942** for the shipped score (self-referential — it is validated against "does this 2 km cell
+  contain catalogue faults" and *contains* a smoothed catalogue), versus **0.529** for the
+  physical-only variant with a base-rate lift of **1.08×**. The honest reading: coarse physical
+  favouritability is nearly uninformative for fault occurrence at this scale, and that is exactly
+  why the family's habitat-only emissions scored 0.0041 / 0.1223 / 0.1352.
+* **Stage B (fine placement, a PIXEL statement).** 51 transforms of the 19 official bands —
+  local relief models, topographic openness/anti-slope, Hessian curvature and ridge response of the
+  detrended elevation, potential-field total horizontal gradients, Basin & Range strike-fabric
+  alignment, multi-scale step energy. Blocked-quadrant AUC against frame P: `hessian_curv_s3`
+  0.7456, `lrm_grad_r15` 0.7340, `lrm_abs_r15` 0.6852, `fabric_align_s5` 0.6755. The classical
+  potential-field edge operators are all **below chance on catalogue-absent faults** at 100 m
+  (tilt/curvature 0.37, gravity THG 0.46) — a physical statement about what these faults are.
+* **Emission**: exact greedy max-coverage over the metric's own kernel (submodular ⇒ (1−1/e)),
+  3 px minimum separation, no mass within 200 m of the catalogue. Measured at one field, one mass,
+  one scorer: 3 px beats 4/5/6 px, and greedy beats raster-order thinning 0.2267 vs 0.0439 credit
+  per dot.
+* **Dominance check** (same field, same mass, same scorer): Stage-A-only ranked by the Stage A
+  score scores 0.0683 on frame P against the shipped file's 0.3081, Jaccard 0.006 — the file is not
+  Stage A's footprint. The ungated Stage-B controls score *higher in-sample* for a mechanical reason
+  (a gate only removes candidate pixels), which is stated on the validation page rather than hidden;
+  the gate's actual evidence is the out-of-fold sweep, where it wins on **both** frames in 4/4
+  folds at every mass.
+* **The mass decision**: frame P says more mass keeps paying to 60,000 dots; the family's own live
+  A/B pairs say otherwise. The metric makes every A/B pair a model-free measurement: removing a set
+  of dots raises a fixed field's score iff their mean credit is below the bar, and the lineage's two
+  prunes removed dots at ≤ 0.052–0.055 — while frame P scores those same strata at 0.029–0.089.
+  Frame P is therefore 2–3× more generous than the hidden set, and the shipped mass (42,000) sits
+  inside the band where the lineage was still gaining live. Flagged as IR-46-03.
+
+### 9.4 The 0.2778 question
+
+`docs/research/why_the_family_top_file_scored_highest.md` answers it end to end: the provenance of
+the number (the file is UNSCORED; 0.2778 belongs to a third-party leaderboard row — IR-44-03 / IR-44-10),
+the additive budget that makes every dot cost exactly 0.2 of denominator, the stratum decomposition
+showing both live prunes removed exactly the below-bar mass, the 6/6 and 21-artifact instrument
+calibration, the emission-geometry theory, and the three routes to beat it with what is measurable
+here. Five ranked hypotheses live in `registry/twostage/hypotheses.json`: two are validated
+(flank excision at the metric's break-even; two-stage gate × curvature placement), one is a
+free emission rule already implemented, and two are recorded as **DATA-BLOCKED with the failing
+HTTP codes** (USGS ComCat microseismicity — HTTP 000 from this sandbox; 3DEP lidar blocks — HTTP 000,
+and the tile-footprint hypothesis was still tested and rejected on measurement).
+
+**Flagged, not hidden**: IR-46-01 (this session's first 24-feature field lost 4/4 folds to the
+incumbent at matched mass and is kept in the sweep), IR-46-02 (the sweep's docstring still states a
+frame-N promotion gate that nothing passes; frame P decides), IR-46-03 (mass choice, above).
+No organizer score exists for anything in this repository; the artifact is a validated candidate.

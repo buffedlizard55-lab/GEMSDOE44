@@ -1,73 +1,55 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
+<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>How to submit — GEMSDOE44</title>
-<link rel="stylesheet" href="assets/site.css"></head><body>
-<header class="top"><div class="wrap">
-<h1>How to submit</h1>
-<div class="note">The exact clicks, the exact Note, and the fix for the range error</div>
-<nav style="margin-top:14px">
-<a href="index.html">Executive summary</a>
-<a href="how-to-submit.html">How to submit</a>
-<a href="data.html">Data</a>
-<a href="method.html">Method</a>
-<a href="validation.html">Validation</a>
-<a href="hypotheses.html">Hypotheses</a>
-<a href="leaderboard.html">Leaderboard</a>
-<a href="limitations.html">Limitations</a>
-</nav></div></header>
-<div class="wrap">
+<title>How to submit — executive summary · GEMSDOE44</title><link rel="stylesheet" href="assets/twostage.css"></head>
+<body><header class="top"><div class="wrap"><nav><a href="index.html">Executive summary</a> <a href="twostage.html">Two-stage method</a> <a href="validation.html">Validation</a> <a href="forensics.html">Why 0.2778</a> <a href="hypotheses.html">Hypotheses</a> <a href="data.html">Data</a> <a href="how-to-submit.html">How to submit</a> <a href="leaderboard.html">Leaderboard</a> <a href="limitations.html">Limitations & flags</a></nav></div></header>
+<div class="wrap"><h1>How to submit — executive summary</h1><p class="src">Source: registry/twostage/submission.json</p>
 
-<h2>Exactly how to submit, line by line</h2>
-<div class="panel">
+<h2>The exact clicks</h2>
 <ol>
-<li>Click <strong>Download</strong> on the <a href="index.html">executive summary</a>: you get
-<code class="mono">GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-zeros.tif</code>.</li>
-<li>Sign in to DrivenData and open
-<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/submissions/">the submission form</a>
-(<em>Submit</em> → <em>Make new submission</em>).</li>
-<li><strong>File to submit</strong> → <em>Choose file</em> → select the downloaded
-<code>.tif</code> (or the <code>.zip</code>, which contains the same single GeoTIFF).</li>
-<li><strong>Note</strong> (optional) → paste:<br>
-<span class="mono">GEMS44 n-strand-ssmc | supervised transfer of USGS SGMC strands absent from the given catalogue (U) onto the 19 official bands; exact greedy max-coverage emission 44090 dots; &lt;=200 m catalogue ring excluded; none on the known mask; unique f</span></li>
-<li>If the form offers a name/identifier field, use
-<span class="mono">GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914</span> so
-you can tell this submission apart from the others later.</li>
-<li>Press <em>Submit</em>. The public leaderboard updates the “Best public DW-Tversky” column for
-your account.</li>
+<li>Download the file: <a href="downloads/GEMS44_h46-twostageAB_20261006T160000Z_b0cfe956-zeros.zip">the .zip</a> (or
+<a href="downloads/GEMS44_h46-twostageAB_20261006T160000Z_b0cfe956-zeros.tif">the .tif</a>).</li>
+<li>Open the submission form:
+<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/submissions/">competition → Submit</a>.</li>
+<li><b>File to submit</b> — choose the downloaded <code>GEMS44_h46-twostageAB_20261006T160000Z_b0cfe956-zeros.zip</code>.</li>
+<li><b>Note</b> — paste: <code>GEMS44 H46 two-stage A x B | Stage A coarse physical-zone gate, Stage B
+curvature/relief placement, exact greedy max-coverage emission, 42,000 dots, 0 within 200 m
+of the catalogue, 0 on the masked catalogue; holdout 4/4 folds vs the incumbent; UNSCORED</code></li>
+<li>Press <b>Create submission</b>. The unique name to identify it later is
+<code>GEMS44-H46-TWOSTAGE-AB</code>.</li>
 </ol>
-</div>
 
-<h2>“Predicted values must be in range [0, 1]” — why it happens and how this file avoids it</h2>
-<p>The official format contract requires a single-band <strong>float32</strong> GeoTIFF with values
-between 0 and 1, NaN or null outside the footprint. The portal message appears when a validator
-sees at least one value outside [0, 1] (a nodata sentinel such as −9999, an unnormalised model
-output, an integer band, or a multi-band file).</p>
-<p>The primary file here is written so that <em>every</em> cell is finite and every value is exactly
-<code>0.0</code> or <code>1.0</code> — there is no nodata tag and no NaN anywhere, so no validator can
-find an out-of-range value. The <code>-nan.tif</code> twin is offered for anyone who wants the
-convention used by the official <code>sample_submission.tif</code> (NaN outside the footprint with
-<code>nodata = nan</code>); both contain the identical prediction set inside the footprint.</p>
-<p>Measured on the official template: footprint <strong>5,167,373 px</strong>,
-known-fault pixels <strong>60,988 px</strong>, scored
-domain <strong>5,106,385 px</strong>. Values outside the
-footprint carry no prediction and are outside the study area.</p>
-<p class="note">Source: <code>registry/population.json</code> (grid section),
-<code>submissions/GEMS44_n-strand-ssmc_20261006T113858Z_bf3b3914-audit.json</code> (format checks).</p>
+<h2>Why a previous download failed with “Predicted values must be in range [0, 1]”</h2>
+<p>Two different defects produce that same message, and both are measured in this repository:</p>
+<ol>
+<li><b>The float32 nodata sentinel.</b> <code>training_features.tif</code> uses
+<code>-3.4028234663852886e+38</code> as its nodata value. Writing those cells through unchanged puts
+values far outside [0, 1] into the raster. (3,061 of those cells lie inside the submission
+footprint.)</li>
+<li><b>The NaN sentinel.</b> A raster with <code>nodata=NaN</code> and NaN cells <i>inside</i> the
+footprint is rejected for the same reason: NaN is not a value in [0, 1]. NaN <i>outside</i> the
+footprint is the official convention and is accepted — but only if the footprint itself is clean.</li>
+</ol>
+<div class="ok"><b>The file offered here cannot trigger either.</b> Its primary twin is single-band
+float32, EPSG:32611, 100 m, 3730 × 3292, <b>every one of the 12,279,160 cells finite</b>, values
+exactly {0.0, 1.0}, and <b>no nodata tag at all</b>. The format block on the
+<a href="index.html">executive summary</a> is re-read from the bytes on disk after writing, by
+<code>gems44.submit.verify</code>, and the check results are stored in
+<code>registry/twostage/submission.json</code>. The <code>-nan.tif</code> twin is offered only for
+anyone who prefers the official template's outside-footprint convention.</div>
 
-<h2>Submission budget</h2>
-<p>The competition allows a limited number of scored submissions and requires one single file to be
-chosen for scoring across both prize rounds before the deadline. This repository therefore treats
-each upload as an experiment and never spends a slot on an artifact that has not first beaten the
-incumbent on the blocked primary frame — see <a href="method.html">Method</a>
-<a href="validation.html">Validation</a>.</p>
+<h2>What the file contains</h2>
+<table class="tbl"><thead><tr><th>check</th><th>value</th></tr></thead><tbody>
+<tr><td>predicted pixels</td><td>42,000</td></tr>
+<tr><td>dots on the masked catalogue</td><td>0</td></tr>
+<tr><td>dots within 200 m of the catalogue</td><td>0</td></tr>
+<tr><td>dots inside the Stage A zone</td><td>42,000 (100.0%)</td></tr>
+<tr><td>min separation enforced</td><td>3.0 px</td></tr>
+<tr><td>sha256 of the .tif</td><td><span class="mono">3c04892d0deca00ccbadf77c801130180f05a03a9c0d575e4d8b91127286d06f</span></td></tr>
+<tr><td>zip inner member byte-identical</td><td>True</td></tr>
+</tbody></table>
+<p class="src">Source: <code>registry/twostage/submission.json</code>.</p>
 
-<footer>
-<p><strong>Evidence discipline.</strong> Every number on this site is rendered from a JSON file in
-<code>registry/</code> that was written by a script in this repository, and the page names that file.
-Nothing here is asserted from memory. Where a value is an estimate from a model rather than a
-measurement, it is labelled as such. No organizer score is claimed for any artifact in this
-repository.</p>
-<p>GEMSDOE44 · DOE GEMS Prize (DrivenData #306) · source:
-<a href="https://github.com/buffedlizard55-lab/GEMSDOE44">github.com/buffedlizard55-lab/GEMSDOE44</a></p>
-</footer></div></body></html>
+<p class="src">A second, independent artifact from a parallel session on this repository (`GEMS44_n-strand-ssmc_…bf3b3914`) is preserved with its original page at <a href="parallel_session_artifact.html">parallel_session_artifact.html</a> and in <code>docs/downloads/</code>; it was not built by this session and no claim is made about it here.</p>
+<footer>GEMSDOE44 — DOE GEMS Prize (DrivenData #306). No score on this site is an organizer
+receipt. Every number is a local measurement and names the registry file it came from.</footer>
+</div></body></html>

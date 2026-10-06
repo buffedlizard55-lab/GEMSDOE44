@@ -1,0 +1,414 @@
+{
+  "created_utc": "2026-10-06T15:17:36Z",
+  "source": "data/raw/training_features.tif (19 official bands; no catalogue, no SGMC)",
+  "features": {
+    "lrm_r5": {
+      "path": "data/interim/feats/lrm_r5.npy",
+      "dtype": "float32",
+      "min": -585.5288696289062,
+      "max": 670.9293212890625,
+      "mean": 1.5906015393696293e-10,
+      "sha256": "5c7d34ca12918e540b4cb683d2b75392cf03be15a91beec9c5a5a8f9e56e58d7"
+    },
+    "lrm_r15": {
+      "path": "data/interim/feats/lrm_r15.npy",
+      "dtype": "float32",
+      "min": -494.85870361328125,
+      "max": 788.9450073242188,
+      "mean": 3.1812030787392587e-10,
+      "sha256": "9fd5ca9bab72664306ff4578974d049580753aa8c87d8b213ff28d160e14fc78"
+    },
+    "lrm_r40": {
+      "path": "data/interim/feats/lrm_r40.npy",
+      "dtype": "float32",
+      "min": -437.65924072265625,
+      "max": 942.91064453125,
+      "mean": -1.526977477794844e-08,
+      "sha256": "6fa724e40d79475ece92c6c4c44091e33c8013ff68d3756d4d5efec1d00ab3c7"
+    },
+    "lrm_abs_r15": {
+      "path": "data/interim/feats/lrm_abs_r15.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 788.9450073242188,
+      "mean": 11.41635513305664,
+      "sha256": "7f9aee5bdeb25ddc0746e7b3fffe748edf28024a79f23b1542a2fb145e82ee40"
+    },
+    "lrm_grad_r15": {
+      "path": "data/interim/feats/lrm_grad_r15.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 203.28526306152344,
+      "mean": 2.3042781352996826,
+      "sha256": "f7cff23e983e4f435860c096e4ef3dd4f15836780090592dae860ae218c49239"
+    },
+    "open_pos_l10": {
+      "path": "data/interim/feats/open_pos_l10.npy",
+      "dtype": "float32",
+      "min": -13.716938972473145,
+      "max": 16.649791717529297,
+      "mean": 0.08937571942806244,
+      "sha256": "e2873dd91698f49ef02ea266e0c4a0c8c249a90d249cce75aa6e6ee02c61d841"
+    },
+    "open_neg_l10": {
+      "path": "data/interim/feats/open_neg_l10.npy",
+      "dtype": "float32",
+      "min": -13.939390182495117,
+      "max": 15.783097267150879,
+      "mean": 0.1193149983882904,
+      "sha256": "af077a6227ab95bc4ed4b3fa47ee8983c86c70a36fbf863fc2c9ad811536e8ba"
+    },
+    "open_antislope_l10": {
+      "path": "data/interim/feats/open_antislope_l10.npy",
+      "dtype": "float32",
+      "min": -30.447607040405273,
+      "max": 29.239715576171875,
+      "mean": 0.029939329251646996,
+      "sha256": "dda521d4ae1bcc6e41890b01eae938857bcccb051532e5ac6dbcf0b97c7587de"
+    },
+    "open_neg_l30": {
+      "path": "data/interim/feats/open_neg_l30.npy",
+      "dtype": "float32",
+      "min": -44.70505142211914,
+      "max": 36.979949951171875,
+      "mean": -4.491072654724121,
+      "sha256": "cc7d277ff5fd82a357b47e20bf4f73e8eb042856339bb91de1f4511e6bc73274"
+    },
+    "open_antislope_l30": {
+      "path": "data/interim/feats/open_antislope_l30.npy",
+      "dtype": "float32",
+      "min": -87.30580139160156,
+      "max": 78.40666198730469,
+      "mean": 0.44056132435798645,
+      "sha256": "eda622143c1a56a9e07f5cc84b7d83289d3a69ac782e1908bd984c83d5a71c1c"
+    },
+    "hessian_ridge_s3": {
+      "path": "data/interim/feats/hessian_ridge_s3.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 34.55474853515625,
+      "mean": 0.16517621278762817,
+      "sha256": "36304532c4b1876e0047bc45f94c2ba980b43e70d75f1f1262e94eb1af7dbf37"
+    },
+    "hessian_ridge_s8": {
+      "path": "data/interim/feats/hessian_ridge_s8.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 4.771825313568115,
+      "mean": 0.05137241259217262,
+      "sha256": "f3147a6b6241ae13e56449eaa1bcfe7b3d41456119486a50b0041ddc9f1b191d"
+    },
+    "hessian_curv_s3": {
+      "path": "data/interim/feats/hessian_curv_s3.npy",
+      "dtype": "float32",
+      "min": 0.0003645514661911875,
+      "max": 41.16301727294922,
+      "mean": 0.6692572832107544,
+      "sha256": "5677633d057243b605795f05d799589700281f1f085d710a281a2b7c0164d2da"
+    },
+    "hessian_curv_s8": {
+      "path": "data/interim/feats/hessian_curv_s8.npy",
+      "dtype": "float32",
+      "min": 4.7280118451453745e-05,
+      "max": 6.156259536743164,
+      "mean": 0.20657862722873688,
+      "sha256": "bacd46d10803387fd50df9e96a910fbd2bd122f701fd5e79ba71157f82e44ea1"
+    },
+    "thg_gravity_s3": {
+      "path": "data/interim/feats/thg_gravity_s3.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 4.012682914733887,
+      "mean": 0.09714749455451965,
+      "sha256": "109409815ce95a09f274c9adc87026a12e48bd557107a5a0751c744273a7c41c"
+    },
+    "thg_gravity_s10": {
+      "path": "data/interim/feats/thg_gravity_s10.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 1.3031363487243652,
+      "mean": 0.08511322736740112,
+      "sha256": "3d86ac20b3627032e65b980cd87619fee532945798736224b51d94308b98d336"
+    },
+    "thg_magnetic_s3": {
+      "path": "data/interim/feats/thg_magnetic_s3.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 332.13671875,
+      "mean": 3.695589542388916,
+      "sha256": "8b097c67264cb0ad58eaffdd5c8eb9000779d6467c8670d44bed3d05ad4c4c90"
+    },
+    "thg_magnetic_s10": {
+      "path": "data/interim/feats/thg_magnetic_s10.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 108.94652557373047,
+      "mean": 1.6706347465515137,
+      "sha256": "6ea3157f783c3230fbb0214b8cc9c8041fe07b7f2cf1076d23bef94508ce4577"
+    },
+    "tilt_tc_s5": {
+      "path": "data/interim/feats/tilt_tc_s5.npy",
+      "dtype": "float32",
+      "min": 4.256250381469727,
+      "max": 35.559574127197266,
+      "mean": 18.474567413330078,
+      "sha256": "5aea2f1c802b4f6b7d2a8558e5b9cc4f6125f9979104f49c269ff51716d4c30a"
+    },
+    "fabric_align_s5": {
+      "path": "data/interim/feats/fabric_align_s5.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 419.3932189941406,
+      "mean": 8.992831230163574,
+      "sha256": "1ef56a661edbd24e96dfce424daa617953d6900b1df0793139d0b48c5165a689"
+    },
+    "fabric_align_s15": {
+      "path": "data/interim/feats/fabric_align_s15.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 140.6374969482422,
+      "mean": 6.329920768737793,
+      "sha256": "270f8840b18a581ca7f8cbe6467364b572cfa7c5df0a23d6a57f27912f8a8647"
+    },
+    "step_energy_s5": {
+      "path": "data/interim/feats/step_energy_s5.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 337.13330078125,
+      "mean": 0.05735218897461891,
+      "sha256": "4d176c17767f9771301ac87420d7062aa0ccdeb75f3923e7712f9afd4a4ee8b6"
+    },
+    "step_energy_s15": {
+      "path": "data/interim/feats/step_energy_s15.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 119.02102661132812,
+      "mean": 0.032560911029577255,
+      "sha256": "3d043a5186efff617841227cb3d532f112f6c736c1c945362670727e79dcb5b0"
+    },
+    "slope_multiscale_ratio": {
+      "path": "data/interim/feats/slope_multiscale_ratio.npy",
+      "dtype": "float32",
+      "min": 0.02910204790532589,
+      "max": 416.1208190917969,
+      "mean": 1.187320351600647,
+      "sha256": "6e5f411c66da2f3204b369225b162cbbd480bd7730670ef6b9495dcfd1c17ad1"
+    },
+    "detrended_elevation_slope": {
+      "path": "data/interim/feats/detrended_elevation_slope.npy",
+      "dtype": "float32",
+      "min": 0.001103136339224875,
+      "max": 62.64591598510742,
+      "mean": 5.289454460144043,
+      "sha256": "b786340184f6ee12e2c25c1a99ea807f0950c58f4cd7757df7f7c59ad3c663ba"
+    },
+    "detrended_elevation_slope_m3": {
+      "path": "data/interim/feats/detrended_elevation_slope_m3.npy",
+      "dtype": "float32",
+      "min": 0.0024578149896115065,
+      "max": 48.12700271606445,
+      "mean": 5.289454936981201,
+      "sha256": "e47010167fecd6730c12fab82d6baf745a4a56c319d63edd62f2d28732eda655"
+    },
+    "detrended_elevation_slope_m9": {
+      "path": "data/interim/feats/detrended_elevation_slope_m9.npy",
+      "dtype": "float32",
+      "min": 0.017403634265065193,
+      "max": 39.773494720458984,
+      "mean": 5.289454936981201,
+      "sha256": "190f76f8d3dca7d4e2292b1032eff2a0addcfcc8e815a45854aa970d9cdffc79"
+    },
+    "detrended_elevation": {
+      "path": "data/interim/feats/detrended_elevation.npy",
+      "dtype": "float32",
+      "min": -589.9837036132812,
+      "max": 1469.9127197265625,
+      "mean": -51.061798095703125,
+      "sha256": "a4112fa734290ccf4af94ea5011dd08745b21d413b91ecaa8ad4d8480a13eb35"
+    },
+    "detrended_elevation_m3": {
+      "path": "data/interim/feats/detrended_elevation_m3.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 594.580078125,
+      "mean": 2.1291165351867676,
+      "sha256": "2f71184f90ef4fd6d2b24fd2f13055e0f6af7e4c7f1121a691284748e0b2b7ee"
+    },
+    "tilt_angle_tot_curv": {
+      "path": "data/interim/feats/tilt_angle_tot_curv.npy",
+      "dtype": "float32",
+      "min": 2.9534237384796143,
+      "max": 88.56654357910156,
+      "mean": 18.474626541137695,
+      "sha256": "f093e4f613f6dade3eb3de5438ca48020f0b24e03947a73a3ffad97401f9ade5"
+    },
+    "tilt_angle_tot_curv_m9": {
+      "path": "data/interim/feats/tilt_angle_tot_curv_m9.npy",
+      "dtype": "float32",
+      "min": 4.016434192657471,
+      "max": 38.91074752807617,
+      "mean": 18.474624633789062,
+      "sha256": "5c8927f8b03a65c1ed906e5e7149c76d2dfd5caf1adbefb115fde4f3267b23ca"
+    },
+    "tmi_hgrad": {
+      "path": "data/interim/feats/tmi_hgrad.npy",
+      "dtype": "float32",
+      "min": 0.004909869749099016,
+      "max": 2200.4365234375,
+      "mean": 18.761741638183594,
+      "sha256": "f8e6e3e607dbaf2f9d982f50c70c523e31bcdd0259b087dba8329129a1589ac7"
+    },
+    "tmi_vgrad": {
+      "path": "data/interim/feats/tmi_vgrad.npy",
+      "dtype": "float32",
+      "min": -7.650597095489502,
+      "max": 20.510923385620117,
+      "mean": -0.00471931416541338,
+      "sha256": "0a3d9c29f540dd641b3d6f2b5cffe55e92c0b9e939aa1f366aa9f1fe0daba431"
+    },
+    "tmi_total": {
+      "path": "data/interim/feats/tmi_total.npy",
+      "dtype": "float32",
+      "min": -2178.27783203125,
+      "max": 4506.14111328125,
+      "mean": -117.57647705078125,
+      "sha256": "de38e16656d9064886bb54555fca6400cb28b27a5989b62adb06068e3ba941da"
+    },
+    "rtp_magnetic": {
+      "path": "data/interim/feats/rtp_magnetic.npy",
+      "dtype": "float32",
+      "min": -2786.299560546875,
+      "max": 4508.76025390625,
+      "mean": -129.7691650390625,
+      "sha256": "a9c6ba163163c8a86ba1aaf76105aa229bbf3c7fb6f6f0671fac5a5d29c8289b"
+    },
+    "magnetic_anomaly": {
+      "path": "data/interim/feats/magnetic_anomaly.npy",
+      "dtype": "float32",
+      "min": -1052.0047607421875,
+      "max": 2109.447509765625,
+      "mean": -51.507659912109375,
+      "sha256": "f2eea5ed762d5944b1771b2077671f85e98b7420817cff053164631609956ed6"
+    },
+    "isostatic_grav_hgrad": {
+      "path": "data/interim/feats/isostatic_grav_hgrad.npy",
+      "dtype": "float32",
+      "min": -15.441243171691895,
+      "max": 12.856057167053223,
+      "mean": 0.022335801273584366,
+      "sha256": "bd90f9614c8b2a8aa9d2dd73e42b07675499d18c09bf9efb4e1e01fbf2b7973b"
+    },
+    "isostatic_grav_vgrad": {
+      "path": "data/interim/feats/isostatic_grav_vgrad.npy",
+      "dtype": "float32",
+      "min": -18.164581298828125,
+      "max": 12.578903198242188,
+      "mean": -0.06703115254640579,
+      "sha256": "8b556bcb8ca56a1b1c76ed4f25ef109acecacb78fcbdf42ce92ff5630a83b494"
+    },
+    "isostatic_grav_slope": {
+      "path": "data/interim/feats/isostatic_grav_slope.npy",
+      "dtype": "float32",
+      "min": 0.0013825353235006332,
+      "max": 0.6517290472984314,
+      "mean": 0.10975818336009979,
+      "sha256": "90b3f80ddcf3b4189b77a7200a954e6631556d471847fc5751e63506d97a976e"
+    },
+    "isostatic_grav_anomaly": {
+      "path": "data/interim/feats/isostatic_grav_anomaly.npy",
+      "dtype": "float32",
+      "min": -45.75756072998047,
+      "max": 24.232954025268555,
+      "mean": -7.6593708992004395,
+      "sha256": "e3aa0cbfce902154887d7a420ea85e15447e527767027e5826796dd4c4425822"
+    },
+    "geodetic_2nd_invariant": {
+      "path": "data/interim/feats/geodetic_2nd_invariant.npy",
+      "dtype": "float32",
+      "min": 1.2000000476837158,
+      "max": 87.45342254638672,
+      "mean": 20.46522331237793,
+      "sha256": "87b64dad69b9845e9ee758bd0371aec228793b480189b9190dcd69f5e69faeca"
+    },
+    "geodetic_shear_rate": {
+      "path": "data/interim/feats/geodetic_shear_rate.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 54.400001525878906,
+      "mean": 10.159501075744629,
+      "sha256": "f57360b655e3aeefde060bc7eda6df099e1e3b3326d031092d19c0bb9e4eebda"
+    },
+    "geodetic_dilatation_rate": {
+      "path": "data/interim/feats/geodetic_dilatation_rate.npy",
+      "dtype": "float32",
+      "min": -16.5,
+      "max": 34.52448272705078,
+      "mean": 5.862383842468262,
+      "sha256": "07631705cf7f118db1275832c8d45ebdd400909618ac309ecb891b710ee71bb1"
+    },
+    "earthquake_density": {
+      "path": "data/interim/feats/earthquake_density.npy",
+      "dtype": "float32",
+      "min": 236.8000030517578,
+      "max": 7869.5,
+      "mean": 908.0357666015625,
+      "sha256": "607aad01a26fe2f7414929400943085ff152f02753d28c288d99539b0870e379"
+    },
+    "earthquake_density_m9": {
+      "path": "data/interim/feats/earthquake_density_m9.npy",
+      "dtype": "float32",
+      "min": 236.8000030517578,
+      "max": 7869.5,
+      "mean": 908.0358276367188,
+      "sha256": "982cb78a20f3f223bd2820fa07f4ce2efa852e48cd393cb5a466d62c9df97f53"
+    },
+    "depth_to_basement": {
+      "path": "data/interim/feats/depth_to_basement.npy",
+      "dtype": "float32",
+      "min": -14.837310791015625,
+      "max": 7135.306640625,
+      "mean": 407.3608093261719,
+      "sha256": "a305a38c57901c93278fb97656af30bbde1940ba00cd4f3e6122f7ed0acda765"
+    },
+    "depth_to_basement_m9": {
+      "path": "data/interim/feats/depth_to_basement_m9.npy",
+      "dtype": "float32",
+      "min": -7.265742778778076,
+      "max": 7050.931640625,
+      "mean": 407.3608093261719,
+      "sha256": "4e4b417e8dbdb6bd00ba8a51734380de948b08bf8963e77b60c178e4efd6147b"
+    },
+    "conductivity_surface": {
+      "path": "data/interim/feats/conductivity_surface.npy",
+      "dtype": "float32",
+      "min": 0.1937037855386734,
+      "max": 4.969292640686035,
+      "mean": 2.8728740215301514,
+      "sha256": "1762eabb8e0a96ac163b227a55899e39f15b908c9bb7e0df8a59419100c59c69"
+    },
+    "conductivity_surface_m9": {
+      "path": "data/interim/feats/conductivity_surface_m9.npy",
+      "dtype": "float32",
+      "min": 0.2220785766839981,
+      "max": 4.969292640686035,
+      "mean": 2.8728737831115723,
+      "sha256": "65e1ef480ef75267e719259271b615c97ba31e401ebd914c7b0fb428bbb4a060"
+    },
+    "curvature_laplacian_m3": {
+      "path": "data/interim/feats/curvature_laplacian_m3.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 594.580078125,
+      "mean": 2.1291165351867676,
+      "sha256": "2f71184f90ef4fd6d2b24fd2f13055e0f6af7e4c7f1121a691284748e0b2b7ee"
+    },
+    "curvature_laplacian_m9": {
+      "path": "data/interim/feats/curvature_laplacian_m9.npy",
+      "dtype": "float32",
+      "min": 0.0,
+      "max": 114.2200927734375,
+      "mean": 0.6138157844543457,
+      "sha256": "f883c0f14e658834defbfd4009bbf04eea19af8ced4979bdd3a54ae855372175"
+    }
+  }
+}
