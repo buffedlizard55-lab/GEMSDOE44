@@ -1,0 +1,10 @@
+{
+ "note": "pooled proxy DTI; full-data model (optimistic, relative comparison only; disclosed)",
+ "scores": {
+  "30000": 0.03985111036010783,
+  "35000": 0.04270298251815439,
+  "40000": 0.04485258146403897,
+  "45000": 0.04663904468908959
+ },
+ "chosen_N": 45000
+}

@@ -1,0 +1,10 @@
+{
+ "note": "full-data model vs FULL catalogue (train-set overlap; optimistic; NOT a score estimate)",
+ "TPw": 2853.979704042681,
+ "FPw": 42811.39066845816,
+ "FNw": 58134.02029595732,
+ "DTI": 0.049271556128901065,
+ "n_truth": 60988,
+ "n_pred_px": 45000,
+ "precision_proxy": 0.06249767998731299
+}

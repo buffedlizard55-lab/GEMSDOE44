@@ -22,7 +22,7 @@ from gems44 import config as C  # noqa: E402
 from gems44 import data_io, features, stage1, stage2  # noqa: E402
 from gems44.emit_submission import (audit_file, uniqueness_report,  # noqa: E402
                                     write_submission, write_zip)
-from gems44.metric import max_kernel_to_truth, score_components  # noqa: E402
+from gems44.metric44 import max_kernel_to_truth, score_components  # noqa: E402
 from gems44.emission import greedy_dots  # noqa: E402
 from gems44.mirror_model import mirror_score  # noqa: E402
 
