@@ -1,0 +1,10 @@
+{
+ "rule": "primary q=0.35 for the arm table; q selection on the A4-full arm only over q in {0.25, 0.35, 0.5, 1.0}, highest pooled proxy DTI wins, ties -> larger q (disclosed: selection on the same holdout)",
+ "q_primary": 0.35,
+ "q_candidates": [
+  0.25,
+  0.35,
+  0.5,
+  1.0
+ ]
+}

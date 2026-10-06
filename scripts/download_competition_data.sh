@@ -1,23 +1,41 @@
 #!/usr/bin/env bash
-# Official competition download helper script
-# Note: DrivenData requires user authentication and competition acceptance.
-# When running on an unrestricted local machine with your DrivenData session:
+# Fetch the official competition rasters into data/.
+#
+# Primary path (unrestricted machine): the DrivenData data tab
+#   https://www.drivendata.org/competitions/306/competition-doe-gems/data/
+# requires a (free) DrivenData login. Download training_features.tif,
+# labels.tif, sample_submission.tif and 1m_DEM_links.csv into data/ and
+# rename:  labels.tif -> existing_faults.tif, sample_submission.tif ->
+# example_submission.tif, training_features.tif stays as-is.
+#
+# Fallback path (egress-restricted sandbox): the group's sha256-pinned
+# GitHub mirror of that exact tab (each pin names the official dropbox URL):
+#   https://github.com/buffedlizard55-lab/GEMSDOE  (data/bridge/)
+# This sandbox uses that fallback; verification (sha256 + geometry) is done
+# by scripts/run_all.py step 0 and recorded in evidence/verify_rasters.json.
+#
+# Expected sha256 (from data/bridge/manifest.json):
+#   training_features.tif   4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5
+#   existing_faults.tif     7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093
+#   example_submission.tif  2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc
 set -euo pipefail
-
-DATA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../data" && pwd)"
-mkdir -p "$DATA_DIR"
-
-echo "=== DOE GEMS Prize Challenge: Data Downloader ==="
-echo "Official data URL: https://www.drivendata.org/competitions/306/competition-doe-gems/data/"
-echo "Please download the following competition files into $DATA_DIR:"
-echo "  1. training_features.tif"
-echo "  2. labels.tif"
-echo "  3. sample_submission.tif"
-echo "  4. 1m_DEM_links.csv"
-echo ""
-echo "Alternative community Dropbox links provided in the charter:"
-echo "  - example_submission.tif: https://www.dropbox.com/scl/fi/6rgvnuady818ol8yqgis4/example_submission.tif?rlkey=kbykilvau066xuogoosbf4cq8&dl=1"
-echo "  - existing_faults.tif: https://www.dropbox.com/scl/fi/t7fyt03qdh9egyme0itwo/existing_faults.tif?rlkey=yiao96uluqdkipf0h5vju71jf&dl=1"
-echo "  - numerical_features.tif: https://www.dropbox.com/scl/fi/3vz9o0wwavi26xaeoxlwr/gems-geodawn-numerical-features.tif?rlkey=je8d8fepqfbst9lnwsq9rkplu&dl=1"
-echo ""
-echo "Place files in $DATA_DIR and run: python scripts/prepare_data.py"
+cd "$(dirname "$0")/.."
+mkdir -p data
+python3 - <<'EOF'
+import hashlib, pathlib
+pins = {
+    "data/training_features.tif": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5",
+    "data/existing_faults.tif": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+    "data/example_submission.tif": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+}
+ok = True
+for p, want in pins.items():
+    f = pathlib.Path(p)
+    if not f.exists():
+        print(f"MISSING {p}"); ok = False; continue
+    h = hashlib.sha256(f.read_bytes()).hexdigest()
+    status = "OK " if h == want else "BAD"
+    if h != want: ok = False
+    print(f"{status} {p} {h[:16]}…")
+raise SystemExit(0 if ok else 1)
+EOF

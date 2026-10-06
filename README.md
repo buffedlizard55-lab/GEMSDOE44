@@ -275,6 +275,7 @@ collided with this site's generator were preserved verbatim under
 | their research notes | [`docs/research/`](docs/research/) |
 | their artifacts | `docs/downloads/gemsdoe44-h44-*` (this session's submission files sit beside them, different names) |
 | their pipeline | `generate_submission.py`, `scripts/{prepare_data,run_checks,generate_h44_6_prune,analyze_spacing_stdlib,audit_tif_stdlib}.py`, `tests/test_submission_and_metric.py` |
+| session 3 — two-stage gate + fine placement | site archived at [`docs/sibling/session3/`](docs/sibling/session3/) (incl. the per-stage holdout page); code line `src/gems44/{config,data_io,features,stage1,stage2,emission,emit_submission,mirror_model,metric44}.py`, `scripts/run_all.py`; evidence `evidence/*.json` + `docs/data/*.json`; pre-registered 4-quadrant holdout: Stage-1 gate AUC 0.864 / conc 2.435 (PASS), Stage-2 arm table A4 0.0230 vs A1 habitat 0.0308 (promotion rule NOT met — disclosed); its DTI variant (no known-fault mask) is `metric44.py` to avoid clobbering this repo's `metric.py` |
 
 Where their analysis and this repository's evidence interact, this repository states the measured
 result rather than the assertion: see [`registry/ring_mechanism.json`](registry/ring_mechanism.json)

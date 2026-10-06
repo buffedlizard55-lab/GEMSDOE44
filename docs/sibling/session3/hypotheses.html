@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Candidate hypotheses, ranked · GEMSDOE44</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <div class="brand">GEMSDOE<span>44</span></div>
+    <a href="index.html">Home</a>
+    <a href="methodology.html">Methodology</a>
+    <a class="on" href="hypotheses.html">Hypotheses</a>
+    <a href="holdout.html">Holdout</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="sources.html">Sources</a>
+    <a href="irregularities.html">Irregularities</a>
+  </div>
+</header>
+<main class="wrap">
+
+<h1>Candidate geological hypotheses — new in GEMSDOE44, ranked</h1>
+<p class="sub">Five candidates not tried in any GEMSDOE site to date. Each names the layers, the
+physical signature, why it catches a fault <b>missing from the USGS/INGENIOUS catalogue</b> rather
+than one already in it, and how it differs from everything already implemented (including the
+group's registered-but-unbuilt arms H33-1..5, H60-1..5, H61-1..3 in GEMSDOE32). Rank order =
+expected DTI improvement per unit implementation cost. Nothing is slot-eligible without passing
+the spatially-blocked holdout first (pre-registration
+<a href="data/stage2_holdout.json">stage2_holdout.json</a>).</p>
+
+<table>
+<tr><th>#</th><th>hypothesis</th><th>layers</th><th>physical signature</th><th>why off-catalogue</th><th>difference from prior work</th><th>expected / cost / data</th><th>status</th></tr>
+
+<tr>
+<td>1</td>
+<td><b>G44-H1</b><br>Cross-physics lineament consensus: two independent physics fields must both show a strong, same-orientation lineament before mass is spent there</td>
+<td>official bands: <code>det_elev</code> (topography), <code>rtp</code> (magnetics), <code>iso_grav_anom</code> (gravity), <code>tc</code> (radiometrics) — 4 independent physics</td>
+<td>per-field structure tensor (Gaussian σ=1.5 grad, σ=2/4 px coherence) → coherence × gradient-energy response; consensus = max over 6 pairs of R<sub>i</sub>·R<sub>j</sub>·max(0, cos 2Δθ) at two scales</td>
+<td>a single field's ridge is its own noise (each field's noise looks like a lineament to itself); two independent physics agreeing on the <i>same trace and orientation</i> is a first-order-structure signature that survives cover — the catalogue is biased toward what is exposed, so buried/deep structures are only visible jointly</td>
+<td>no site has built an <b>inter-field orientation-agreement</b> detector. GEMSDOE32's "multiphysics" (H32d) added dots on hand-built surfaces (dip-projected steps, transtensional swarms, MT clay-cap surfaces) — a union of surfaces, not a learned consensus field; its 35-channel detector has no cross-field angular term anywhere</td>
+<td>core detector of this submission · cost low (raster algebra + RF, all inputs on disk) · data: 4 official bands, hash-verified</td>
+<td><span class="pill ok">BUILT + holdout-scored</span> arm A3 vs A4 in <a href="holdout.html#stage2">holdout §Stage 2</a> (H1-only vs full model isolates its contribution)</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td><b>G44-H2</b><br>Strike inheritance: a candidate lineament is only emit-eligible if its orientation continues a mapped system nearby — new faults in relay positions inherit the parent strike</td>
+<td>345 NBMG Qfaults-INGENIOUS v2 gap-link features (official vector mirror; per-feature source URL recorded) + the pixel's own lineament orientation from G44-H1's detrended-surface tensor</td>
+<td>for each pixel: cos 2(θ<sub>pixel</sub> − θ<sub>nearest gap-link strike</sub>) · exp(−d/2 km), d = distance to nearest gap link</td>
+<td>a new fault that extends or relays a <i>mapped</i> system has the parent's kinematics; the catalogue records the mapped segments, not their unmapped continuations. Inheritance selects continuations and rejects unrelated relict lineaments (which the catalogue also does not contain, but which score high on raw structure)</td>
+<td>the group's arms used the catalogue only as a <b>mask</b> (flank removal) or emitted <b>catalogue vectors</b> (H41/SGMC — lost the proxy). Nobody has used the catalogue's <i>strike geometry</i> as an orientation <i>prior on detected lineaments</i></td>
+<td>filter on G44-H1 · cost very low (one distance transform + windowed nearest-strike stamp) · data: official NBMG mirror (345 features, sha-pinned upstream)</td>
+<td><span class="pill ok">BUILT + holdout-scored</span> channel <code>h2_inherit</code> in the Stage-2 model</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td><b>G44-H3</b><br>Catalogue-incompleteness relay prior: the catalogue's own uncertainty classes (Inferred / Moderately Constrained segments) and its end-to-end gaps flag where unmapped faulting is most likely</td>
+<td>NBMG gap links with <code>ftype_src/tgt</code>, <code>gap_km</code>, <code>kinematic_compat</code>; 290 relay-class links (gap &lt; 3 km, kinematically compatible)</td>
+<td>Gaussian (σ=2 px) stamps at each gap midpoint, weight = kinematic compatibility; plus endpoint stamps weighted by the weaker segment's uncertainty class</td>
+<td>where the catalogue is <i>uncertain or ends</i> is exactly where unmapped faulting lives — the catalogue flags its own weak spots, and by construction those points are <b>off the mapped line</b> (adjacent, not on it). Relay ramps between compatible segments are the textbook location of unmapped normal faults</td>
+<td>H33-2 (the 0.2778 winner) <i>deleted</i> dots near the catalogue; no arm has used the ftype uncertainty class + gap/relay geometry as an emission <i>prior</i>. H60-2 (catalogue-difference) needs a <i>newer</i> catalogue — different mechanism, and the newer dataset is not obtainable from this sandbox</td>
+<td>prior channel in Stage 2 · cost very low · data: official NBMG mirror. <b>Circularity disclosure:</b> relay positions are derived from catalogue gaps, so the proxy validation partially rewards the prior by construction — the holdout table reports it as its own channel so the effect is visible, and the flank B=2 mask keeps emission off the mapped line</td>
+<td><span class="pill ok">BUILT + holdout-scored</span> channels <code>relay</code>, <code>endpt</code></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td><b>G44-H4</b><br>Hydrothermal-plumbing composite: high conductivity × shallow conductive base × dense high heat-flow wells = active permeable structure, even without a surface scarp</td>
+<td><code>cond_surf</code> (band 17), <code>depth_to_base_surf</code> (band 15), 2,108 USGS Great-Basin heat-flow well points (official GDR/ScienceBase mirror, hf_meas mW/m², 184 wells ≥ 1500)</td>
+<td>clip(z(cond),0,∞) · clip(−z(depth_to_base),0,∞) · 1[≥1 hot well within 5 km]</td>
+<td>hydrothermal systems localize on faults; conductivity marks alteration, shallow conductive base marks near-surface fluid, measured heat flow marks heat that actually reaches ground. The joint signature points at <i>active plumbing</i> — faults that can lack any preserved Quaternary scarp and therefore be absent from a geomorphic catalogue</td>
+<td>dilcond (GEMSDOE26, 0.1223) used conductivity <i>alone as a coarse habitat</i> — the failure mode we are fixing; H33-1 (wellspring geochemistry) was a <i>removal</i> prior and was falsified. No arm has built the 3-way joint composite at placement scale; no arm has used the heat-flow <i>well points</i> as a placement layer (heat flow as a basin habitat was among the worst performers, 0.0041 — the difference is 300 m placement vs basin-scale, and the holdout adjudicates)</td>
+<td>tie-break channel · cost low · data: 2 official bands + official well CSV (reprojected USAEAC_83_117 → EPSG:32611 with pyproj; 4,216 wells in grid, lat 37.40–40.72 — verified plausible)</td>
+<td><span class="pill ok">BUILT + holdout-scored</span> channel <code>h4_conduit</code>; note: composite is very sparse (few pixels pass all three conditions) — RF weights it by measured importance</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td><b>G44-H5</b><br>Seismicity lineament × magnetic edge: a <i>linear</i> (anisotropic) concentration of earthquake density, witnessed by a co-located magnetic edge, is an active or creeping fault that the Quaternary-surface catalogue can miss</td>
+<td><code>deq_n100a15</code> (band 10), <code>ieq_n100a15</code> (band 16), <code>tmi_hg</code> (band 3)</td>
+<td>structure-tensor coherence of the seismicity-density field (σ=4 px) × positive part of z(|tmi_hg|)</td>
+<td>instrumental seismicity is a <b>dynamic</b> inventory: blind, creeping, and low-slip-rate faults rupture small earthquakes even when they never preserve a scarp; a geomorphic catalogue records only the last of those. Requiring the density to be <i>linear, not a blob</i> (tensor anisotropy) is the discriminator vs crustal noise</td>
+<td>adjacent to GEMSDOE32's registered-but-unbuilt H61-2 (seismicity tensor + <i>det_elev curvature inflection</i>): this variant uses a <i>magnetic</i> edge as the witness instead of surface curvature, and is built/measured here — disclosure included so it is not passed off as untouched territory</td>
+<td>witness channel · cost low · data: official bands on disk; free USGS ComCat hypocentres (official, API) could refine depth later — not used, not needed for this arm</td>
+<td><span class="pill ok">BUILT + holdout-scored</span> channel <code>h5_seis_edge</code> (weakest measured lift — reported honestly)</td>
+</tr>
+</table>
+
+<h2>Registered but not built here (needs egress this sandbox lacks — CI step specced)</h2>
+<table>
+<tr><th>hypothesis</th><th>what it needs</th><th>free official source</th><th>status</th></tr>
+<tr><td><b>G44-R1</b> — 1 m / 10 m DEM drainage-network chi-transform &amp; knickpoint residuals (inherited interest from GEMSDOE32 H60-5; targets faults under valley fill with no scarp)</td><td>DEM tiles + hydrology</td><td>official <code>1m_DEM_links.csv</code> / <code>Digital-elevation-model-links-JSON.pdf</code> (USGS 3DEP; mirrored in the GEMSDOE repo, sha 8804dbff…)</td><td><span class="pill claim">registered, not run</span> — tile fetch needs egress; cost high</td></tr>
+<tr><td><b>G44-R2</b> — post-catalogue coseismic rupture (Monte Cristo Range 2020 Mw 6.5) as exact line targets (inherited interest from GEMSDOE32 H60-1; real, published, verifiable by the expert panel, and <i>absent from the pre-2020 labels by construction</i>)</td><td>MCRE rupture vector</td><td>Dee et al. NBMG TR-190 / Koehler et al. 2021 (SRL 92(2A) 823–829, USGS Publications Warehouse 70217872 — verified record)</td><td><span class="pill claim">registered, not built</span> — sciencebase.gov not reachable from this sandbox (flagged irregularity IR-44-EGRESS-01)</td></tr>
+</table>
+
+<h2>Deliberately <b>not</b> proposed (and why)</h2>
+<ul class="tight">
+<li><b>Step-over / tip <i>extension</i> of a ridge field</b> — GEMSDOE32 H33-5 falsified it as an addition arm (0.00767 credit/dot vs 0.05416 break-even). Our G44-H3 uses the <i>same physics region</i> (relay zones) but as a coarse prior channel inside a separately-validated model, not as a geometry-extension arm — the falsification does not transfer, and we say so.</li>
+<li><b>Wellspring-chemistry removal prior</b> — GEMSDOE32 H33-1 falsified it (10–25× too expensive per dot). Not re-proposed.</li>
+<li><b>TDR/tilt zero-crossing on band 6</b> — GEMSDOE32 H61-3 rests on reading band 6 as "tilt angle"; GEMSDOE25 <i>measured</i> Spearman 0.9999 between band 6 and the GeoDAWN radiometric TC product. We follow the measurement (IR-44-BAND6-01); a zero-crossing transform on radiometric counts is not a magnetic TDR.</li>
+<li><b>Catalogue-flank B=2 removal</b> — this is a <i>metric-theoretic</i> consequence (hidden truth is off-catalogue by construction), not a hypothesis; it is applied deterministically after emission and disclosed as also used by the group's best file. The dot positions themselves come entirely from this system's two stages.</li>
+</ul>
+
+</main>
+<footer><div class="wrap">GEMSDOE44 · hypotheses · evidence: <code>evidence/stage2_holdout.json</code>, <code>evidence/external_mirrors.json</code></div></footer>
+</body>
+</html>
