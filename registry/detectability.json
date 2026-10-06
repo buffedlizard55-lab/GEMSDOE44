@@ -1,0 +1,327 @@
+{
+  "auc_vs_distance_to_catalogue": {
+    "0-3px": {
+      "auc_cat_detr_slope": 0.5256,
+      "auc_off_detr_slope": 0.6224,
+      "n_cat": 4000,
+      "n_neg": 527,
+      "n_off": 792
+    }
+  },
+  "blocked_quadrant_auc": {
+    "catalogue": {
+      "folds": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean": 1.0
+    },
+    "sgmc_only": {
+      "folds": [
+        0.7716,
+        0.7708,
+        0.789,
+        0.7623
+      ],
+      "mean": 0.7734
+    }
+  },
+  "n_neg": 8000,
+  "n_pos_catalogue": 4000,
+  "n_pos_sgmc_only": 4000,
+  "seed": 44,
+  "univariate_auc": {
+    "conductivity_surface": {
+      "abs_gap": 0.0046,
+      "catalogue": 0.4878,
+      "sgmc_only": 0.5076
+    },
+    "conductivity_surface_m3": {
+      "abs_gap": 0.0048,
+      "catalogue": 0.4877,
+      "sgmc_only": 0.5075
+    },
+    "conductivity_surface_m9": {
+      "abs_gap": 0.0048,
+      "catalogue": 0.4876,
+      "sgmc_only": 0.5076
+    },
+    "depth_to_basement": {
+      "abs_gap": -0.1297,
+      "catalogue": 0.513,
+      "sgmc_only": 0.3573
+    },
+    "depth_to_basement_m3": {
+      "abs_gap": -0.1293,
+      "catalogue": 0.5132,
+      "sgmc_only": 0.3575
+    },
+    "depth_to_basement_m9": {
+      "abs_gap": -0.1285,
+      "catalogue": 0.5136,
+      "sgmc_only": 0.3578
+    },
+    "detrended_elevation": {
+      "abs_gap": -0.1622,
+      "catalogue": 0.4967,
+      "sgmc_only": 0.6655
+    },
+    "detrended_elevation_m3": {
+      "abs_gap": -0.1637,
+      "catalogue": 0.4971,
+      "sgmc_only": 0.6666
+    },
+    "detrended_elevation_m9": {
+      "abs_gap": -0.1702,
+      "catalogue": 0.4999,
+      "sgmc_only": 0.6703
+    },
+    "detrended_elevation_slope": {
+      "abs_gap": -0.1727,
+      "catalogue": 0.5643,
+      "sgmc_only": 0.737
+    },
+    "detrended_elevation_slope_m3": {
+      "abs_gap": -0.1864,
+      "catalogue": 0.5608,
+      "sgmc_only": 0.7472
+    },
+    "detrended_elevation_slope_m9": {
+      "abs_gap": -0.2033,
+      "catalogue": 0.5549,
+      "sgmc_only": 0.7582
+    },
+    "dist_to_catalogue_px": {
+      "abs_gap": 0.4001,
+      "catalogue": 0.0,
+      "sgmc_only": 0.4001
+    },
+    "dist_to_earthquake": {
+      "abs_gap": 0.0237,
+      "catalogue": 0.5424,
+      "sgmc_only": 0.4813
+    },
+    "dist_to_earthquake_m3": {
+      "abs_gap": 0.0237,
+      "catalogue": 0.5425,
+      "sgmc_only": 0.4812
+    },
+    "dist_to_earthquake_m9": {
+      "abs_gap": 0.0235,
+      "catalogue": 0.5425,
+      "sgmc_only": 0.4809
+    },
+    "earthquake_density": {
+      "abs_gap": 0.0451,
+      "catalogue": 0.5586,
+      "sgmc_only": 0.4864
+    },
+    "earthquake_density_m3": {
+      "abs_gap": 0.0451,
+      "catalogue": 0.5586,
+      "sgmc_only": 0.4865
+    },
+    "earthquake_density_m9": {
+      "abs_gap": 0.0449,
+      "catalogue": 0.5585,
+      "sgmc_only": 0.4864
+    },
+    "geodetic_2nd_invariant": {
+      "abs_gap": 0.0381,
+      "catalogue": 0.5602,
+      "sgmc_only": 0.478
+    },
+    "geodetic_2nd_invariant_m3": {
+      "abs_gap": 0.0381,
+      "catalogue": 0.5601,
+      "sgmc_only": 0.478
+    },
+    "geodetic_2nd_invariant_m9": {
+      "abs_gap": 0.0377,
+      "catalogue": 0.5598,
+      "sgmc_only": 0.4779
+    },
+    "geodetic_dilatation_rate": {
+      "abs_gap": -0.0151,
+      "catalogue": 0.5276,
+      "sgmc_only": 0.4574
+    },
+    "geodetic_dilatation_rate_m3": {
+      "abs_gap": -0.0148,
+      "catalogue": 0.5279,
+      "sgmc_only": 0.4573
+    },
+    "geodetic_dilatation_rate_m9": {
+      "abs_gap": -0.0145,
+      "catalogue": 0.5279,
+      "sgmc_only": 0.4575
+    },
+    "geodetic_shear_rate": {
+      "abs_gap": 0.0367,
+      "catalogue": 0.5596,
+      "sgmc_only": 0.4771
+    },
+    "geodetic_shear_rate_m3": {
+      "abs_gap": 0.0365,
+      "catalogue": 0.5595,
+      "sgmc_only": 0.477
+    },
+    "geodetic_shear_rate_m9": {
+      "abs_gap": 0.0365,
+      "catalogue": 0.5594,
+      "sgmc_only": 0.4771
+    },
+    "isostatic_grav_anomaly": {
+      "abs_gap": -0.0624,
+      "catalogue": 0.4659,
+      "sgmc_only": 0.5966
+    },
+    "isostatic_grav_anomaly_m3": {
+      "abs_gap": -0.0623,
+      "catalogue": 0.4659,
+      "sgmc_only": 0.5964
+    },
+    "isostatic_grav_anomaly_m9": {
+      "abs_gap": -0.062,
+      "catalogue": 0.4658,
+      "sgmc_only": 0.5962
+    },
+    "isostatic_grav_hgrad": {
+      "abs_gap": -0.0068,
+      "catalogue": 0.5048,
+      "sgmc_only": 0.5116
+    },
+    "isostatic_grav_hgrad_m3": {
+      "abs_gap": -0.007,
+      "catalogue": 0.5048,
+      "sgmc_only": 0.5118
+    },
+    "isostatic_grav_hgrad_m9": {
+      "abs_gap": -0.007,
+      "catalogue": 0.5055,
+      "sgmc_only": 0.5125
+    },
+    "isostatic_grav_slope": {
+      "abs_gap": -0.0271,
+      "catalogue": 0.5257,
+      "sgmc_only": 0.4472
+    },
+    "isostatic_grav_slope_m3": {
+      "abs_gap": -0.0272,
+      "catalogue": 0.5258,
+      "sgmc_only": 0.4471
+    },
+    "isostatic_grav_slope_m9": {
+      "abs_gap": -0.0275,
+      "catalogue": 0.5258,
+      "sgmc_only": 0.4467
+    },
+    "isostatic_grav_vgrad": {
+      "abs_gap": 0.0099,
+      "catalogue": 0.5302,
+      "sgmc_only": 0.4797
+    },
+    "isostatic_grav_vgrad_m3": {
+      "abs_gap": 0.0098,
+      "catalogue": 0.5302,
+      "sgmc_only": 0.4796
+    },
+    "isostatic_grav_vgrad_m9": {
+      "abs_gap": 0.0096,
+      "catalogue": 0.5305,
+      "sgmc_only": 0.4791
+    },
+    "magnetic_anomaly": {
+      "abs_gap": -0.0058,
+      "catalogue": 0.5039,
+      "sgmc_only": 0.5097
+    },
+    "magnetic_anomaly_m3": {
+      "abs_gap": -0.006,
+      "catalogue": 0.5037,
+      "sgmc_only": 0.5097
+    },
+    "magnetic_anomaly_m9": {
+      "abs_gap": -0.0056,
+      "catalogue": 0.5039,
+      "sgmc_only": 0.5095
+    },
+    "rtp_magnetic": {
+      "abs_gap": -0.0188,
+      "catalogue": 0.5054,
+      "sgmc_only": 0.5242
+    },
+    "rtp_magnetic_m3": {
+      "abs_gap": -0.0185,
+      "catalogue": 0.5059,
+      "sgmc_only": 0.5243
+    },
+    "rtp_magnetic_m9": {
+      "abs_gap": -0.0177,
+      "catalogue": 0.509,
+      "sgmc_only": 0.5266
+    },
+    "tilt_angle_tot_curv": {
+      "abs_gap": -0.0612,
+      "catalogue": 0.4441,
+      "sgmc_only": 0.3829
+    },
+    "tilt_angle_tot_curv_m3": {
+      "abs_gap": -0.0613,
+      "catalogue": 0.4442,
+      "sgmc_only": 0.3829
+    },
+    "tilt_angle_tot_curv_m9": {
+      "abs_gap": -0.0608,
+      "catalogue": 0.4454,
+      "sgmc_only": 0.3846
+    },
+    "tmi_hgrad": {
+      "abs_gap": 0.0279,
+      "catalogue": 0.5294,
+      "sgmc_only": 0.4985
+    },
+    "tmi_hgrad_m3": {
+      "abs_gap": 0.0266,
+      "catalogue": 0.5288,
+      "sgmc_only": 0.4978
+    },
+    "tmi_hgrad_m9": {
+      "abs_gap": 0.0251,
+      "catalogue": 0.5277,
+      "sgmc_only": 0.4974
+    },
+    "tmi_total": {
+      "abs_gap": -0.0212,
+      "catalogue": 0.4993,
+      "sgmc_only": 0.5219
+    },
+    "tmi_total_m3": {
+      "abs_gap": -0.0212,
+      "catalogue": 0.4992,
+      "sgmc_only": 0.522
+    },
+    "tmi_total_m9": {
+      "abs_gap": -0.0216,
+      "catalogue": 0.5005,
+      "sgmc_only": 0.5221
+    },
+    "tmi_vgrad": {
+      "abs_gap": 0.0097,
+      "catalogue": 0.4873,
+      "sgmc_only": 0.503
+    },
+    "tmi_vgrad_m3": {
+      "abs_gap": 0.0098,
+      "catalogue": 0.4872,
+      "sgmc_only": 0.503
+    },
+    "tmi_vgrad_m9": {
+      "abs_gap": 0.0012,
+      "catalogue": 0.4905,
+      "sgmc_only": 0.5083
+    }
+  }
+}

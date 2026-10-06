@@ -21,3 +21,7 @@ tmp/
 # from main (Session 1-2)
 *.npy
 data/raw/
+
+# from main (sessions 1-4)
+*.npy
+data/raw/

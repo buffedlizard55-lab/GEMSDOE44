@@ -1,139 +1,191 @@
-"""Line-by-line verification of the DTI implementation.
+"""Falsification tests for :mod:`gems44.metric`.
 
-1. Official worked example (drivendata page 967, read 2026-10-06):
-   TPw=3.00, FPw=1.89, FNw=2.00  ->  DTI = 0.60
-2. Hand-computed micro grids (single truth pixel, known geometry).
-3. Identity DTI = TPw / (TPw + 0.2 FPw + 0.8 (|G| - TPw)).
-4. Bounds: DTI in [0, 1]; perfect on-truth dots -> DTI = 1; empty -> 0.
+These tests deliberately attack the implementation: random grids, soft predictions,
+masking, empty sets, and the closed-form reductions.  Any disagreement between the
+fast operator and the independent brute-force transcription is a failure.
 """
-import sys
-from pathlib import Path
+
+from __future__ import annotations
 
 import numpy as np
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from gems44 import metric as M  # noqa: E402
-
-
-def test_worked_example_components():
-    """The published numbers must reproduce the published score."""
-    tpw, fpw, fnw = 3.00, 1.89, 2.00
-    dti = tpw / (tpw + 0.2 * fpw + 0.8 * fnw + 1e-12)
-    assert abs(dti - 0.60) < 0.005  # published: 0.60
-
-
-def test_single_truth_pixel_exact_hit():
-    G = np.zeros((9, 9))
-    G[4, 4] = 1.0
-    foot = np.ones((9, 9), bool)
-    P = np.zeros((9, 9))
-    P[4, 4] = 1.0
-    s = M.score_components(P, G, foot)
-    assert abs(s["TPw"] - 1.0) < 1e-12
-    assert abs(s["FNw"]) < 1e-12
-    assert abs(s["FPw"]) < 1e-12
-    assert abs(s["DTI"] - 1.0) < 1e-9
+from gems44.metric import (
+    ALPHA,
+    BETA,
+    RADIUS_PX,
+    binary_credit,
+    dti,
+    dti_bruteforce,
+    dti_closed_form,
+    dti_of,
+    kernel,
+)
 
 
-def test_single_truth_pixel_at_distance_d():
-    """One truth pixel, one dot at Euclidean distance d -> DTI = k(d)."""
-    for (dr, dc, d, expected_k) in [(0, 1, 1.0, 2.0 / 3.0),
-                                    (0, 2, 2.0, 1.0 / 3.0),
-                                    (0, 3, 3.0, 0.0),
-                                    (1, 1, np.sqrt(2), 1 - np.sqrt(2) / 3)]:
-        G = np.zeros((9, 9))
-        G[4, 4] = 1.0
-        foot = np.ones((9, 9), bool)
-        P = np.zeros((9, 9))
-        P[4 + dr, 4 + dc] = 1.0
-        s = M.score_components(P, G, foot)
-        assert abs(s["DTI"] - expected_k) < 1e-9, (dr, dc, s)
-        # FN identity
-        assert abs(s["FNw"] - (1.0 - s["TPw"])) < 1e-12
-        # FP = 1 - k(d) (the dot pays the uncovered kernel share)
-        assert abs(s["FPw"] - (1.0 - expected_k)) < 1e-9
+def _random_case(seed: int, shape=(24, 26), soft: bool = False):
+    rng = np.random.default_rng(seed)
+    if soft:
+        pred = rng.random(shape).astype(np.float64)
+        pred[pred < 0.75] = 0.0
+    else:
+        pred = (rng.random(shape) < 0.10).astype(np.float64)
+    truth = (rng.random(shape) < 0.12).astype(np.int8)
+    valid = rng.random(shape) > 0.10
+    known = (rng.random(shape) < 0.08)
+    pred = np.where(valid & ~known, pred, 0.0)
+    truth = np.where(valid & ~known, truth, 0)
+    return pred, truth, valid, known
 
 
-def test_saturation_multiple_dots_same_truth():
-    """More dots on the same truth pixel must NOT increase TPw (max rule)."""
-    G = np.zeros((9, 9))
-    G[4, 4] = 1.0
-    foot = np.ones((9, 9), bool)
-    P = np.zeros((9, 9))
-    P[4, 4] = 1.0
-    P[4, 5] = 1.0  # second dot at d=1
-    s = M.score_components(P, G, foot)
-    assert abs(s["TPw"] - 1.0) < 1e-12  # saturated at 1
-    assert abs(s["FPw"] - (1.0 - 2.0 / 3.0)) < 1e-9
+@pytest.mark.parametrize("seed", range(8))
+def test_fast_equals_bruteforce_binary(seed):
+    pred, truth, valid, known = _random_case(seed)
+    a = dti(pred, truth, valid, known)
+    b = dti_bruteforce(pred, truth, valid, known)
+    assert abs(a.tp_w - b.tp_w) < 1e-9
+    assert abs(a.fp_w - b.fp_w) < 1e-9
+    assert abs(a.fn_w - b.fn_w) < 1e-9
+    assert abs(a.score - b.score) < 1e-12
 
 
-def test_empty_prediction_is_zero():
-    G = np.zeros((9, 9))
-    G[4, 4] = 1.0
-    foot = np.ones((9, 9), bool)
-    P = np.zeros((9, 9))
-    s = M.score_components(P, G, foot)
-    assert s["DTI"] == 0.0
-    assert abs(s["FNw"] - 1.0) < 1e-12
+@pytest.mark.parametrize("seed", range(4))
+def test_fast_equals_bruteforce_soft(seed):
+    pred, truth, valid, known = _random_case(100 + seed, soft=True)
+    a = dti(pred, truth, valid, known)
+    b = dti_bruteforce(pred, truth, valid, known)
+    assert abs(a.tp_w - b.tp_w) < 1e-9
+    assert abs(a.fp_w - b.fp_w) < 1e-9
+    assert abs(a.score - b.score) < 1e-12
 
 
-def test_dti_bounded_and_monotone_in_hits():
-    rng = np.random.default_rng(0)
-    G = (rng.random((60, 60)) < 0.02).astype(float)
-    foot = np.ones_like(G, bool)
-    # perfect cover
-    P1 = G.copy()
-    # half of truth covered
-    mask = rng.random((60, 60)) < 0.5
-    P2 = np.where(mask, G, 0.0)
-    d1 = M.score(P1, G, foot)
-    d2 = M.score(P2, G, foot)
-    assert 0.0 <= d2 < d1 <= 1.0
+def test_fn_identity_and_closed_form():
+    for seed in range(6):
+        pred, truth, valid, known = _random_case(200 + seed)
+        r = dti(pred, truth, valid, known)
+        assert abs(r.fn_w - (r.n_truth - r.tp_w)) < 1e-9            # FN_w = |G| - TP_w
+        assert abs(r.score - dti_closed_form(r.tp_w, r.fp_w, r.n_truth)) < 1e-12
 
 
-def test_official_formulas_match_reference_computation():
-    """Cross-check score_components against a brute-force O(|G||P|) implementation."""
-    rng = np.random.default_rng(1)
-    H = W = 40
-    G = (rng.random((H, W)) < 0.05).astype(float)
-    P = (rng.random((H, W)) < 0.05).astype(float)
-    foot = np.ones((H, W), bool)
-    R = 3.0
-
-    g = np.argwhere(G > 0)
-    p = np.argwhere(P > 0)
-
-    tpw = 0.0
-    for (gr, gc) in g:
-        best = 0.0
-        for (pr, pc) in p:
-            d = np.hypot(pr - gr, pc - gc)
-            if d <= R:
-                best = max(best, P[pr, pc] * (1 - d / R))
-        tpw += best
-    fpw = 0.0
-    for (pr, pc) in p:
-        bestk = 0.0
-        for (gr, gc) in g:
-            d = np.hypot(pr - gr, pc - gc)
-            if d <= R:
-                bestk = max(bestk, 1 - d / R)
-        fpw += P[pr, pc] * (1 - bestk)
-    fnw = len(g) - tpw
-    ref = tpw / (tpw + 0.2 * fpw + 0.8 * fnw + 1e-12)
-
-    s = M.score_components(P, G, foot)
-    assert abs(s["TPw"] - tpw) < 1e-9
-    assert abs(s["FPw"] - fpw) < 1e-9
-    assert abs(s["FNw"] - fnw) < 1e-9
-    assert abs(s["DTI"] - ref) < 1e-9
+def test_kernel_values():
+    assert kernel(0.0) == 1.0
+    assert abs(kernel(1.0) - 2.0 / 3.0) < 1e-12          # 100 m -> 2/3
+    assert abs(kernel(2.0) - 1.0 / 3.0) < 1e-12          # 200 m -> 1/3
+    assert kernel(3.0) == 0.0                            # 300 m -> 0 (k = (1-d/R)+)
+    assert kernel(10.0) == 0.0
+    assert RADIUS_PX == 3.0 and ALPHA == 0.2 and BETA == 0.8
 
 
-def test_kernel_support_exactly_3px():
-    offs, w = M.kernel_weights(3)
-    d = np.hypot(offs[:, 0], offs[:, 1])
-    assert np.all(d < 3.0)
-    assert (d == 3.0).sum() == 0  # k(3) = 0 excluded
-    assert abs(w[np.argmin(d)] - 1.0) < 1e-12
+def test_perfect_prediction_scores_one():
+    shape = (20, 20)
+    truth = np.zeros(shape, np.int8)
+    truth[5, 3:17] = 1
+    pred = truth.astype(np.float64)
+    r = dti(pred, truth)
+    assert abs(r.score - 1.0) < 1e-9
+
+
+def test_empty_prediction_scores_zero():
+    shape = (20, 20)
+    truth = np.zeros(shape, np.int8)
+    truth[5, 3:17] = 1
+    assert dti(np.zeros(shape), truth).score == 0.0
+
+
+def test_binary_dominates_its_own_scaled_version():
+    """Prop. (i): a graded map is strictly dominated by its own thresholded support."""
+    shape = (40, 40)
+    truth = np.zeros(shape, np.int8)
+    truth[8, 5:35] = 1
+    truth[30, 5:35] = 1
+    rng = np.random.default_rng(7)
+    field = rng.random(shape) * 0.4
+    field[7:10, 4:36] = 0.9                     # a fuzzy band over the first trace
+    base = dti(field, truth).score
+    thresh = dti((field >= 0.9).astype(np.float64), truth).score
+    assert thresh > base
+
+
+def test_scaling_a_soft_map_never_helps():
+    """DTI(lambda*p) is increasing in lambda, so lambda=1 dominates any lambda<1."""
+    shape = (40, 40)
+    truth = np.zeros(shape, np.int8)
+    truth[8, 5:35] = 1
+    rng = np.random.default_rng(11)
+    field = rng.random(shape)
+    field[7:10, 4:36] = 0.8
+    scores = [dti(field * lam, truth).score for lam in (0.2, 0.5, 0.8, 1.0)]
+    assert all(b > a for a, b in zip(scores, scores[1:]))
+
+
+def test_marginal_rule_matches_direct_evaluation():
+    """(ii): adding a dot of credit k pays iff k > 0.2 * DTI. Checked by direct re-scoring."""
+    shape = (60, 60)
+    truth = np.zeros(shape, np.int8)
+    truth[30, 5:55] = 1
+    dots = np.zeros(shape, np.float64)
+    dots[30, np.arange(6, 55, 4)] = 1.0
+    s0 = dti(dots, truth).score
+    for extra_col, extra_row in [(10, 31), (10, 33), (10, 26)]:
+        e = dots.copy()
+        e[extra_row, extra_col] = 1.0
+        s1 = dti(e, truth).score
+        # credit of the added dot = increase in TP_w if it is the best cover of some truth pixel
+        added = e - dots
+        r0 = dti(dots, truth)
+        r1 = dti(e, truth)
+        credit = r1.tp_w - r0.tp_w
+        predicted_improves = credit > 0.2 * s0
+        assert predicted_improves == (s1 > s0)
+
+
+def test_known_mask_is_neutral():
+    """Staff: it should not matter whether known faults are included in predictions."""
+    shape = (30, 30)
+    truth = np.zeros(shape, np.int8)
+    truth[4, 2:28] = 1
+    known = np.zeros(shape, bool)
+    known[20, 2:28] = True
+    pred_a = np.zeros(shape, np.float64)
+    pred_a[3:6, 2:28] = 1.0
+    pred_b = pred_a.copy()
+    pred_b[known] = 1.0                      # also paint the known fault
+    assert abs(dti(pred_a, truth, known=known).score - dti(pred_b, truth, known=known).score) < 1e-12
+    # ... and a dot placed *on* the known mask earns nothing
+    only_known = np.zeros(shape, np.float64)
+    only_known[known] = 1.0
+    assert dti(only_known, truth, known=known).score == 0.0
+
+
+def test_binary_credit_matches_dti():
+    for seed in range(6):
+        pred, truth, valid, known = _random_case(300 + seed)
+        s = binary_credit(pred > 0, truth, valid, known)
+        r = dti(pred, truth, valid, known)
+        assert abs(s["T"] - r.tp_w) < 1e-9
+        assert abs(s["F"] - r.fp_w) < 1e-9
+        assert s["G"] == r.n_truth
+        assert abs(dti_of(s) - r.score) < 1e-12
+
+
+def test_rejects_out_of_range_and_nonfinite():
+    shape = (8, 8)
+    truth = np.zeros(shape, np.int8)
+    with pytest.raises(ValueError):
+        dti(np.full(shape, 1.5), truth)
+    with pytest.raises(ValueError):
+        dti(np.full(shape, np.nan), truth)
+    with pytest.raises(ValueError):
+        dti(np.full(shape, -0.1), truth)
+
+
+def test_nan_outside_footprint_is_allowed():
+    """The official sample submission carries NaN outside the footprint: that must not raise."""
+    shape = (10, 10)
+    truth = np.zeros(shape, np.int8)
+    truth[5, 2:8] = 1
+    pred = np.full(shape, np.nan)
+    pred[5, 2:8] = 1.0
+    valid = np.isfinite(pred)          # the footprint is exactly the non-NaN region
+    r = dti(pred, truth, valid=valid)
+    assert r.score > 0.9

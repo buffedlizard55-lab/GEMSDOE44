@@ -1,0 +1,46 @@
+{
+  "agreement_all_within_1e-9": true,
+  "artifact": "GEMS44_n-strand-ssmc_20261006T110212Z_4971d359",
+  "frames": {
+    "N_sgmc_within_300m": {
+      "artifact": {
+        "abs_diff": 5.551115123125783e-17,
+        "exact": 0.395723932,
+        "fast": 0.395723932
+      },
+      "delta_artifact_minus_incumbent_exact": 0.220188,
+      "incumbent": {
+        "abs_diff": 0.0,
+        "exact": 0.175535894,
+        "fast": 0.175535894
+      },
+      "truth_px": 17493,
+      "uniform_same_mass": {
+        "abs_diff": 6.938893903907228e-18,
+        "exact": 0.046870174,
+        "fast": 0.046870174
+      }
+    },
+    "P_sgmc_beyond_300m": {
+      "artifact": {
+        "abs_diff": 0.0,
+        "exact": 0.142183294,
+        "fast": 0.142183294
+      },
+      "delta_artifact_minus_incumbent_exact": 0.048009,
+      "incumbent": {
+        "abs_diff": 1.3877787807814457e-17,
+        "exact": 0.094174429,
+        "fast": 0.094174429
+      },
+      "truth_px": 62122,
+      "uniform_same_mass": {
+        "abs_diff": 0.0,
+        "exact": 0.077595242,
+        "fast": 0.077595242
+      }
+    }
+  },
+  "mass": 44090,
+  "operator_note": "exact = gems44.metric.dti (29 offsets); fast = binary_credit (2 EDTs)"
+}

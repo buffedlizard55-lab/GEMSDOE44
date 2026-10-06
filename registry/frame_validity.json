@@ -1,0 +1,88 @@
+{
+  "caveat": "the live scores are owner-reported and not organizer-authenticated (IR-44-08); the test asks only for the ORDER, which is the property a promotion frame needs",
+  "conclusion": "0 of 3 frames reproduce the reported score order. NO local frame reproduces the reported order: no hypothesis may be promoted on a local frame in this session. Selection must fall back to mechanism-based reasoning plus explicitly declared risk (registered as an irregularity).",
+  "frames": {
+    "N_sgmc_near": 17493,
+    "P_sgmc_far": 62122,
+    "S_catalogue": 60988
+  },
+  "purpose": "falsification test of local promotion frames against owner-reported live scores",
+  "rows": [
+    {
+      "artifact": "gems19-h19-5-powerlaw-budget-multiline-corroborated-20260930-e27054cf-nan.tif",
+      "binary": true,
+      "dots_or_mass": 121131,
+      "dti_N_sgmc_near": 0.141336,
+      "dti_P_sgmc_far": 0.099167,
+      "dti_S_catalogue": 0.0,
+      "live_score_reported": 0.1922,
+      "note": "owner-reported; not authenticated",
+      "site": "19GEMSDOE",
+      "uniform_N_sgmc_near": 0.071431,
+      "uniform_P_sgmc_far": 0.151389,
+      "uniform_S_catalogue": 0.0
+    },
+    {
+      "artifact": "gems27-topo-gap-closure-t-v2-on-d1-5-20261002-5512495c6bd1-nan.tif",
+      "binary": true,
+      "dots_or_mass": 61328,
+      "dti_N_sgmc_near": 0.173375,
+      "dti_P_sgmc_far": 0.101163,
+      "dti_S_catalogue": 0.0,
+      "live_score_reported": 0.2449,
+      "note": "owner-reported; not authenticated",
+      "site": "GEMSDOE27",
+      "uniform_N_sgmc_near": 0.057556,
+      "uniform_P_sgmc_far": 0.101997,
+      "uniform_S_catalogue": 0.0
+    },
+    {
+      "artifact": "gems24-h25-1-dotted-h19-5-d1-5-20261002-989f59505db1-nan.tif",
+      "binary": true,
+      "dots_or_mass": 60069,
+      "dti_N_sgmc_near": 0.1732,
+      "dti_P_sgmc_far": 0.099911,
+      "dti_S_catalogue": 0.0,
+      "live_score_reported": 0.2477,
+      "note": "owner-reported; not authenticated",
+      "site": "GEMSDOE24",
+      "uniform_N_sgmc_near": 0.06195,
+      "uniform_P_sgmc_far": 0.101035,
+      "uniform_S_catalogue": 0.0
+    },
+    {
+      "artifact": "gems24-h25-1-dotted-h19-5-d2-8-20261002-e56ea318af89-nan.tif",
+      "binary": true,
+      "dots_or_mass": 44090,
+      "dti_N_sgmc_near": 0.175536,
+      "dti_P_sgmc_far": 0.094174,
+      "dti_S_catalogue": 0.0,
+      "live_score_reported": 0.26,
+      "note": "owner-reported; owner page conflicted (IR-44-03 class)",
+      "site": "GEMSDOE25/GEMSDOE24",
+      "uniform_N_sgmc_near": 0.049746,
+      "uniform_P_sgmc_far": 0.079066,
+      "uniform_S_catalogue": 0.0
+    }
+  ],
+  "verdict": {
+    "N_sgmc_near": {
+      "beats_its_own_uniform_control_on_all": true,
+      "same_order": false,
+      "spearman_vs_live": 0.8,
+      "spread": 0.0342
+    },
+    "P_sgmc_far": {
+      "beats_its_own_uniform_control_on_all": false,
+      "same_order": false,
+      "spearman_vs_live": -0.4,
+      "spread": 0.006989
+    },
+    "S_catalogue": {
+      "beats_its_own_uniform_control_on_all": false,
+      "same_order": false,
+      "spearman_vs_live": NaN,
+      "spread": 0.0
+    }
+  }
+}

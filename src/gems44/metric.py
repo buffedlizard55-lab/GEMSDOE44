@@ -1,146 +1,209 @@
-"""Distance-weighted Tversky index (DTI) - official competition metric.
+"""Exact Distance-Weighted Tversky Index (DTI) for the DOE GEMS Prize (DrivenData #306).
 
-Implemented verbatim from the published formulae
-(https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/,
-read 2026-10-06):
+Every formula here is transcribed line-by-line from the official problem description
+(https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/ , section
+"Performance metric"), read 2026-10-06 UTC.  The masking rule is taken from the organizer
+statement in community thread 11516.
 
-    k(d)      = max(1 - d/R, 0),  R = 3 px (300 m at 100 m resolution)
-    TPw       = sum_g  max_{x: d(x,g) <= R} p(x) * k(d(x,g))
-    FPw       = sum_{x: p>0} p(x) * (1 - max_g k(d(x,g)))
-    FNw       = sum_g  (1 - max_{x: d(x,g) <= R} p(x) * k(d(x,g)))
-    DTI       = TPw / (TPw + alpha*FPw + beta*FNw + eps),  alpha=0.2, beta=0.8
+OFFICIAL DEFINITIONS (verbatim structure)
+-----------------------------------------
+Let p(x) in [0, 1] be the predicted probability at pixel x and g(x) the ground-truth label.
 
-Identity used throughout (exact, not an approximation):
-    FNw = |G| - TPw
-because FNw sums (1 - M_g) over ground-truth pixels with M_g = max p*k.
+    k(d) = (1 - d / R)+          R = 300 m  (3 pixels at the 100 m competition grid)
 
-CONVENTION FLAG (for manual review):
-  d(x, g) is Euclidean distance in pixel units. The problem statement says
-  "distance to the nearest ground truth pixel ... linear (triangular) kernel
-  with 300 m support" but does not state the lattice distance convention.
-  For 0/1 dot emissions inside a 3 px kernel the DTI difference between
-  Euclidean / Manhattan / Chebyshev is bounded and small; the official
-  server-side implementation is not public (the reference solution
-  notebook only uses TverskyLoss(alpha=0.2, beta=0.8) for training).
+    TP_w = sum_{g in G} max_{x : d(x,g) <= R} p(x) * k(d(x,g))
+    FP_w = sum_{x : p(x) > 0} p(x) * [1 - max_{g in G} k(d(x,g))]
+    FN_w = sum_{g in G} [1 - max_{x : d(x,g) <= R} p(x) * k(d(x,g))]
+
+    DTI(alpha, beta) = TP_w / (TP_w + alpha*FP_w + beta*FN_w + eps)
+    alpha = 0.2 (false-positive weight), beta = 0.8 (false-negative weight)
+
+MASKING
+-------
+DrivenData staff (thread 11516, 2026-09-16): "Pixels corresponding to known USGS/INGENIOUS
+faults are masked / excluded from evaluation, so they do not count towards penalty terms."
+and "for scoring purposes it should not matter whether these known faults are included with
+predictions or not."  We therefore zero predictions and truth on the excluded set *before*
+applying the kernel.  That is the only reading under which the staff's second sentence is
+literally true, so it is the reading implemented here.
+
+IDENTITIES (both re-derived and unit-tested, not assumed)
+---------------------------------------------------------
+*  FN_w = |G| - TP_w                                    (exact, by substitution)
+*  DTI  = TP_w / (alpha*(TP_w + FP_w) + beta*|G| + eps)  (exact, by substitution)
+*  for a binary {0,1} prediction, TP_w = sum_{g in G} k(d_pred(g)) * 1[d_pred(g) <= R]
+   and FP_w = sum_{x : p(x)=1} (1 - k(d_gt(x))), i.e. two Euclidean distance transforms.
+
+The module is deliberately small and dependency-light so that the exact operator can be
+checked against an independent O(|G| * |P|) brute-force transcription in the tests.
 """
+
 from __future__ import annotations
+
+from dataclasses import dataclass
 
 import numpy as np
 
-from .config import ALPHA, BETA, R_PX
+ALPHA: float = 0.2
+BETA: float = 0.8
+RADIUS_PX: float = 3.0
+EPS: float = 1e-12
+PIXEL_M: float = 100.0
 
-_EPS = 1e-12
+
+def kernel(d_px: np.ndarray | float, radius_px: float = RADIUS_PX) -> np.ndarray:
+    """Triangular kernel k(d) = max(1 - d/R, 0). Distances in pixels (1 px = 100 m)."""
+    return np.maximum(1.0 - np.asarray(d_px, dtype=np.float64) / float(radius_px), 0.0)
 
 
-def kernel_weights(max_r: int = R_PX) -> tuple[np.ndarray, np.ndarray]:
-    """Return (dr, w) for all lattice offsets within Chebyshev radius max_r.
+def kernel_offsets(radius_px: float = RADIUS_PX) -> list[tuple[int, int, float]]:
+    """All integer offsets with k > 0, each with its kernel weight.
 
-    dr  : (K, 2) int offsets (dr, dc)
-    w   : (K,) triangular kernel values k(|dr,dc|_Euclid)
+    R = 3 px -> the 29 integer offsets with k >= 0 collapse to 25 with k > 0, because k is
+    exactly 0 at d = R (the four axis offsets at distance 3 fall out; all 25 remaining
+    offsets have d <= 2.828 px).  Verified by the tests, not assumed.
     """
-    offs = np.stack(np.meshgrid(np.arange(-max_r, max_r + 1),
-                                np.arange(-max_r, max_r + 1),
-                                indexing="ij"), axis=-1).reshape(-1, 2)
-    dist = np.hypot(offs[:, 0].astype(float), offs[:, 1].astype(float))
-    w = np.clip(1.0 - dist / max_r, 0.0, None)
-    keep = w > 0
-    return offs[keep], w[keep]
+    r = int(np.ceil(radius_px))
+    out: list[tuple[int, int, float]] = []
+    for dy in range(-r, r + 1):
+        for dx in range(-r, r + 1):
+            w = float(kernel(np.hypot(dy, dx), radius_px))
+            if w > 0.0:
+                out.append((dy, dx, w))
+    return out
 
 
-def max_kernel_to_truth(truth: np.ndarray, footprint: np.ndarray,
-                        max_r: int = R_PX) -> np.ndarray:
-    """K(x) = max over truth pixels g of k(d(x, g)), 0 where no truth in R.
+_OFFSETS = kernel_offsets()
+_OFFSET_ARRAY = np.array([[dy, dx, w] for dy, dx, w in _OFFSETS], dtype=np.float64)
 
-    Computed with shifted-mask max over the (2R+1)^2 lattice offsets.
+
+@dataclass(frozen=True)
+class DTIConstants:
+    """Sufficient statistics of one DTI evaluation."""
+
+    tp_w: float
+    fp_w: float
+    fn_w: float
+    n_truth: int
+    score: float
+
+    def ledger(self) -> dict:
+        return {
+            "TP_w": self.tp_w,
+            "FP_w": self.fp_w,
+            "FN_w": self.fn_w,
+            "G_pixels": self.n_truth,
+            "DTI": self.score,
+        }
+
+
+def _scored_domain(pred: np.ndarray, truth: np.ndarray, valid, known) -> tuple[np.ndarray, np.ndarray]:
+    """Zero predictions and truth outside the footprint and on the known-fault mask."""
+    pred = np.asarray(pred, dtype=np.float64)
+    truth = np.asarray(truth)
+    if pred.ndim != 2 or pred.shape != truth.shape:
+        raise ValueError("prediction and truth must be equal-shaped 2-D grids")
+    if valid is None:
+        valid = np.ones(pred.shape, dtype=bool)
+    if known is None:
+        known = np.zeros(pred.shape, dtype=bool)
+    valid = np.asarray(valid, dtype=bool)
+    known = np.asarray(known, dtype=bool)
+    if valid.shape != pred.shape or known.shape != pred.shape:
+        raise ValueError("valid/known mask shape mismatch")
+    active = valid & ~known
+    p = np.where(active, pred, 0.0)
+    g = np.where(active, truth > 0, False)
+    if not np.isfinite(p).all():
+        raise ValueError("predictions inside the scored domain must be finite")
+    if p.min() < 0.0 or p.max() > 1.0:
+        raise ValueError("predictions inside the scored domain must lie in [0, 1]")
+    return p, g
+
+
+def _max_over_disc(field: np.ndarray, weights: np.ndarray) -> np.ndarray:
+    """max over the 29 kernel offsets of field[shifted] * weight. Exact per the definition."""
+    n0, n1 = field.shape
+    out = np.zeros(field.shape, dtype=np.float64)
+    for dy, dx, w in _OFFSETS:
+        # shifted[i, j] = field[i + dy, j + dx] * w, with wrapped entries forced to 0.
+        shifted = np.roll(np.roll(field, -dy, axis=0), -dx, axis=1) * w
+        if dy > 0:            # out[i] = field[i + dy]: valid for i < n0 - dy
+            shifted[n0 - dy:, :] = 0.0
+        elif dy < 0:          # out[i] = field[i + dy]: valid for i >= -dy
+            shifted[:-dy, :] = 0.0
+        if dx > 0:
+            shifted[:, n1 - dx:] = 0.0
+        elif dx < 0:
+            shifted[:, :-dx] = 0.0
+        np.maximum(out, shifted, out=out)
+    return out
+
+
+def dti(pred: np.ndarray, truth: np.ndarray, valid=None, known=None) -> DTIConstants:
+    """Exact DTI for soft or binary predictions, exactly as the organizer defines it."""
+    p, g = _scored_domain(pred, truth, valid, known)
+    coverage = _max_over_disc(p, _OFFSET_ARRAY[:, 2])          # max_x p(x) k(d(x,g)) for every pixel
+    gt_weight = _max_over_disc(g.astype(np.float64), _OFFSET_ARRAY[:, 2])  # max_g k(d(x,g)) for every pixel
+    tp_w = float(coverage[g].sum())
+    fp_w = float((p * (1.0 - gt_weight))[p > 0].sum())
+    fn_w = float(g.sum() - tp_w)
+    denom = tp_w + ALPHA * fp_w + BETA * fn_w + EPS
+    return DTIConstants(tp_w=tp_w, fp_w=fp_w, fn_w=fn_w, n_truth=int(g.sum()), score=tp_w / denom)
+
+
+def dti_bruteforce(pred: np.ndarray, truth: np.ndarray, valid=None, known=None) -> DTIConstants:
+    """Independent O(|P|*|G|) transcription used only to falsify :func:`dti` in tests."""
+    p, g = _scored_domain(pred, truth, valid, known)
+    gs = np.argwhere(g)
+    ps = np.argwhere(p > 0)
+    pv = p[p > 0]
+    if gs.size == 0:
+        return DTIConstants(0.0, float(pv.sum()), 0.0, 0, 0.0)
+
+    def k_of(d: np.ndarray) -> np.ndarray:
+        return np.maximum(1.0 - d / RADIUS_PX, 0.0)
+
+    tp_w = 0.0
+    for gy, gx in gs:
+        d = np.hypot(ps[:, 0] - gy, ps[:, 1] - gx)
+        tp_w += float((pv * k_of(d)).max()) if ps.size else 0.0
+    fp_w = 0.0
+    for idx, (xy, xv) in enumerate(zip(ps, pv)):
+        d = np.hypot(gs[:, 0] - xy[0], gs[:, 1] - xy[1])
+        fp_w += float(xv * (1.0 - k_of(d).max()))
+    fn_w = float(gs.shape[0]) - tp_w
+    denom = tp_w + ALPHA * fp_w + BETA * fn_w + EPS
+    return DTIConstants(tp_w, fp_w, fn_w, int(gs.shape[0]), tp_w / denom)
+
+
+def dti_closed_form(tp_w: float, fp_w: float, n_truth: int) -> float:
+    """T / (alpha*(T+F) + beta*G + eps) -- the algebraically reduced official formula."""
+    return tp_w / (ALPHA * (tp_w + fp_w) + BETA * n_truth + EPS)
+
+
+def binary_credit(dots: np.ndarray, truth: np.ndarray, valid=None, known=None) -> dict:
+    """Exact sufficient statistics for a binary {0,1} dot file, via two distance transforms.
+
+    Returns T (=TP_w), F (=FP_w), G (=|truth| in the scored domain), n (=number of dots in
+    the scored domain) and the two distance maps.  Used by the emitter and the holdout.
     """
-    K = np.zeros_like(truth, dtype=np.float64)
-    offs, w = kernel_weights(max_r)
-    t = truth.astype(bool)
-    H, W = t.shape
-    for (dr, dc), wk in zip(offs, w):
-        dr, dc = int(dr), int(dc)
-        # truth pixel at (r+dr, c+dc) covers x=(r, c); slice without wrap
-        r0, r1 = max(0, -dr), min(H, H - dr)
-        c0, c1 = max(0, -dc), min(W, W - dc)
-        r2, c2 = max(0, dr), max(0, dc)
-        sub = t[r0:r1, c0:c1]
-        mask = K[r2:r2 + (r1 - r0), c2:c2 + (c1 - c0)]
-        upd = np.where(sub, wk, 0.0)
-        np.maximum(mask, upd, out=mask)
-    K = np.where(footprint, K, 0.0)
-    return K
+    from scipy.ndimage import distance_transform_edt
+
+    p, g = _scored_domain(np.asarray(dots, dtype=np.float64), truth, valid, known)
+    dot = p > 0.0
+    if not dot.any() or not g.any():
+        return {
+            "T": 0.0, "F": float(dot.sum()), "G": int(g.sum()), "n": int(dot.sum()),
+            "d_pred": np.full(p.shape, np.inf), "d_gt": np.full(p.shape, np.inf),
+        }
+    d_pred = distance_transform_edt(~dot, sampling=1.0)          # distance from each pixel to nearest dot
+    d_gt = distance_transform_edt(~g, sampling=1.0)              # distance from each pixel to nearest truth pixel
+    t = float(kernel(d_pred[g]).sum())
+    f = float((1.0 - kernel(d_gt[dot])).sum())
+    return {"T": t, "F": f, "G": int(g.sum()), "n": int(dot.sum()), "d_pred": d_pred, "d_gt": d_gt}
 
 
-def weighted_true_positive(prediction: np.ndarray, truth: np.ndarray,
-                           max_r: int = R_PX) -> float:
-    """TPw = sum_g max_{x in N_R(g)} p(x) * k(d(x, g)).
-
-    Sparse-friendly: each predicted pixel updates the truth pixels inside
-    its (2R+1)^2 window.
-    """
-    p = prediction.astype(np.float64)
-    rows, cols = np.nonzero(p > 0)
-    if rows.size == 0:
-        return 0.0
-    t = truth.astype(bool)
-    # truth pixels only; we accumulate M_g = max p*k over g
-    tr_rows, tr_cols = np.nonzero(t)
-    M = np.zeros(tr_rows.shape[0], dtype=np.float64)
-    offs, w = kernel_weights(max_r)
-    H, W = p.shape
-    # build truth index lookup (sparse, |G| ~ 6e4); -1 = not a truth pixel
-    truth_grid = np.full((H, W), -1, dtype=np.int64)
-    truth_grid[tr_rows, tr_cols] = np.arange(tr_rows.size)
-    for (dr, dc), wk in zip(offs, w):
-        r2 = rows + int(dr)
-        c2 = cols + int(dc)
-        ok = (r2 >= 0) & (r2 < H) & (c2 >= 0) & (c2 < W)
-        if not ok.any():
-            continue
-        idx = truth_grid[r2[ok], c2[ok]]
-        hit = idx >= 0
-        if not hit.any():
-            continue
-        vals = p[rows[ok][hit], cols[ok][hit]] * wk
-        np.maximum.at(M, idx[hit], vals)
-    tpw = float(M.sum())
-    return tpw
-
-
-def score_components(prediction: np.ndarray, truth: np.ndarray,
-                     footprint: np.ndarray, max_r: int = R_PX,
-                     K_cache: np.ndarray | None = None,
-                     invK_cache: np.ndarray | None = None) -> dict:
-    """Full official DTI plus its components.
-
-    prediction : (H, W) float, 0/1 dots (any [0,1] works)
-    truth      : (H, W) 0/1 ground truth pixels
-    footprint  : (H, W) bool domain mask
-    K_cache    : optional precomputed max-kernel-to-truth field (same truth)
-    invK_cache : optional precomputed (1 - K) field, same truth (saves a
-                 80 MB transient per call when scoring many arms)
-    """
-    n_truth = int(truth.sum())
-    tpw = weighted_true_positive(prediction, truth, max_r)
-    fnw = n_truth - tpw
-    if K_cache is None:
-        K_cache = max_kernel_to_truth(truth, footprint, max_r)
-    if invK_cache is None:
-        fpw = float((prediction * (1.0 - K_cache)).sum())
-    else:
-        fpw = float((prediction * invK_cache).sum())
-    dti = tpw / (tpw + ALPHA * fpw + BETA * fnw + _EPS)
-    return {
-        "TPw": tpw,
-        "FPw": fpw,
-        "FNw": fnw,
-        "DTI": float(dti),
-        "n_truth": n_truth,
-        "n_pred_px": int((prediction > 0).sum()),
-        "precision_proxy": tpw / max(fpw + tpw, _EPS),  # informational only
-    }
-
-
-def score(prediction: np.ndarray, truth: np.ndarray,
-          footprint: np.ndarray, max_r: int = R_PX) -> float:
-    return score_components(prediction, truth, footprint, max_r)["DTI"]
+def dti_of(binary_stats: dict) -> float:
+    """DTI from :func:`binary_credit` sufficient statistics."""
+    return dti_closed_form(binary_stats["T"], binary_stats["F"], binary_stats["G"])
