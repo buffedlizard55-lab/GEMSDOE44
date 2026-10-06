@@ -1,0 +1,42 @@
+{
+ "preregistration": "GEMSDOE44-PREREG-1 stage 1: 4-quadrant block CV; gate validated by zone AUC + catalogue concentration ratio at top-q (q=0.35); proxy = visible catalogue (necessary-condition test only)",
+ "q": 0.35,
+ "folds": {
+  "0": {
+   "auc": 0.7045074231850126,
+   "concentration_ratio": 1.60333328425671,
+   "px_top": 16335.0,
+   "px_total": 29109.0,
+   "n_blocks": 7626,
+   "pos_blocks": 1658
+  },
+  "1": {
+   "auc": 0.8788397604356604,
+   "concentration_ratio": 2.421569947488892,
+   "px_top": 10791.0,
+   "px_total": 12732.0,
+   "n_blocks": 7719,
+   "pos_blocks": 834
+  },
+  "2": {
+   "auc": 0.9504671780533849,
+   "concentration_ratio": 2.857142857142857,
+   "px_top": 9397.0,
+   "px_total": 9397.0,
+   "n_blocks": 7708,
+   "pos_blocks": 493
+  },
+  "3": {
+   "auc": 0.9233391723439851,
+   "concentration_ratio": 2.857142857142857,
+   "px_top": 9750.0,
+   "px_total": 9750.0,
+   "n_blocks": 7802,
+   "pos_blocks": 505
+  }
+ },
+ "pooled": {
+  "auc_mean": 0.8642883835045108,
+  "conc_mean": 2.4347972365078294
+ }
+}

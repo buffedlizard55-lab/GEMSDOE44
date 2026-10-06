@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methodology · GEMSDOE44</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <div class="brand">GEMSDOE<span>44</span></div>
+    <a href="index.html">Home</a>
+    <a class="on" href="methodology.html">Methodology</a>
+    <a href="hypotheses.html">Hypotheses</a>
+    <a href="holdout.html">Holdout</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="sources.html">Sources</a>
+    <a href="irregularities.html">Irregularities</a>
+  </div>
+</header>
+<main class="wrap">
+
+<h1>Methodology</h1>
+<p class="sub">Two explicitly separate stages, separately validated, plus the emission and
+format machinery. Pre-registration: <b>GEMSDOE44-PREREG-1</b> (4-quadrant spatial block folds;
+fixed budget per arm; promotion rules fixed <i>before</i> the run —
+<code>evidence/stage2_holdout.json</code> records the rules alongside the results).</p>
+
+<h2>0. The metric, implemented and verified</h2>
+<div class="card">
+<p>Official distance-weighted Tversky index (<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">published formulae</a>),
+implemented in <code>src/gems44/metric.py</code> and test-verified line by line
+(<code>tests/test_metric.py</code>, 8 tests, all passing):</p>
+<ul class="tight">
+<li>triangular kernel k(d) = max(1 − d/R, 0), R = 3 px (300 m at 100 m);</li>
+<li>TPw = Σ<sub>g∈G</sub> max<sub>x: d≤R</sub> p(x)·k(d(x,g)); FPw = Σ<sub>x: p&gt;0</sub> p(x)·[1 − max<sub>g</sub> k(d(x,g))];</li>
+<li>FNw = Σ<sub>g</sub> [1 − max<sub>x: d≤R</sub> p(x)·k(d(x,g))] = |G| − TPw (exact identity, used throughout);</li>
+<li>DTI = TPw / (TPw + 0.2·FPw + 0.8·FNw + ε); worked example TP=3.00, FP=1.89, FN=2.00 → 0.60 reproduced;</li>
+<li>full metric cross-checked against an independent brute-force O(|G||P|) implementation on a synthetic grid.</li>
+</ul>
+<p><b>Convention flag (IR-44-METRIC-01):</b> the lattice distance convention (Euclidean vs
+Manhattan) of the <i>server-side</i> implementation is not public — the reference-solution
+notebook only contains the training loss. We implement the published formulae with Euclidean
+pixel distance; for 0/1 dots inside a 3-px kernel the difference between conventions is small
+and bounded, and we disclose it rather than pretend it is zero.</p>
+</div>
+
+<h2>1. Stage 1 — coarse favourability gate (the “worth searching” question)</h2>
+<div class="card">
+<p>2 km × 2 km superpixels (187×165 = 30,855). Per-superpixel features (11): p90 of
+<code>geod_shearrate</code>, <code>geod_dilaterate</code>, <code>geod_2ndinv</code> (kinematic
+activity); log-sum of <code>deq</code>+<code>ieq</code> (seismicity); p90 of <code>cond_surf</code>,
+<code>tc</code> (hydrothermal/radiometric proxies); p99−p1 range of <code>iso_grav_anom</code>;
+−median <code>depth_to_base_surf</code> (shallow base); log counts of relay-zone and
+endpoint-uncertainty stamps; log count of heat-flow wells ≥ 1500 mW/m².</p>
+<p>A gradient-boosted classifier (positive superpixel = ≥ 3 catalogue pixels — a fault line
+crossing a 2 km block) is trained in each fold on the other three quadrants and evaluated in the
+held-out quadrant on two metrics that answer the <i>coarse</i> question only:</p>
+<ul class="tight">
+<li><b>zone AUC</b> — can favourability rank zones by known-fault content?</li>
+<li><b>concentration ratio</b> — fraction of the fold's catalogue pixels inside the top-q zones,
+divided by q (1.0 = no better than random; the gate must beat the baseline convincingly to earn
+its place).</li>
+</ul>
+<p>The gate keeps the top-q superpixels (q selected by the pre-registered rule in
+<code>evidence/gate_q_selection.json</code>). <b>Separately-validated disclosure (IR-44-PROXY-01):</b>
+the only verifiable proxy for “worth searching” is the visible catalogue; this test is a
+necessary-condition check and <i>cannot</i> reward genuinely new faults. The Stage-1 numbers are
+therefore reported on their own and never collapsed into a single “system” number with Stage 2.</p>
+</div>
+
+<h2>2. Stage 2 — fine-scale placement model (the “where the pixel is” question)</h2>
+<div class="card">
+<p>A gradient-boosted pixel classifier over 28 channels, trained on the catalogue proxy with
+spatial-block folds (positives = all catalogue pixels in the training quadrants; 5× random
+footprint negatives). Channels, grouped by hypothesis
+(<a href="hypotheses.html">hypotheses page</a>):</p>
+<table>
+<tr><th>group</th><th>channels</th><th>mechanism</th></tr>
+<tr><td>RAW (19)</td><td>robust z-score of every official band (<code>depth_to_base_surf</code> sign-flipped: shallow = favourable)</td><td>context the model may use or ignore, by measured importance</td></tr>
+<tr><td>H1 (4)</td><td><code>pair_hi/lo</code>, <code>cmax2_hi/lo</code></td><td>cross-physics structure-tensor consensus (energy×coherence response, pairwise angular agreement, two scales)</td></tr>
+<tr><td>H2 (1)</td><td><code>h2_inherit</code></td><td>cos 2(θ<sub>pixel</sub>−θ<sub>parent strike</sub>)·exp(−d/2 km) from the 290 NBMG gap links</td></tr>
+<tr><td>H3 (2)</td><td><code>relay</code>, <code>endpt</code></td><td>kinematically-compatible gap midpoints + uncertainty-classed endpoints (circularity disclosed)</td></tr>
+<tr><td>H4 (1)</td><td><code>h4_conduit</code></td><td>conductivity × shallow conductive base × hot-well density joint composite</td></tr>
+<tr><td>H5 (1)</td><td><code>h5_seis_edge</code></td><td>seismicity-tensor coherence × magnetic edge witness</td></tr>
+</table>
+<p>Per fold, each of five arms emits <b>10,000 dots</b> (same budget, 200 m exclusion radius,
+inside the held-out quadrant, under the same gate and the B=2 catalogue-flank mask applied to the
+candidate field <i>before</i> emission):</p>
+<ul class="tight">
+<li><b>A0 random</b> — the budget baseline;</li>
+<li><b>A1 habitat-only</b> — the Stage-1 favourability field as the placement score (the conflation the brief forbids, measured explicitly so its failure mode stays visible);</li>
+<li><b>A2 single-field</b> — |detrended-elevation slope| only (the classic scarp detector);</li>
+<li><b>A3 H1-only</b> — the multi-physics consensus alone (isolates its contribution);</li>
+<li><b>A4 full model</b> — the 28-channel model.</li>
+</ul>
+<p>Each emission is scored with the <b>official DTI</b> against the held-out fold's catalogue.
+Promotion rule (fixed before the run): A4 &gt; A0, A1, A2 in ≥ 3/4 folds <b>and</b> A4 &gt; A3 in
+≥ 2/4 folds <b>and</b> Stage-1 concentration ratio ≥ 1.3 in ≥ 3/4 folds. Results:
+<a href="holdout.html#stage2">holdout page</a>.</p>
+</div>
+
+<h2>3. Emission — the DTI-optimal shape</h2>
+<div class="card">
+<p>From the metric: TPw saturates at 1 per truth pixel (max rule), so a second dot on the same
+truth pixel is pure FP cost, and every off-target dot costs up to 0.2 while an exact hit costs 0.
+The optimal shape of a fixed dot budget is therefore <b>well-separated 0/1 dots placed where the
+score field is highest</b> — greedy best-first with a 200 m exclusion radius. Budget N is chosen
+by a pre-registered sweep (30k/35k/40k/45k, <code>evidence/budget_sweep.json</code>); the
+200 m catalogue-flank removal is applied to the candidate field before emission (mass that can
+never earn round-1 credit — the hidden truth is off-catalogue by construction — is not wasted).
+This layout family is the same family the group's best files use (disclosed); the <i>positions</i>
+come entirely from this system's two stages, and the uniqueness check below quantifies the
+residual overlap with previously-scored files.</p>
+</div>
+
+<h2 id="format">4. Format — why the portal rejected the old files, and the guarantees here</h2>
+<div class="card">
+<p>The DrivenData portal error <code>“Predicted values must be in range [0, 1]”</code> has
+<i>two</i> measured mechanisms (GEMSDOE32's analysis, which we re-audit byte-for-byte):
+(1) out-of-range values — the feature stack's nodata sentinel
+<code>−3.4028234663852886e+38</code> passes through unchanged if a pipeline forgets to clean it;
+(2) an out-of-range <b>nodata tag</b> — a GeoTIFF whose <i>nodata value</i> is that sentinel (or
+NaN in a strict validator) is rejected even when the in-range cells are fine. Our writer
+(<code>src/gems44/emit_submission.py</code>) writes single-band float32, EPSG:32611, 100 m,
+3730×3292, official geotransform, <b>no nodata tag</b>, every cell finite and in [0,1] — then
+<b>re-opens the written file from disk</b> and records a checks receipt
+(<code>evidence/audit-*.json</code>): 12,279,160 cells checked, not 3,061 sampled.</p>
+</div>
+
+<h2>5. Mirror (live-anchored) truth model — and its honest limits</h2>
+<div class="card">
+<p>The hidden test set is, by construction, faults <b>not</b> in the visible catalogue, so no
+catalogue-based instrument can see it. The group's owner-report-derived inference (GEMSDOE25 H28):
+the hidden set is scattered around structure surfaces at σ ≈ 1.85 px. Our independent
+re-implementation scatters the catalogue with 2-D Gaussian noise (σ swept 1.5 / 1.85 / 2.5 px),
+scores candidate files against the scattered copies with the official metric over paired seeds,
+and reports mean ± se. This is a <span class="pill model">model</span> — it is a statement about
+<i>this generative description</i> of the hidden set, not about the actual one. It is used to
+compare candidate <i>files</i> (ours vs incumbents) at equal footing, never as a score estimate.</p>
+</div>
+
+<h2>6. Uniqueness — “not dominated by one stage's footprint alone”</h2>
+<div class="card">
+<p>Two checks, both reported in <a href="holdout.html">holdout page</a>:
+(1) <b>dominance</b> — the emitted dots' distribution across Stage-1 favourability deciles (by
+construction all inside the gate; the decile histogram shows the mass is spread over the
+gate, not concentrated in one zone family);
+(2) <b>uniqueness vs incumbents</b> — pixel overlap of our dot set with four previously-scored
+dot sets (0.2778 / 0.2708 / 0.2600 / 0.2449 files, mirrored and hashed here), against the
+random-overlap expectation n₁·n₂/F for sets of those sizes inside the footprint.</p>
+</div>
+
+<h2>7. Reproduction</h2>
+<div class="card">
+<pre class="note-box">venv: /home/user/venv (python 3.11, numpy, rasterio, scipy, scikit-learn, pyproj, pytest)
+data: data/ (sha256-pinned official rasters — see evidence/verify_rasters.json)
+tests:  python -m pytest tests -q        # 8 passed (metric)
+run:    python scripts/run_all.py        # writes evidence/*.json + docs/downloads/*.tif
+site:   python scripts/publish_evidence.py  # copies evidence into docs/data/ for the Pages feed</pre>
+</div>
+
+</main>
+<footer><div class="wrap">GEMSDOE44 · methodology</div></footer>
+</body>
+</html>

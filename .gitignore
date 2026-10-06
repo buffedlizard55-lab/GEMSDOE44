@@ -1,0 +1,19 @@
+# data (official rasters are large; sha256-pinned, fetched via scripts/download_competition_data.sh)
+data/
+!data/.gitkeep
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# scratch
+tmp/
+*.log
+.nox/
+.mypy_cache/
+.ruff_cache/
+
+# keep: evidence/*.json (small, the site's data feed), docs/ (site + downloads)
